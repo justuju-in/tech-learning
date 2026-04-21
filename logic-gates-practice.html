@@ -385,22 +385,14 @@ B ──┘</div>
     </div>
 </section>
 
-<!-- Challenge: XOR from NAND -->
+<!-- XOR from NAND — verification exercise -->
 <section>
-    <h2>Challenge: XOR Using Only NAND!</h2>
-    <p>This is a tough one. Think first, then check the answer.</p>
+    <h2>Can NAND Build XOR Too?</h2>
 
-    <div class="practice-q">
-        <p><strong>XOR formula:</strong> <code>A &oplus; B = A.B' + A'.B</code></p>
-        <p>How would you build this using only NAND gates?</p>
-    </div>
+    <p>We've seen NAND build NOT, AND, and OR. But what about XOR?</p>
 
     <div class="fragment">
-        <p><strong>Hint:</strong> You'll need 4 NAND gates.</p>
-    </div>
-
-    <div class="fragment">
-        <p><strong>Steps:</strong></p>
+        <p>It turns out — <strong>yes!</strong> Someone figured out that just 4 NAND gates, connected in a clever way, give us XOR. Here's the circuit:</p>
         <ol>
             <li>W = NAND(A, B)</li>
             <li>X = NAND(A, W)</li>
@@ -409,15 +401,16 @@ B ──┘</div>
         </ol>
     </div>
 
-    <div class="fragment success-box">
-        <strong>Verify it!</strong> Check every input combination (00, 01, 10, 11) and confirm the output matches XOR.
+    <div class="fragment warning-box">
+        <strong>How was this discovered?</strong> You'd need Boolean Algebra to derive this — which we'll learn soon! For now, let's just <strong>verify</strong> that it actually works by tracing through all 4 input combinations.
     </div>
 </section>
 
 <!-- Verify XOR from NAND -->
 <section>
-    <h2>Verification: XOR from NAND</h2>
+    <h2>Verify: Does This Really Give XOR?</h2>
     <p>W=NAND(A,B), X=NAND(A,W), Y=NAND(W,B), Out=NAND(X,Y)</p>
+    <p>Let's trace through every possible input — this is just circuit tracing!</p>
 
     <table>
         <tr><th>A</th><th>B</th><th>W</th><th>X</th><th>Y</th><th>Output</th><th>XOR?</th></tr>
@@ -557,8 +550,8 @@ A ──── NOT ── X ──┘</div>
     <div class="fragment"><p><strong>Step 2:</strong> X = A' (NOT)</p></div>
     <div class="fragment"><p><strong>Step 3:</strong> Output = W . X = <code>(A + B) . A'</code></p></div>
     <div class="fragment info-box">
-        Simplify: (A + B).A' = A.A' + B.A' = 0 + A'.B = <strong>A'.B</strong>
-        <br>Meaning: Output is 1 only when A=0 and B=1.
+        The expression is <strong>(A + B) . A'</strong>. Can we make this simpler? We'll learn how in the Boolean Algebra lesson!
+        <br>For now, try plugging in all 4 combinations of A and B to see when output = 1.
     </div>
 </section>
 
@@ -728,7 +721,7 @@ C ──┘</div>
                 <p><strong>SOP:</strong> <code>F = A'.B'.C + A.B'.C + A.B.C</code></p>
             </div>
             <div class="fragment info-box">
-                See the pattern? Output is 1 when C=1 and (B=0 or A=1). Simplified: <strong>F = C.(A + B')</strong>
+                That's the SOP expression! It looks long. Later, in Boolean Algebra, we'll learn how to make it shorter. For now, being able to <strong>write</strong> it is the important skill.
             </div>
         </div>
     </div>
@@ -1041,7 +1034,7 @@ B ──┘</div>
         <div class="circuit-box">A ──── NOT ──┐
              ├── AND ── Output
 B ──── NOT ──┘</div>
-        <p class="fragment answer-reveal">Output = A'.B'. This equals <strong>NOR</strong>! (De Morgan's theorem)</p>
+        <p class="fragment answer-reveal">Output = A'.B'. Check the truth table — NOT(0).NOT(0)=1, NOT(0).NOT(1)=0, NOT(1).NOT(0)=0, NOT(1).NOT(1)=0. That's the same as <strong>NOR</strong>! Interesting...</p>
     </div>
 
     <div class="practice-q">
@@ -1065,7 +1058,7 @@ B ──┘               ├── AND ── Output
 A ──┐               │
     ├── NAND ── X ──┘
 B ──┘</div>
-        <p class="fragment answer-reveal">W = (A.B)', X = (A.B)', so Output = (A.B)'.(A.B)' = (A.B)'. Both are the same! <strong>Output = (A.B)' = NAND</strong></p>
+        <p class="fragment answer-reveal">W = (A.B)', X = (A.B)'. Both W and X are the same! So Output = AND(W, W). Check: if W=1, output=1. If W=0, output=0. So <strong>Output = (A.B)' = just NAND again!</strong></p>
     </div>
 
     <div class="practice-q">
@@ -1076,7 +1069,7 @@ B ──┘                    │  ├── OR ── Output
 B ──┐                    │  │
     ├── AND ── X ────────┘──┘
 C ──┘</div>
-        <p class="fragment answer-reveal">W = A.B, X = B.C, Output = <strong>A.B + B.C = B.(A + C)</strong></p>
+        <p class="fragment answer-reveal">W = A.B, X = B.C, Output = <strong>A.B + B.C</strong></p>
     </div>
 
     <div class="practice-q">
@@ -1106,7 +1099,7 @@ C ──┘</div>
                 <tr><td>1</td><td>0</td><td>1</td></tr>
                 <tr><td>1</td><td>1</td><td>1</td></tr>
             </table>
-            <p class="fragment answer-reveal">F = A'.B + A.B' + A.B = <strong>A + B (OR!)</strong></p>
+            <p class="fragment answer-reveal">F = A'.B + A.B' + A.B. Check the truth table — output is 1 everywhere except (0,0). That's the same as <strong>OR</strong>!</p>
         </div>
         <div>
             <p><strong>D2:</strong></p>
@@ -1117,7 +1110,7 @@ C ──┘</div>
                 <tr><td>1</td><td>0</td><td>1</td></tr>
                 <tr><td>1</td><td>1</td><td>0</td></tr>
             </table>
-            <p class="fragment answer-reveal">F = A'.B' + A'.B + A.B' = <strong>(A.B)' = NAND!</strong></p>
+            <p class="fragment answer-reveal">F = A'.B' + A'.B + A.B'. Check the truth table — output is 1 everywhere except (1,1). That's the same as <strong>NAND</strong>!</p>
         </div>
     </div>
 </section>
@@ -1166,7 +1159,7 @@ C ──┘</div>
 
     <div class="fragment answer-reveal">
         F = A'.B'.C + A'.B.C' + A.B'.C' + A.B.C<br>
-        Pattern: Output is 1 when there's an <strong>odd number of 1s</strong>. This is <strong>A &oplus; B &oplus; C (3-way XOR)</strong>!
+        Look at the pattern: output is 1 when there's an <strong>odd number of 1s</strong> among A, B, C. Interesting!
     </div>
 </section>
 
@@ -1190,8 +1183,7 @@ C ──┘</div>
 
     <div class="fragment answer-reveal">
         F = A'.B'.C' + A'.B'.C + A.B'.C' + A.B'.C + A.B.C'<br>
-        = B'.(A'.C' + A'.C + A.C' + A.C) + A.B.C'<br>
-        = B' + A.B.C' = <strong>B' + A.C'</strong>
+        That's 5 product terms! Can this be made shorter? We'll learn how in Boolean Algebra and K-Maps.
     </div>
 </section>
 
@@ -1273,12 +1265,12 @@ C ──┘</div>
     <div class="practice-q"><p><strong>G2:</strong> NOR gate — using only NAND</p></div>
     <div class="fragment answer-reveal">4 NAND gates: Build OR (3 NANDs), then NOT the output (1 more NAND) = <strong>4 NAND gates</strong></div>
 
-    <div class="practice-q"><p><strong>G3:</strong> XNOR gate — using only NAND</p></div>
-    <div class="fragment answer-reveal">XOR = 4 NANDs. XNOR = NOT(XOR) = 1 more NAND. Total = <strong>5 NAND gates</strong></div>
+    <div class="practice-q"><p><strong>G3:</strong> AND gate with 3 inputs (A, B, C) — using only 2-input NAND gates</p></div>
+    <div class="fragment answer-reveal">NAND(A,B) &rarr; NOT that with NAND &rarr; gives A.B. Then NAND(A.B, C) &rarr; NOT that with NAND &rarr; gives A.B.C. Total = <strong>4 NAND gates</strong>. Verify with a truth table!</div>
 
-    <div class="practice-q"><p><strong>G4:</strong> <code>F = A + B.C</code> — using only NAND</p></div>
+    <div class="practice-q"><p><strong>G4:</strong> XNOR gate — using only NAND. Hint: you already know XOR takes 4 NANDs.</p></div>
     <div class="fragment answer-reveal">
-        <strong>F = (A'.(B.C)')' </strong> = NAND(NAND(A,A), NAND(B,C)) = <strong>3 NAND gates!</strong>
+        XOR = 4 NANDs. XNOR = NOT(XOR) = 1 more NAND (both inputs same). Total = <strong>5 NAND gates</strong>
     </div>
 </section>
 
@@ -1300,7 +1292,7 @@ D ──┘</div>
     </div>
 
     <div class="practice-q">
-        <p><strong>H2:</strong> Write the SOP expression for this truth table and simplify:</p>
+        <p><strong>H2:</strong> Write the SOP expression for this truth table:</p>
         <table style="width:50%; font-size: 0.8em;">
             <tr><th>A</th><th>B</th><th>C</th><th>F</th></tr>
             <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
@@ -1370,10 +1362,10 @@ C ──┘</div>
     </div>
 
     <div class="practice-q">
-        <p><strong>H9:</strong> Draw these circuits using <strong>only NAND gates</strong>:</p>
+        <p><strong>H9:</strong> Draw these using <strong>only NAND gates</strong>:</p>
         <ol>
-            <li><code>F = A + B</code></li>
-            <li><code>F = A.B + C</code></li>
+            <li>OR gate (A + B)</li>
+            <li>NOR gate (hint: build OR first, then...)</li>
         </ol>
     </div>
 
@@ -1398,11 +1390,11 @@ C ──┘</div>
     <h2>Answer Key: Week 1</h2>
     <div style="font-size: 0.82em;">
         <p><strong>H1:</strong> P=XOR(0,1)=1, Q=NOT(1)=0, R=AND(1,0)=0, S=NOR(1,0)=0, Output=OR(0,0)=<strong>0</strong></p>
-        <p><strong>H2:</strong> SOP = A'.B.C' + A'.B.C + A.B.C' + A.B.C = B.(A'.C' + A'.C + A.C' + A.C) = <strong>B</strong></p>
+        <p><strong>H2:</strong> SOP = A'.B.C' + A'.B.C + A.B.C' + A.B.C (4 product terms — notice B=1 in every single one!)</p>
         <p><strong>H3:</strong> XOR(1,0)=1, 1.1=1, A'=0, 0.0=0, Output=1+0=<strong>1</strong></p>
         <p><strong>H4:</strong> P=A', W=NAND(A',B)=(A'.B)', X=A.C, Output = (A'.B)' + A.C</p>
         <p><strong>H5:</strong> F = A'.B'.C + A'.B.C' + A.B'.C' — exactly one is 1</p>
-        <p><strong>H6:</strong> F1: NAND(1,0)=1. F2: 1'+0'=0+1=1. Same! Because <strong>NAND = NOT(AND) = A'+B'</strong> (De Morgan's theorem!)</p>
+        <p><strong>H6:</strong> F1: NAND(1,0)=1. F2: 1'+0'=0+1=1. Same output! Try all 4 combinations — they always match. We'll learn WHY in Boolean Algebra (it's called De Morgan's theorem).</p>
     </div>
 </section>
 
@@ -1411,8 +1403,8 @@ C ──┘</div>
     <div style="font-size: 0.82em;">
         <p><strong>H7:</strong> Rows where F=1: (0,0,1), (0,1,1), (1,0,1), (1,1,0), (1,1,1). SOP = A'.B'.C + A'.B.C + A.B'.C + A.B.C' + A.B.C = <strong>A.B + C</strong></p>
         <p><strong>H8:</strong> P=NAND(1,1)=0, Q=NOR(0,1)=0, R=XOR(1,0)=1, S=NAND(0,0)=1, T=NOT(1)=0, Output=XOR(1,0)=<strong>1</strong></p>
-        <p><strong>H9:</strong> (1) A+B = NAND(NAND(A,A), NAND(B,B)) = 3 NANDs. (2) A.B+C = NAND(NAND(A,B), NAND(C,C)) = 3 NANDs.</p>
-        <p><strong>H10:</strong> SOP = A'.B'.C + A'.B.C' + A'.B.C + A.B'.C + A.B.C = <strong>A'.B + C</strong></p>
+        <p><strong>H9:</strong> (1) A+B = NAND(NAND(A,A), NAND(B,B)) = 3 NANDs. (2) NOR = OR + NOT = 3 NANDs + 1 NAND = 4 NANDs.</p>
+        <p><strong>H10:</strong> SOP = A'.B'.C + A'.B.C' + A'.B.C + A.B'.C + A.B.C (5 product terms)</p>
     </div>
 </section>
 
