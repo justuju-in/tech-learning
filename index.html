@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Justuju — Tech Learning</title>
+    <style>
+      :root {
+        --main-color: #2c3e50;
+        --accent-color: #8e44ad;
+        --border: #e0e0e0;
+        --muted: #7f8c8d;
+        --section-bg: #f8f9fa;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background: white;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2em 1em;
+      }
+      .container {
+        max-width: 600px;
+        width: 100%;
+      }
+      h1 {
+        color: var(--main-color);
+        font-size: 1.7em;
+        font-weight: 700;
+        margin-bottom: 0.15em;
+      }
+      .subtitle {
+        color: var(--muted);
+        font-size: 0.95em;
+        margin-bottom: 2.5em;
+      }
+
+      .module {
+        margin-bottom: 2em;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .module-header {
+        background: var(--section-bg);
+        padding: 0.8em 1.2em;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .module-header h2 {
+        font-size: 0.85em;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .module-header .badge {
+        font-size: 0.75em;
+        padding: 0.2em 0.6em;
+        border-radius: 20px;
+        background: #f3e5f5;
+        color: var(--accent-color);
+        font-weight: 600;
+      }
+      .module-header .badge.done {
+        background: #d4edda;
+        color: #27ae60;
+      }
+      .module-header .badge.current {
+        background: #fff3cd;
+        color: #e67e22;
+      }
+
+      .topic-list { list-style: none; }
+      .topic-list li { border-bottom: 1px solid var(--border); }
+      .topic-list li:last-child { border-bottom: none; }
+      .topic-list a {
+        display: flex;
+        align-items: center;
+        padding: 0.9em 1.2em;
+        color: var(--main-color);
+        text-decoration: none;
+        font-size: 0.95em;
+        transition: background 0.15s;
+      }
+      .topic-list a:hover { background: var(--section-bg); }
+      .topic-list .num {
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        line-height: 28px;
+        text-align: center;
+        border-radius: 50%;
+        background: var(--accent-color);
+        color: white;
+        font-size: 0.8em;
+        font-weight: 600;
+        margin-right: 1em;
+        flex-shrink: 0;
+      }
+      .topic-list .upcoming {
+        opacity: 0.4;
+        pointer-events: none;
+      }
+      .topic-list .upcoming .num {
+        background: #ccc;
+      }
+
+      .footer {
+        margin-top: 2em;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.8em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Justuju — Tech Learning</h1>
+      <p class="subtitle">Logic, Problem Solving & Programming</p>
+
+      <!-- Module 1: Number Systems -->
+      <div class="module">
+        <div class="module-header">
+          <h2>Module 1 — Number Systems</h2>
+          <span class="badge done">Done</span>
+        </div>
+        <ul class="topic-list">
+          <li><span class="upcoming"><span class="num">1</span> Number Systems & Counting</span></li>
+          <li><span class="upcoming"><span class="num">2</span> Binary Numbers & Conversions</span></li>
+          <li><span class="upcoming"><span class="num">3</span> 1's Complement & 2's Complement</span></li>
+        </ul>
+      </div>
+
+      <!-- Module 2: Logic Gates & Boolean Algebra -->
+      <div class="module">
+        <div class="module-header">
+          <h2>Module 2 — Logic Gates & Boolean Algebra</h2>
+          <span class="badge current">In Progress</span>
+        </div>
+        <ul class="topic-list">
+          <li><a href="logic-gates-practice.html"><span class="num">1</span> Logic Gates — Practice & Mastery</a></li>
+          <li><a href="boolean-algebra.html"><span class="num">2</span> Boolean Algebra</a></li>
+          <li><a href="karnaugh-maps.html"><span class="num">3</span> Karnaugh Maps (K-Maps)</a></li>
+        </ul>
+      </div>
+
+      <!-- Module 3: Flowcharts -->
+      <div class="module">
+        <div class="module-header">
+          <h2>Module 3 — Flowcharts & Problem Solving</h2>
+          <span class="badge current">In Progress</span>
+        </div>
+        <ul class="topic-list">
+          <li class="upcoming"><span class="upcoming"><span class="num">1</span> Introduction to Flowcharts</span></li>
+          <li class="upcoming"><span class="upcoming"><span class="num">2</span> Operators & Dry Runs</span></li>
+          <li class="upcoming"><span class="upcoming"><span class="num">3</span> Decision Making & Conditions</span></li>
+          <li class="upcoming"><span class="upcoming"><span class="num">4</span> Loops</span></li>
+        </ul>
+      </div>
+
+      <p class="footer">Justuju Team — Building Logic, One Step at a Time</p>
+    </div>
+  </body>
+</html>

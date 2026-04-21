@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Gates — Practice &amp; Mastery</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/theme/white.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/monokai.css">
+    <style>
+        :root {
+            --main-color: #2c3e50;
+            --accent-color: #3498db;
+            --light-bg: #f8f9fa;
+            --code-bg: #282c34;
+            --warning-color: #e67e22;
+            --success-color: #27ae60;
+        }
+        .reveal {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 28px;
+        }
+        .reveal .slides section { height: 100%; overflow-y: auto !important; }
+        .reveal .slides section.stack { overflow-y: visible !important; }
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            color: var(--main-color); font-weight: 600; text-transform: none; margin-bottom: 0.6em;
+        }
+        .reveal h1 { font-size: 2.2em; line-height: 1.2; }
+        .reveal h2 { font-size: 1.6em; }
+        .reveal h3 { font-size: 1.3em; margin-bottom: 0.4em; }
+        .reveal h4 { font-size: 1.05em; margin-bottom: 0.3em; }
+        .reveal section { text-align: left; height: 100%; }
+        .reveal .center-content { text-align: center; }
+        .reveal pre { margin: 0.7em auto; box-shadow: 0 5px 15px rgba(0,0,0,0.15); border-radius: 8px; font-size: 0.55em; line-height: 1.4; }
+        .reveal code { font-family: 'Monaco','Menlo','Ubuntu Mono','Consolas',monospace; padding: 0.1em 0.3em; background: var(--light-bg); border-radius: 3px; color: #e74c3c; }
+        .reveal pre code { background: var(--code-bg); color: #abb2bf; padding: 1em; border-radius: 8px; max-height: 420px; overflow: auto; }
+        .reveal .key-point { background: #fff3cd; border-left: 4px solid #ffc107; padding: 0.7em 1.1em; margin: 0.7em 0; border-radius: 4px; font-size: 0.85em; }
+        .reveal .warning-box { background: #ffe5e5; border-left: 4px solid var(--warning-color); padding: 0.7em 1.1em; margin: 0.7em 0; border-radius: 4px; font-size: 0.85em; }
+        .reveal .success-box { background: #d4edda; border-left: 4px solid var(--success-color); padding: 0.7em 1.1em; margin: 0.7em 0; border-radius: 4px; font-size: 0.85em; }
+        .reveal .info-box { background: #dae8fc; border-left: 4px solid #2980b9; padding: 0.7em 1.1em; margin: 0.7em 0; border-radius: 4px; font-size: 0.85em; }
+        .reveal .highlight { color: var(--accent-color); font-weight: 600; }
+        .reveal ul { margin: 0.7em 0; } .reveal li { margin: 0.3em 0; line-height: 1.5; }
+        .reveal ol { margin: 0.7em 0; } .reveal p { margin: 0.45em 0; }
+        .reveal blockquote { background: var(--light-bg); border-left: 4px solid var(--accent-color); padding: 0.7em 1.1em; margin: 0.7em 0; font-style: normal; border-radius: 4px; }
+        .reveal .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2em; margin: 0.7em 0; }
+        .reveal .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1em; margin: 0.7em 0; }
+        .reveal .card { background: var(--light-bg); padding: 0.8em 1em; border-radius: 8px; border-top: 4px solid var(--accent-color); }
+        .reveal .small { font-size: 0.78em; color: #6c757d; }
+        .reveal .mono { font-family: 'Monaco','Menlo',monospace; font-size: 0.78em; }
+        .reveal table { margin: 0.7em auto; border-collapse: collapse; font-size: 0.75em; width: 90%; }
+        .reveal table th { background: var(--main-color); color: white; padding: 0.5em 0.8em; }
+        .reveal table td { padding: 0.4em 0.8em; border: 1px solid #dee2e6; }
+        .reveal table tr:nth-child(even) { background: var(--light-bg); }
+        .big-q { font-size: 1.35em; font-weight: 600; color: var(--main-color); text-align: center; margin: 0.9em 0; line-height: 1.4; }
+        .circuit-box { background: #fff; border: 2px solid var(--accent-color); padding: 1em; border-radius: 8px; margin: 0.5em 0; font-family: 'Monaco','Menlo',monospace; font-size: 0.65em; line-height: 1.5; white-space: pre; }
+        .practice-q { background: #e8f4fd; border-left: 4px solid var(--accent-color); padding: 0.7em 1.1em; margin: 0.7em 0; border-radius: 4px; font-size: 0.9em; }
+        .answer-reveal { background: #d4edda; border-left: 4px solid var(--success-color); padding: 0.7em 1.1em; margin: 0.7em 0; border-radius: 4px; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ════════════════════════════════════════════════
+     TITLE
+═════════════════════════════════════════════════ -->
+<section class="center-content">
+    <h1>Logic Gates — Practice & Mastery</h1>
+    <p style="font-size: 1.3em; color: #555;">Let's <span class="highlight">really</span> understand gates!</p>
+    <br>
+    <p class="small">7 gates. Infinite combinations. Let's build mastery.</p>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     TODAY'S PLAN
+═════════════════════════════════════════════════ -->
+<section>
+    <h2>Today's Plan</h2>
+    <p>Today we'll <strong>work</strong> with gates — not just remember them, but actually <em>use</em> them:</p>
+    <ol>
+        <li class="fragment">Quick Recap — all gates at a glance</li>
+        <li class="fragment">What's inside a computer? — the story of chips and gates</li>
+        <li class="fragment">Universal Gates — build everything from just one gate</li>
+        <li class="fragment">Circuit Tracing — read a circuit, find the output</li>
+        <li class="fragment">Truth Table to Expression — look at a table, write the formula</li>
+        <li class="fragment">Expression to Circuit — look at a formula, draw the circuit</li>
+        <li class="fragment">Lots and lots of practice problems!</li>
+    </ol>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     SECTION 1: QUICK RECAP
+═════════════════════════════════════════════════ -->
+<section>
+    <h2>Recap: All Gates at a Glance</h2>
+    <table style="font-size: 0.65em; width: 100%;">
+        <tr>
+            <th>Gate</th>
+            <th>Expression</th>
+            <th>0,0</th>
+            <th>0,1</th>
+            <th>1,0</th>
+            <th>1,1</th>
+            <th>How to remember</th>
+        </tr>
+        <tr>
+            <td><strong>AND</strong></td>
+            <td>A . B</td>
+            <td>0</td><td>0</td><td>0</td><td>1</td>
+            <td>Both must be 1</td>
+        </tr>
+        <tr>
+            <td><strong>OR</strong></td>
+            <td>A + B</td>
+            <td>0</td><td>1</td><td>1</td><td>1</td>
+            <td>At least one is 1</td>
+        </tr>
+        <tr>
+            <td><strong>NOT</strong></td>
+            <td>A'</td>
+            <td colspan="2">0 &rarr; 1</td><td colspan="2">1 &rarr; 0</td>
+            <td>Flip it</td>
+        </tr>
+        <tr>
+            <td><strong>XOR</strong></td>
+            <td>A &oplus; B</td>
+            <td>0</td><td>1</td><td>1</td><td>0</td>
+            <td>Must be different</td>
+        </tr>
+        <tr>
+            <td><strong>NAND</strong></td>
+            <td>(A . B)'</td>
+            <td>1</td><td>1</td><td>1</td><td>0</td>
+            <td>Opposite of AND</td>
+        </tr>
+        <tr>
+            <td><strong>NOR</strong></td>
+            <td>(A + B)'</td>
+            <td>1</td><td>0</td><td>0</td><td>0</td>
+            <td>Opposite of OR</td>
+        </tr>
+        <tr>
+            <td><strong>XNOR</strong></td>
+            <td>(A &oplus; B)'</td>
+            <td>1</td><td>0</td><td>0</td><td>1</td>
+            <td>Must be the same</td>
+        </tr>
+    </table>
+    <div class="key-point" style="margin-top:0.5em;">
+        <strong>Tip:</strong> You don't need to memorize all of them! If you know AND and OR, then NAND = opposite of AND, NOR = opposite of OR. That's it.
+    </div>
+</section>
+
+<!-- Quick Fire Round 1 -->
+<section>
+    <h2>Quick Fire Round!</h2>
+    <p>What's the output? Think first, then check the answer.</p>
+
+    <div class="two-col">
+        <div>
+            <div class="practice-q">
+                <p><strong>Q1:</strong> <code>1 AND 0</code> = ?</p>
+                <p class="fragment answer-reveal"><strong>0</strong> — both must be 1!</p>
+            </div>
+            <div class="practice-q">
+                <p><strong>Q2:</strong> <code>1 OR 0</code> = ?</p>
+                <p class="fragment answer-reveal"><strong>1</strong> — at least one is 1</p>
+            </div>
+            <div class="practice-q">
+                <p><strong>Q3:</strong> <code>NOT 1</code> = ?</p>
+                <p class="fragment answer-reveal"><strong>0</strong> — flip it!</p>
+            </div>
+        </div>
+        <div>
+            <div class="practice-q">
+                <p><strong>Q4:</strong> <code>1 XOR 1</code> = ?</p>
+                <p class="fragment answer-reveal"><strong>0</strong> — they're the same, so 0</p>
+            </div>
+            <div class="practice-q">
+                <p><strong>Q5:</strong> <code>0 NAND 0</code> = ?</p>
+                <p class="fragment answer-reveal"><strong>1</strong> — AND(0,0)=0, flip it = <strong>1</strong></p>
+            </div>
+            <div class="practice-q">
+                <p><strong>Q6:</strong> <code>0 NOR 1</code> = ?</p>
+                <p class="fragment answer-reveal"><strong>0</strong> — OR(0,1)=1, flip it = <strong>0</strong></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Fire Level 2 -->
+<section>
+    <h2>Quick Fire — Level 2</h2>
+    <p>These need a bit more thinking...</p>
+
+    <div class="practice-q">
+        <p><strong>Q1:</strong> <code>NOT(1 AND 1)</code> = ?</p>
+        <p class="fragment answer-reveal"><strong>0</strong> — AND gives 1, NOT makes it <strong>0</strong>. (This is just NAND!)</p>
+    </div>
+    <div class="practice-q">
+        <p><strong>Q2:</strong> <code>NOT(0 OR 0)</code> = ?</p>
+        <p class="fragment answer-reveal"><strong>1</strong> — OR gives 0, NOT makes it <strong>1</strong>. (This is NOR!)</p>
+    </div>
+    <div class="practice-q">
+        <p><strong>Q3:</strong> <code>(1 NAND 0) AND (0 NOR 0)</code> = ?</p>
+        <p class="fragment answer-reveal">NAND(1,0) = <strong>1</strong>, NOR(0,0) = <strong>1</strong>, AND(1,1) = <strong>1</strong></p>
+    </div>
+    <div class="practice-q">
+        <p><strong>Q4:</strong> <code>1 XOR 0 AND 1</code> — How does this evaluate?</p>
+        <p class="fragment answer-reveal">AND goes first (higher precedence): <code>0 AND 1 = 0</code>, then <code>1 XOR 0 = <strong>1</strong></code></p>
+    </div>
+    <div class="fragment key-point">
+        <strong>Remember precedence:</strong> NOT &gt; AND &gt; OR/XOR. Use <strong>brackets</strong> to avoid confusion!
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     SECTION 2: WHAT'S INSIDE A COMPUTER?
+═════════════════════════════════════════════════ -->
+<section>
+    <h2>What's Inside a Computer?</h2>
+
+    <p>You've used phones, laptops, computers. But have you ever wondered <strong>what's inside</strong> that makes everything work?</p>
+
+    <div class="fragment" style="margin-top: 0.8em;">
+        <p>Inside there's a tiny chip called a <strong>processor</strong> or <strong>CPU</strong>. This chip is incredibly small — smaller than your fingernail!</p>
+    </div>
+
+    <div class="fragment" style="margin-top: 0.8em;">
+        <p>Now the real question — <strong>what's inside this tiny chip?</strong></p>
+    </div>
+
+    <div class="fragment key-point">
+        <strong>Answer:</strong> Millions and millions of tiny switches. These switches are the <strong>logic gates</strong> we've been learning — the very same AND, OR, NOT!
+    </div>
+
+    <div class="fragment info-box">
+        A modern phone's processor has about <strong>15 billion gates</strong> inside it! All of them working together to do addition, subtraction, comparison — everything.
+    </div>
+</section>
+
+<!-- Chip visual explanation -->
+<section>
+    <h2>What Does a Chip Look Like?</h2>
+
+    <div class="two-col">
+        <div>
+            <p>From the outside, a chip looks like a small black square with silver pins.</p>
+            <p class="fragment" style="margin-top:0.6em;">But if you zoom in with a <strong>microscope</strong>, you'd see tiny tiny wires and switches — all arranged in a pattern.</p>
+            <p class="fragment" style="margin-top:0.6em;">These switches are the gates — AND, OR, NOT, NAND, NOR...</p>
+        </div>
+        <div style="text-align: center;">
+            <div style="background: #1a1a2e; color: #e0e0e0; padding: 1.5em; border-radius: 12px; font-family: monospace; font-size: 0.6em; line-height: 1.8; text-align: left;">
+                ┌─────────────────────┐<br>
+                │ &nbsp;╔═╗ ╔═╗ ╔═╗ ╔═╗ &nbsp;│<br>
+                │ &nbsp;║G║─║G║─║G║─║G║ &nbsp;│<br>
+                │ &nbsp;╚═╝ ╚═╝ ╚═╝ ╚═╝ &nbsp;│<br>
+                │ &nbsp;&nbsp;│ &nbsp;&nbsp;│ &nbsp;&nbsp;│ &nbsp;&nbsp;│ &nbsp;&nbsp;│<br>
+                │ &nbsp;╔═╗ ╔═╗ ╔═╗ ╔═╗ &nbsp;│<br>
+                │ &nbsp;║G║─║G║─║G║─║G║ &nbsp;│<br>
+                │ &nbsp;╚═╝ ╚═╝ ╚═╝ ╚═╝ &nbsp;│<br>
+                │ &nbsp;&nbsp;│ &nbsp;&nbsp;│ &nbsp;&nbsp;│ &nbsp;&nbsp;│ &nbsp;&nbsp;│<br>
+                │ &nbsp;╔═╗ ╔═╗ ╔═╗ ╔═╗ &nbsp;│<br>
+                │ &nbsp;║G║─║G║─║G║─║G║ &nbsp;│<br>
+                │ &nbsp;╚═╝ ╚═╝ ╚═╝ ╚═╝ &nbsp;│<br>
+                └─────────────────────┘<br>
+                <span style="color: #ffc107;">&nbsp;G = Gate (AND/OR/NOT...)</span>
+            </div>
+            <p class="small">Inside a chip: millions of gates connected together</p>
+        </div>
+    </div>
+</section>
+
+<!-- The Factory Problem -->
+<section>
+    <h2>The Factory Problem: 7 Types vs 1 Type</h2>
+
+    <p>Now think about this — a company needs to manufacture this chip. They need to put <strong>billions of gates</strong> inside it.</p>
+
+    <div class="fragment warning-box">
+        <strong>Problem:</strong> If the chip uses 7 different types of gates (AND, OR, NOT, XOR, NAND, NOR, XNOR), then:
+        <ul>
+            <li>The factory needs <strong>7 different machines</strong> — one for each gate type</li>
+            <li><strong>7 different designs</strong> need to be tested</li>
+            <li>If there's a defect in one type, it's hard to find — <strong>check 7 places</strong></li>
+            <li>The cost goes way up!</li>
+        </ul>
+    </div>
+
+    <div class="fragment">
+        <div class="big-q">What if we could use <em>just ONE type</em> of gate to build ALL the others?</div>
+    </div>
+
+    <div class="fragment success-box">
+        <strong>Yes we can!</strong> If you only manufacture NAND gates — one machine, one design, one testing process. Then use NAND to build AND, OR, NOT, XOR — everything!<br>
+        This makes chips <strong>cheaper, simpler, and more reliable</strong>.
+    </div>
+</section>
+
+<!-- This is why they're called universal -->
+<section>
+    <h2>That's Why NAND and NOR Are Called "Universal"</h2>
+
+    <p>In the real world, most chips are built using only NAND gates!</p>
+
+    <div class="fragment info-box">
+        <strong>Fun fact:</strong> NAND gates are the easiest to manufacture on silicon (the material chips are made of). That's why NAND is the most popular gate in the industry.
+    </div>
+
+    <div class="fragment">
+        <p style="margin-top:0.8em;">We already know that NAND can build everything. Let's review how:</p>
+    </div>
+
+    <div class="fragment key-point">
+        <strong>Universal Gate = </strong> A gate that can be used to build <strong>any other gate</strong>. Both NAND and NOR are universal.
+    </div>
+</section>
+
+<!-- NAND builds everything -->
+<section>
+    <h2>NAND Builds Everything!</h2>
+    <p>Here's how basic gates are built from NAND:</p>
+
+    <div class="three-col">
+        <div class="card fragment">
+            <h4>NOT from NAND</h4>
+            <div class="circuit-box">A ──┐
+    ├── NAND ── A'
+A ──┘</div>
+            <p class="small">Give both inputs the same value!<br><code>NAND(A,A) = (A.A)' = A'</code></p>
+        </div>
+        <div class="card fragment">
+            <h4>AND from NAND</h4>
+            <div class="circuit-box">A ──┐
+    ├── NAND ── W ──┐
+B ──┘               ├── NAND ── A.B
+                W ──┘</div>
+            <p class="small">NAND the output again (as NOT)<br><code>((A.B)')' = A.B</code></p>
+        </div>
+        <div class="card fragment">
+            <h4>OR from NAND</h4>
+            <div class="circuit-box">A ──┐
+    ├── NAND ── P ──┐
+A ──┘               ├── NAND ── A+B
+B ──┐               │
+    ├── NAND ── Q ──┘
+B ──┘</div>
+            <p class="small">First NOT both, then NAND:<br><code>NAND(A',B') = A+B</code></p>
+        </div>
+    </div>
+</section>
+
+<!-- NOR builds everything -->
+<section>
+    <h2>NOR Builds Everything Too!</h2>
+    <p>The same thing works with NOR:</p>
+
+    <div class="three-col">
+        <div class="card fragment">
+            <h4>NOT from NOR</h4>
+            <div class="circuit-box">A ──┐
+    ├── NOR ── A'
+A ──┘</div>
+            <p class="small">Same trick! Both inputs the same.<br><code>NOR(A,A) = (A+A)' = A'</code></p>
+        </div>
+        <div class="card fragment">
+            <h4>OR from NOR</h4>
+            <div class="circuit-box">A ──┐
+    ├── NOR ── W ──┐
+B ──┘              ├── NOR ── A+B
+               W ──┘</div>
+            <p class="small">NOR the output again (as NOT):<br><code>((A+B)')' = A+B</code></p>
+        </div>
+        <div class="card fragment">
+            <h4>AND from NOR</h4>
+            <div class="circuit-box">A ──┐
+    ├── NOR ── P ──┐
+A ──┘              ├── NOR ── A.B
+B ──┐              │
+    ├── NOR ── Q ──┘
+B ──┘</div>
+            <p class="small">First NOT both, then NOR:<br><code>NOR(A',B') = A.B</code></p>
+        </div>
+    </div>
+</section>
+
+<!-- Challenge: XOR from NAND -->
+<section>
+    <h2>Challenge: XOR Using Only NAND!</h2>
+    <p>This is a tough one. Think first, then check the answer.</p>
+
+    <div class="practice-q">
+        <p><strong>XOR formula:</strong> <code>A &oplus; B = A.B' + A'.B</code></p>
+        <p>How would you build this using only NAND gates?</p>
+    </div>
+
+    <div class="fragment">
+        <p><strong>Hint:</strong> You'll need 4 NAND gates.</p>
+    </div>
+
+    <div class="fragment">
+        <p><strong>Steps:</strong></p>
+        <ol>
+            <li>W = NAND(A, B)</li>
+            <li>X = NAND(A, W)</li>
+            <li>Y = NAND(W, B)</li>
+            <li>Output = NAND(X, Y)</li>
+        </ol>
+    </div>
+
+    <div class="fragment success-box">
+        <strong>Verify it!</strong> Check every input combination (00, 01, 10, 11) and confirm the output matches XOR.
+    </div>
+</section>
+
+<!-- Verify XOR from NAND -->
+<section>
+    <h2>Verification: XOR from NAND</h2>
+    <p>W=NAND(A,B), X=NAND(A,W), Y=NAND(W,B), Out=NAND(X,Y)</p>
+
+    <table>
+        <tr><th>A</th><th>B</th><th>W</th><th>X</th><th>Y</th><th>Output</th><th>XOR?</th></tr>
+        <tr class="fragment"><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td><strong>0</strong></td><td>0 &#10003;</td></tr>
+        <tr class="fragment"><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td><strong>1</strong></td><td>1 &#10003;</td></tr>
+        <tr class="fragment"><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td><strong>1</strong></td><td>1 &#10003;</td></tr>
+        <tr class="fragment"><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td><strong>0</strong></td><td>0 &#10003;</td></tr>
+    </table>
+
+    <div class="fragment success-box">
+        Everything matches! Just 4 NAND gates give us XOR. <strong>NAND is truly universal!</strong>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     SECTION 3: CIRCUIT TRACING — WHY
+═════════════════════════════════════════════════ -->
+<section>
+    <h2>Circuit Tracing: What Is It and Why?</h2>
+
+    <p>So far we've been finding the output of one gate at a time. But in real circuits, <strong>gates are connected to each other</strong> — the output of one gate becomes the input of another.</p>
+
+    <div class="fragment" style="margin-top: 0.6em;">
+        <div class="circuit-box">A ──┐
+    ├── AND ── W ──┐
+B ──┘              ├── OR ── Output
+C ─────────────────┘</div>
+        <p>"What does this circuit do? What will the output be?"</p>
+    </div>
+
+    <div class="fragment info-box">
+        <strong>Circuit tracing</strong> = start from the inputs, find each gate's output step by step, and work your way to the final answer.
+    </div>
+
+    <div class="fragment key-point">
+        <strong>Why is this important?</strong> When you write complex conditions in flowcharts — <code>if ((a AND b) OR c)</code> — you need to evaluate them step by step. Circuit tracing is exactly that skill!
+    </div>
+</section>
+
+<!-- Circuit Trace #1: Easy -->
+<section>
+    <h2>Circuit Trace #1 (Easy)</h2>
+    <div class="circuit-box">
+Inputs: A = 1, B = 0
+
+A ─���┐
+    ├── AND ── W ──┐
+B ──┘              ├── OR ── Output
+A ─────────────────┘</div>
+
+    <div class="practice-q"><p><strong>What's the output?</strong></p></div>
+
+    <div class="fragment"><p><strong>Step 1:</strong> W = AND(A, B) = AND(1, 0) = <code>0</code></p></div>
+    <div class="fragment"><p><strong>Step 2:</strong> Output = OR(W, A) = OR(0, 1) = <code>1</code></p></div>
+    <div class="fragment success-box"><strong>Output = 1</strong></div>
+</section>
+
+<!-- Circuit Trace #2: Medium -->
+<section>
+    <h2>Circuit Trace #2 (Medium)</h2>
+    <div class="circuit-box">
+Inputs: A = 1, B = 1, C = 0
+
+A ──┐
+    ├── AND ── W ──┐
+B ──┘              ├── XOR ── Output
+C ──── NOT ── X ───┘</div>
+
+    <div class="practice-q"><p><strong>Trace it step by step. What's the output?</strong></p></div>
+
+    <div class="fragment"><p><strong>Step 1:</strong> W = AND(1, 1) = <code>1</code></p></div>
+    <div class="fragment"><p><strong>Step 2:</strong> X = NOT(0) = <code>1</code></p></div>
+    <div class="fragment"><p><strong>Step 3:</strong> Output = XOR(1, 1) = <code>0</code></p></div>
+    <div class="fragment success-box"><strong>Output = 0</strong> — in XOR, if both are the same, the output is 0!</div>
+</section>
+
+<!-- Circuit Trace #3: Harder -->
+<section>
+    <h2>Circuit Trace #3 (Harder)</h2>
+    <div class="circuit-box">
+Inputs: A = 0, B = 1, C = 1
+
+A ──── NOT ── P ──┐
+                  ├── AND ── R ──┐
+B ────────────────┘              │
+                                 ├── OR ── Output
+B ──┐                            │
+    ├── NAND ── Q ───────────────┘
+C ──┘</div>
+
+    <div class="practice-q"><p><strong>Trace it!</strong></p></div>
+
+    <div class="fragment"><p><strong>Step 1:</strong> P = NOT(0) = <code>1</code></p></div>
+    <div class="fragment"><p><strong>Step 2:</strong> Q = NAND(1, 1) = <code>0</code></p></div>
+    <div class="fragment"><p><strong>Step 3:</strong> R = AND(1, 1) = <code>1</code></p></div>
+    <div class="fragment"><p><strong>Step 4:</strong> Output = OR(1, 0) = <code>1</code></p></div>
+    <div class="fragment success-box"><strong>Output = 1</strong></div>
+</section>
+
+<!-- Circuit Trace #4: 4 inputs -->
+<section>
+    <h2>Circuit Trace #4 (4 Inputs)</h2>
+    <div class="circuit-box">
+Inputs: A = 1, B = 0, C = 1, D = 0
+
+A ──┐
+    ├── NAND ── P ──┐
+B ──┘               ├── OR ── S ──┐
+C ──┐               │             │
+    ├── NOR ── Q ───┘             ├── XOR ── Output
+D ──┘                             │
+A ──┐                             │
+    ├── AND ── R ─────────────────┘
+D ──┘</div>
+
+    <div class="practice-q"><p><strong>Solve it step by step!</strong></p></div>
+
+    <div class="fragment"><p>P = NAND(1,0) = <code>1</code> &nbsp;|&nbsp; Q = NOR(1,0) = <code>0</code> &nbsp;|&nbsp; R = AND(1,0) = <code>0</code></p></div>
+    <div class="fragment"><p>S = OR(1, 0) = <code>1</code></p></div>
+    <div class="fragment"><p>Output = XOR(1, 0) = <code>1</code></p></div>
+    <div class="fragment success-box"><strong>Output = 1</strong></div>
+</section>
+
+<!-- Circuit Trace #5: Derive Expression -->
+<section>
+    <h2>Circuit Trace #5: Find the Expression</h2>
+    <p>No numbers this time — <strong>variables</strong>. Write the Boolean expression for the output.</p>
+    <div class="circuit-box">
+A ──┐
+    ├── OR ── W ──┐
+B ──┘             ├── AND ── Output
+A ──── NOT ── X ──┘</div>
+
+    <div class="practice-q"><p><strong>What's the output expression?</strong></p></div>
+
+    <div class="fragment"><p><strong>Step 1:</strong> W = A + B (OR)</p></div>
+    <div class="fragment"><p><strong>Step 2:</strong> X = A' (NOT)</p></div>
+    <div class="fragment"><p><strong>Step 3:</strong> Output = W . X = <code>(A + B) . A'</code></p></div>
+    <div class="fragment info-box">
+        Simplify: (A + B).A' = A.A' + B.A' = 0 + A'.B = <strong>A'.B</strong>
+        <br>Meaning: Output is 1 only when A=0 and B=1.
+    </div>
+</section>
+
+<!-- Circuit Trace #6: 3 Variable Expression -->
+<section>
+    <h2>Circuit Trace #6: 3-Variable Expression</h2>
+    <div class="circuit-box">
+A ──┐
+    ├── AND ── W ──┐
+B ──┘              │
+                   ├── OR ── R ──┐
+C ──── NOT ── X ───┘             ├── AND ── Output
+                                 │
+A ──┐                            │
+    ├── XOR ── Y ────────────────┘
+C ──┘</div>
+
+    <div class="practice-q"><p><strong>What's the output expression?</strong></p></div>
+
+    <div class="fragment"><p>W = A.B &nbsp;&nbsp;|&nbsp;&nbsp; X = C' &nbsp;&nbsp;|&nbsp;&nbsp; Y = A &oplus; C</p></div>
+    <div class="fragment"><p>R = W + X = A.B + C'</p></div>
+    <div class="fragment"><p><strong>Output = R . Y = (A.B + C') . (A &oplus; C)</strong></p></div>
+    <div class="fragment key-point">
+        Being able to write the expression is the key skill! We'll learn how to simplify these in the Boolean Algebra lesson.
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     SECTION 4: TRUTH TABLE → EXPRESSION (SOP)
+═════════════════════════════════════════════════ -->
+<section>
+    <h2>Truth Table to Expression — Why?</h2>
+
+    <div class="big-q">You know WHEN the output should be 1. But how do you write it as a <em>formula</em>?</div>
+
+    <div class="fragment" style="margin-top: 0.8em;">
+        <p>Imagine you've decided that a light should turn ON when:</p>
+        <ul>
+            <li>Switch A is ON <strong>and</strong> Switch B is OFF, <strong>or</strong></li>
+            <li>Both switches are ON</li>
+        </ul>
+        <p>You've made the truth table. But now you need to explain this to someone, or write it in code, or build a circuit — you need <strong>a formula</strong>.</p>
+    </div>
+
+    <div class="fragment key-point">
+        <strong>Truth Table &rarr; Expression</strong> means: "I know WHAT I want. Now I can express HOW."
+    </div>
+</section>
+
+<!-- SOP Method -->
+<section>
+    <h2>Sum of Products (SOP) Method</h2>
+
+    <div class="info-box">
+        <strong>3 Simple Steps:</strong>
+        <ol>
+            <li>Find all rows where the output = <strong>1</strong></li>
+            <li>For each such row, write a <strong>product term</strong> (AND) — where the input is 0, put NOT; where it's 1, write it directly</li>
+            <li>Join all product terms with <strong>OR (+)</strong></li>
+        </ol>
+    </div>
+
+    <div class="fragment" style="margin-top: 0.8em;">
+        <p><strong>Why "Sum of Products"?</strong></p>
+        <ul>
+            <li>"Products" = AND terms (A.B is called a product)</li>
+            <li>"Sum" = joining with OR (A+B is called a sum in Boolean algebra)</li>
+        </ul>
+    </div>
+</section>
+
+<!-- SOP Example 1 -->
+<section>
+    <h2>SOP Example: Step by Step</h2>
+    <div class="two-col">
+        <div>
+            <table>
+                <tr><th>A</th><th>B</th><th>Output</th></tr>
+                <tr><td>0</td><td>0</td><td>0</td></tr>
+                <tr style="background: #d4edda;"><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+                <tr style="background: #d4edda;"><td>1</td><td>0</td><td><strong>1</strong></td></tr>
+                <tr><td>1</td><td>1</td><td>0</td></tr>
+            </table>
+        </div>
+        <div>
+            <div class="fragment">
+                <p><strong>Step 1:</strong> Where is output=1?<br>Row 2 (A=0, B=1) and Row 3 (A=1, B=0)</p>
+            </div>
+            <div class="fragment">
+                <p><strong>Step 2:</strong> Product terms:</p>
+                <ul>
+                    <li>Row 2: A=0, B=1 &rarr; <code>A'.B</code></li>
+                    <li>Row 3: A=1, B=0 &rarr; <code>A.B'</code></li>
+                </ul>
+            </div>
+            <div class="fragment">
+                <p><strong>Step 3:</strong> OR them together:</p>
+                <p style="font-size:1.1em;"><code>F = A'.B + A.B'</code></p>
+            </div>
+            <div class="fragment success-box">
+                Wait — that's <strong>XOR</strong>! A &oplus; B
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SOP Practice 1 -->
+<section>
+    <h2>SOP Practice #1</h2>
+    <div class="two-col">
+        <div>
+            <table>
+                <tr><th>A</th><th>B</th><th>Output</th></tr>
+                <tr><td>0</td><td>0</td><td>1</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td></tr>
+            </table>
+            <p class="practice-q"><strong>Write the expression!</strong></p>
+        </div>
+        <div>
+            <div class="fragment">
+                <p><strong>Output=1 rows:</strong></p>
+                <ul>
+                    <li>Row 1: A=0, B=0 &rarr; <code>A'.B'</code></li>
+                    <li>Row 4: A=1, B=1 &rarr; <code>A.B</code></li>
+                </ul>
+            </div>
+            <div class="fragment">
+                <p><strong>SOP:</strong> <code>F = A'.B' + A.B</code></p>
+            </div>
+            <div class="fragment success-box">
+                Recognize it? This is <strong>XNOR</strong>! Output is 1 when both are the same.
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SOP Practice 2: 3 variables -->
+<section>
+    <h2>SOP Practice #2: 3 Variables</h2>
+    <div class="two-col">
+        <div>
+            <table>
+                <tr><th>A</th><th>B</th><th>C</th><th>Output</th></tr>
+                <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+            </table>
+        </div>
+        <div>
+            <div class="practice-q"><p><strong>Write the SOP expression!</strong></p></div>
+            <div class="fragment">
+                <p><strong>Output=1 rows:</strong></p>
+                <ul>
+                    <li>(0,0,1) &rarr; <code>A'.B'.C</code></li>
+                    <li>(1,0,1) &rarr; <code>A.B'.C</code></li>
+                    <li>(1,1,1) &rarr; <code>A.B.C</code></li>
+                </ul>
+            </div>
+            <div class="fragment">
+                <p><strong>SOP:</strong> <code>F = A'.B'.C + A.B'.C + A.B.C</code></p>
+            </div>
+            <div class="fragment info-box">
+                See the pattern? Output is 1 when C=1 and (B=0 or A=1). Simplified: <strong>F = C.(A + B')</strong>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SOP Practice 3 -->
+<section>
+    <h2>SOP Practice #3: Your Turn!</h2>
+    <div class="two-col">
+        <div>
+            <table>
+                <tr><th>A</th><th>B</th><th>C</th><th>Output</th></tr>
+                <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+            </table>
+        </div>
+        <div>
+            <div class="practice-q"><p><strong>Try it yourself first!</strong></p></div>
+            <div class="fragment">
+                <p><strong>Output=1 rows:</strong></p>
+                <ul>
+                    <li>(0,1,1) &rarr; A'.B.C</li>
+                    <li>(1,0,1) &rarr; A.B'.C</li>
+                    <li>(1,1,0) &rarr; A.B.C'</li>
+                    <li>(1,1,1) &rarr; A.B.C</li>
+                </ul>
+            </div>
+            <div class="fragment">
+                <p><strong>F = A'.B.C + A.B'.C + A.B.C' + A.B.C</strong></p>
+            </div>
+            <div class="fragment key-point">
+                <strong>Pattern:</strong> Output is 1 when <em>at least 2 of the 3 inputs are 1</em>. This is a "majority function"!
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     SECTION 5: EXPRESSION → CIRCUIT — WHY
+═════════════════════════════════════════════════ -->
+<section>
+    <h2>Expression to Circuit — Why?</h2>
+
+    <p>You now have a formula: <code>F = A'.B + C</code></p>
+
+    <div class="fragment">
+        <p>But what if you need to <strong>actually build it</strong>? Or explain to someone step-by-step — "first do this, then do that"?</p>
+    </div>
+
+    <div class="fragment info-box">
+        <strong>A circuit is a roadmap.</strong> Just like a flowchart shows step-by-step how data flows, a circuit diagram shows <strong>how signals flow from inputs to output</strong>.
+    </div>
+
+    <div class="fragment key-point">
+        <strong>Expression &rarr; Circuit</strong> means: "I know the formula. Now I can show STEP BY STEP what to do."
+    </div>
+</section>
+
+<!-- Expression → Circuit: How to approach -->
+<section>
+    <h2>Approach: Expression to Circuit</h2>
+
+    <div class="info-box">
+        <strong>Steps:</strong>
+        <ol>
+            <li>Read the expression — what operations (AND, OR, NOT) are there?</li>
+            <li><strong>Work from inside out</strong> — brackets/NOT first, then AND, then OR</li>
+            <li>Draw a gate for each operation</li>
+            <li>Connect the gates with wires</li>
+        </ol>
+    </div>
+</section>
+
+<!-- Expression → Circuit: Example -->
+<section>
+    <h2>Example: <code>F = A'.B + C</code></h2>
+    <p><strong>Which gates do we need?</strong></p>
+    <div class="fragment"><p>NOT (for A), AND (for A'.B), OR (for result + C)</p></div>
+
+    <div class="fragment">
+        <div class="circuit-box">
+A ──── NOT ── A' ──┐
+                   ├── AND ── (A'.B) ──┐
+B ─────────────────┘                   ├── OR ── F
+                                       │
+C ─────────────────────────────────────┘</div>
+    </div>
+
+    <div class="fragment">
+        <p><strong>Verify:</strong> A=0, B=1, C=0 &rarr; A'=1, A'.B=1, F=1+0=<strong>1</strong> &#10003;</p>
+        <p>A=1, B=1, C=0 &rarr; A'=0, A'.B=0, F=0+0=<strong>0</strong> &#10003;</p>
+    </div>
+</section>
+
+<!-- Expression → Circuit: Practice -->
+<section>
+    <h2>Practice: Expression to Circuit</h2>
+
+    <div class="practice-q">
+        <p><strong>Q1:</strong> Draw the circuit for: <code>F = (A + B) . (A' + C)</code></p>
+    </div>
+
+    <div class="fragment">
+        <div class="circuit-box">
+A ──┐
+    ├── OR ── W ──┐
+B ──┘             │
+                  ├── AND ── F
+A ── NOT ── A' ──┐│
+                 ├── OR ── X ──┘
+C ───────────────┘</div>
+    </div>
+
+    <div class="fragment practice-q">
+        <p><strong>Q2:</strong> Draw the circuit for: <code>F = A.(B &oplus; C)</code></p>
+    </div>
+
+    <div class="fragment">
+        <div class="circuit-box">
+B ──┐
+    ├── XOR ── W ──┐
+C ──┘              ├── AND ��─ F
+A ─────────────────┘</div>
+        <p class="small">Simple! XOR gate + AND gate. Done.</p>
+    </div>
+</section>
+
+<!-- Expression → Circuit: Harder -->
+<section>
+    <h2>Practice: A Bit Harder</h2>
+
+    <div class="practice-q">
+        <p><strong>Q3:</strong> Draw the circuit for: <code>F = (A.B)' + (C.D)'</code></p>
+        <p class="small">Hint: (X)' means NAND!</p>
+    </div>
+
+    <div class="fragment">
+        <div class="circuit-box">
+A ──┐
+    ├── NAND ── W ──┐
+B ──┘               ├── OR ── F
+C ──┐               │
+    ├── NAND ── X ──┘
+D ──┘</div>
+    </div>
+
+    <div class="fragment key-point">
+        <strong>Notice:</strong> (A.B)' is just a NAND gate! So instead of writing NOT-AND separately, you can directly use a NAND gate.
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     SECTION 6: PRACTICE PROBLEMS — LOTS OF THEM!
+═════════════════════════════════════════════════ -->
+<section class="center-content">
+    <h1>Practice Time!</h1>
+    <p style="font-size: 1.2em; color: #555;">Now for lots of problems. Practice these every week.</p>
+    <p class="small">Problems are organized by category — easy to hard.</p>
+</section>
+
+<!-- SET A: Quick Fire Gate Evaluation -->
+<section>
+    <h2>Set A: Gate Evaluation (20 Problems)</h2>
+    <p>Write the output for each. <strong>How many can you solve in one minute?</strong></p>
+
+    <div class="two-col" style="font-size: 0.82em;">
+        <div>
+            <ol>
+                <li><code>1 AND 1</code> = <span class="fragment" style="color:var(--success-color);"><strong>1</strong></span></li>
+                <li><code>0 OR 0</code> = <span class="fragment" style="color:var(--success-color);"><strong>0</strong></span></li>
+                <li><code>NOT 0</code> = <span class="fragment" style="color:var(--success-color);"><strong>1</strong></span></li>
+                <li><code>1 NAND 1</code> = <span class="fragment" style="color:var(--success-color);"><strong>0</strong></span></li>
+                <li><code>0 NOR 1</code> = <span class="fragment" style="color:var(--success-color);"><strong>0</strong></span></li>
+                <li><code>1 XOR 0</code> = <span class="fragment" style="color:var(--success-color);"><strong>1</strong></span></li>
+                <li><code>0 XNOR 0</code> = <span class="fragment" style="color:var(--success-color);"><strong>1</strong></span></li>
+                <li><code>1 NAND 0</code> = <span class="fragment" style="color:var(--success-color);"><strong>1</strong></span></li>
+                <li><code>NOT(1 OR 0)</code> = <span class="fragment" style="color:var(--success-color);"><strong>0</strong></span></li>
+                <li><code>NOT(0 AND 1)</code> = <span class="fragment" style="color:var(--success-color);"><strong>1</strong></span></li>
+            </ol>
+        </div>
+        <div>
+            <ol start="11">
+                <li><code>1 NOR 1</code> = <span class="fragment" style="color:var(--success-color);"><strong>0</strong></span></li>
+                <li><code>0 XOR 0</code> = <span class="fragment" style="color:var(--success-color);"><strong>0</strong></span></li>
+                <li><code>1 AND 0 OR 1</code> = <span class="fragment" style="color:var(--success-color);"><strong>1</strong></span></li>
+                <li><code>NOT(1 NAND 0)</code> = <span class="fragment" style="color:var(--success-color);"><strong>0</strong></span></li>
+                <li><code>(0 OR 1) AND (1 OR 0)</code> = <span class="fragment" style="color:var(--success-color);"><strong>1</strong></span></li>
+                <li><code>(1 AND 0) OR (0 AND 1)</code> = <span class="fragment" style="color:var(--success-color);"><strong>0</strong></span></li>
+                <li><code>NOT(NOT 1)</code> = <span class="fragment" style="color:var(--success-color);"><strong>1</strong></span></li>
+                <li><code>(1 XOR 1) OR (0 XOR 1)</code> = <span class="fragment" style="color:var(--success-color);"><strong>1</strong></span></li>
+                <li><code>(1 NAND 1) AND (0 NOR 0)</code> = <span class="fragment" style="color:var(--success-color);"><strong>0</strong></span></li>
+                <li><code>NOT((1 OR 0) AND (0 OR 0))</code> = <span class="fragment" style="color:var(--success-color);"><strong>1</strong></span></li>
+            </ol>
+        </div>
+    </div>
+</section>
+
+<!-- SET B: Circuit Tracing with Numbers -->
+<section>
+    <h2>Set B: Circuit Tracing (Numbers)</h2>
+    <p>Find the output of each circuit. Show your work step by step.</p>
+
+    <div class="practice-q">
+        <p><strong>B1:</strong> A=1, B=1</p>
+        <div class="circuit-box">A ──┐
+    ├── NAND ── W ──── NOT ── Output
+B ──┘</div>
+        <p class="fragment answer-reveal">W = NAND(1,1) = 0, Output = NOT(0) = <strong>1</strong> (This is just AND!)</p>
+    </div>
+
+    <div class="practice-q">
+        <p><strong>B2:</strong> A=0, B=1, C=1</p>
+        <div class="circuit-box">A ──── NOT ── P ──┐
+                      ├── OR ── Output
+B ──┐              │
+    ├── AND ── Q ──┘
+C ──┘</div>
+        <p class="fragment answer-reveal">P = NOT(0) = 1, Q = AND(1,1) = 1, Output = OR(1,1) = <strong>1</strong></p>
+    </div>
+</section>
+
+<section>
+    <h2>Set B: Circuit Tracing (continued)</h2>
+
+    <div class="practice-q">
+        <p><strong>B3:</strong> A=1, B=0, C=0</p>
+        <div class="circuit-box">A ──┐
+    ├── XOR ── W ──┐
+B ──┘              ├── NOR ── Output
+C ─────────────────┘</div>
+        <p class="fragment answer-reveal">W = XOR(1,0) = 1, Output = NOR(1,0) = <strong>0</strong></p>
+    </div>
+
+    <div class="practice-q">
+        <p><strong>B4:</strong> A=0, B=0, C=1, D=1</p>
+        <div class="circuit-box">A ──┐
+    ├── OR ── W ──┐
+B ──┘             ├── NAND ── Output
+C ──┐             │
+    ├── AND ── X ─┘
+D ──┘</div>
+        <p class="fragment answer-reveal">W = OR(0,0) = 0, X = AND(1,1) = 1, Output = NAND(0,1) = <strong>1</strong></p>
+    </div>
+
+    <div class="practice-q">
+        <p><strong>B5:</strong> A=1, B=1, C=0</p>
+        <div class="circuit-box">A ──┐
+    ├── AND ── W ──── NOT ── P ──┐
+B ──┘                            ├── OR ── Output
+C ──── NOT ── X ──┐              │
+                  ├── NAND ── Q ─┘
+B ────────────────┘</div>
+        <p class="fragment answer-reveal">W = AND(1,1) = 1, P = NOT(1) = 0, X = NOT(0) = 1, Q = NAND(1,1) = 0, Output = OR(0,0) = <strong>0</strong></p>
+    </div>
+</section>
+
+<section>
+    <h2>Set B: Circuit Tracing (Hard)</h2>
+
+    <div class="practice-q">
+        <p><strong>B6:</strong> A=1, B=0, C=1, D=0</p>
+        <div class="circuit-box">A ──┐                            ┌── Output1
+    ├── XOR ── W ──┐             │
+B ──┘              ├── AND ── R ─┘
+C ──┐              │
+    ├── XNOR ── X ─┘
+D ──┘
+A ──┐
+    ├── NOR ── Y ──── NOT ── Output2
+C ──┘</div>
+        <p class="fragment answer-reveal">W=XOR(1,0)=1, X=XNOR(1,0)=0, R=AND(1,0)=<strong>0</strong>=Output1<br>
+        Y=NOR(1,1)=0, Output2=NOT(0)=<strong>1</strong></p>
+    </div>
+
+    <div class="practice-q">
+        <p><strong>B7:</strong> A=0, B=1, C=1, D=0</p>
+        <div class="circuit-box">A ──── NOT ── P ──┐
+                      ├── AND ── S ──┐
+B ────────────────────┘              │
+                                     ├── XOR ── Output
+C ──┐                                │
+    ├── OR ── Q ──┐                  │
+D ──┘             ├── NAND ─��� T ─────┘
+C ──── NOT ── R ──┘</div>
+        <p class="fragment answer-reveal">P=NOT(0)=1, S=AND(1,1)=1, Q=OR(1,0)=1, R=NOT(1)=0, T=NAND(1,0)=1, Output=XOR(1,1)=<strong>0</strong></p>
+    </div>
+</section>
+
+<!-- SET C: Expression Derivation from Circuits -->
+<section>
+    <h2>Set C: Find the Expression</h2>
+    <p>No numbers — <strong>variables</strong>. Write the Boolean expression for the output.</p>
+
+    <div class="practice-q">
+        <p><strong>C1:</strong></p>
+        <div class="circuit-box">A ──┐
+    ├── AND ── W ──── NOT ── Output
+B ──┘</div>
+        <p class="fragment answer-reveal">Output = NOT(A.B) = <strong>(A.B)' = NAND!</strong></p>
+    </div>
+
+    <div class="practice-q">
+        <p><strong>C2:</strong></p>
+        <div class="circuit-box">A ──── NOT ──┐
+             ├── AND ── Output
+B ──── NOT ──┘</div>
+        <p class="fragment answer-reveal">Output = A'.B'. This equals <strong>NOR</strong>! (De Morgan's theorem)</p>
+    </div>
+
+    <div class="practice-q">
+        <p><strong>C3:</strong></p>
+        <div class="circuit-box">A ──┐
+    ├── OR ── W ──┐
+B ──┘             ├── AND ── Output
+C ────────────────┘</div>
+        <p class="fragment answer-reveal">Output = <strong>(A + B) . C</strong></p>
+    </div>
+</section>
+
+<section>
+    <h2>Set C: Find the Expression (continued)</h2>
+
+    <div class="practice-q">
+        <p><strong>C4:</strong></p>
+        <div class="circuit-box">A ──┐
+    ├── NAND ── W ──┐
+B ──┘               ├── AND ── Output
+A ──┐               │
+    ├── NAND ── X ──┘
+B ──┘</div>
+        <p class="fragment answer-reveal">W = (A.B)', X = (A.B)', so Output = (A.B)'.(A.B)' = (A.B)'. Both are the same! <strong>Output = (A.B)' = NAND</strong></p>
+    </div>
+
+    <div class="practice-q">
+        <p><strong>C5:</strong></p>
+        <div class="circuit-box">A ──┐                    ┌──┐
+    ├── AND ── W ────────┤  │
+B ──┘                    │  ├── OR ── Output
+B ──┐                    │  │
+    ├── AND ── X ────────┘──┘
+C ──┘</div>
+        <p class="fragment answer-reveal">W = A.B, X = B.C, Output = <strong>A.B + B.C = B.(A + C)</strong></p>
+    </div>
+
+    <div class="practice-q">
+        <p><strong>C6:</strong></p>
+        <div class="circuit-box">A ──── NOT ── P ──┐
+                      ├── AND ── W ──┐
+B ────────────────────┘              ├── OR ── Output
+A ──┐                                │
+    ├── AND ── X ────────────────────┘
+C ──┘</div>
+        <p class="fragment answer-reveal">P = A', W = A'.B, X = A.C, Output = <strong>A'.B + A.C</strong></p>
+    </div>
+</section>
+
+<!-- SET D: Truth Table to Expression -->
+<section>
+    <h2>Set D: Truth Table &rarr; Expression</h2>
+    <p>Look at the truth table, write the SOP expression.</p>
+
+    <div class="two-col">
+        <div>
+            <p><strong>D1:</strong></p>
+            <table style="width:100%;">
+                <tr><th>A</th><th>B</th><th>F</th></tr>
+                <tr><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td></tr>
+            </table>
+            <p class="fragment answer-reveal">F = A'.B + A.B' + A.B = <strong>A + B (OR!)</strong></p>
+        </div>
+        <div>
+            <p><strong>D2:</strong></p>
+            <table style="width:100%;">
+                <tr><th>A</th><th>B</th><th>F</th></tr>
+                <tr><td>0</td><td>0</td><td>1</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>0</td></tr>
+            </table>
+            <p class="fragment answer-reveal">F = A'.B' + A'.B + A.B' = <strong>(A.B)' = NAND!</strong></p>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>Set D: 3-Variable Truth Tables</h2>
+
+    <div class="practice-q">
+        <p><strong>D3:</strong></p>
+        <table style="width: 70%;">
+            <tr><th>A</th><th>B</th><th>C</th><th>F</th></tr>
+            <tr><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+            <tr><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+            <tr><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+            <tr><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+            <tr><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+            <tr><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+            <tr><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+            <tr><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+        </table>
+    </div>
+
+    <div class="fragment answer-reveal">
+        Output=1 rows: (0,0,0), (0,1,0), (1,0,0), (1,1,0) — in all of them C=0!<br>
+        <strong>F = C' (just NOT C!)</strong>
+    </div>
+</section>
+
+<section>
+    <h2>Set D: More 3-Variable Problems</h2>
+
+    <div class="practice-q">
+        <p><strong>D4:</strong></p>
+        <table style="width: 70%;">
+            <tr><th>A</th><th>B</th><th>C</th><th>F</th></tr>
+            <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+            <tr><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+            <tr><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+            <tr><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+            <tr><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+            <tr><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+            <tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+        </table>
+    </div>
+
+    <div class="fragment answer-reveal">
+        F = A'.B'.C + A'.B.C' + A.B'.C' + A.B.C<br>
+        Pattern: Output is 1 when there's an <strong>odd number of 1s</strong>. This is <strong>A &oplus; B &oplus; C (3-way XOR)</strong>!
+    </div>
+</section>
+
+<section>
+    <h2>Set D: Hard</h2>
+
+    <div class="practice-q">
+        <p><strong>D5:</strong></p>
+        <table style="width: 70%;">
+            <tr><th>A</th><th>B</th><th>C</th><th>F</th></tr>
+            <tr><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+            <tr><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+            <tr><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+            <tr><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+            <tr><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+            <tr><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+            <tr><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+            <tr><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+        </table>
+    </div>
+
+    <div class="fragment answer-reveal">
+        F = A'.B'.C' + A'.B'.C + A.B'.C' + A.B'.C + A.B.C'<br>
+        = B'.(A'.C' + A'.C + A.C' + A.C) + A.B.C'<br>
+        = B' + A.B.C' = <strong>B' + A.C'</strong>
+    </div>
+</section>
+
+<!-- SET E: Expression → Circuit -->
+<section>
+    <h2>Set E: Expression &rarr; Circuit</h2>
+    <p>Read the expression, draw the circuit (on paper!).</p>
+
+    <div class="practice-q"><p><strong>E1:</strong> <code>F = A + B'</code></p></div>
+    <div class="practice-q"><p><strong>E2:</strong> <code>F = A.B + C.D</code></p></div>
+    <div class="practice-q"><p><strong>E3:</strong> <code>F = (A + B).(C + D)</code></p></div>
+    <div class="practice-q"><p><strong>E4:</strong> <code>F = A'.(B + C')</code></p></div>
+    <div class="practice-q"><p><strong>E5:</strong> <code>F = (A.B)' + C.(D + E')</code></p></div>
+
+    <div class="fragment key-point">
+        <strong>Tip:</strong> After drawing these circuits, plug in some values (A=0, B=1, ...) and verify that the circuit and expression give the same answer!
+    </div>
+</section>
+
+<!-- SET F: Challenge Problems -->
+<section>
+    <h2>Set F: Challenge Problems</h2>
+
+    <div class="warning-box" style="font-size: 1em;">
+        <strong>Challenge 1:</strong> Design a circuit that outputs <strong>1</strong> only when <em>exactly two</em> of three inputs (A, B, C) are 1.
+    </div>
+
+    <div class="fragment">
+        <p><strong>Step 1:</strong> Build the truth table</p>
+        <table style="width: 60%; font-size: 0.8em;">
+            <tr><th>A</th><th>B</th><th>C</th><th>F</th></tr>
+            <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+            <tr><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+            <tr style="background:#d4edda;"><td>0</td><td>1</td><td>1</td><td><strong>1</strong></td></tr>
+            <tr><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr style="background:#d4edda;"><td>1</td><td>0</td><td>1</td><td><strong>1</strong></td></tr>
+            <tr style="background:#d4edda;"><td>1</td><td>1</td><td>0</td><td><strong>1</strong></td></tr>
+            <tr><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+        </table>
+    </div>
+
+    <div class="fragment">
+        <p><strong>Step 2:</strong> <code>F = A'.B.C + A.B'.C + A.B.C'</code></p>
+        <p><strong>Step 3:</strong> Now draw the circuit! (3 AND gates with NOTs &rarr; 1 OR gate)</p>
+    </div>
+</section>
+
+<section>
+    <h2>Challenge Problems (continued)</h2>
+
+    <div class="warning-box">
+        <strong>Challenge 2:</strong> Build a circuit where output is 1 when <strong>A=1 and B=1</strong>, or when <strong>A=0 and C=1</strong>. First truth table, then SOP, then circuit.
+    </div>
+
+    <div class="fragment answer-reveal">
+        <strong>F = A.B + A'.C</strong><br>
+        Circuit: AND(A,B), AND(NOT(A),C), OR both results together.
+    </div>
+
+    <div class="fragment warning-box" style="margin-top:1em;">
+        <strong>Challenge 3:</strong> 2-bit number comparator — Inputs: A1,A0 (number A) and B1,B0 (number B). Output: 1 if A > B.
+        <br><span class="small">Hint: First list all cases where A > B. 4 inputs = 16-row truth table.</span>
+    </div>
+
+    <div class="fragment warning-box" style="margin-top:1em;">
+        <strong>Challenge 4:</strong> Build the "exactly 2 of 3" circuit from Challenge 1 using <strong>only NAND gates</strong>. How many NAND gates do you need?
+    </div>
+</section>
+
+<!-- SET G: Build Using Only NAND -->
+<section>
+    <h2>Set G: Build Using Only NAND!</h2>
+    <p>Build these gates/circuits using only NAND gates. How many do you need?</p>
+
+    <div class="practice-q"><p><strong>G1:</strong> OR gate (2 inputs) — using only NAND</p></div>
+    <div class="fragment answer-reveal">3 NAND gates: NAND(A,A) &rarr; A', NAND(B,B) &rarr; B', NAND(A',B') &rarr; A+B</div>
+
+    <div class="practice-q"><p><strong>G2:</strong> NOR gate — using only NAND</p></div>
+    <div class="fragment answer-reveal">4 NAND gates: Build OR (3 NANDs), then NOT the output (1 more NAND) = <strong>4 NAND gates</strong></div>
+
+    <div class="practice-q"><p><strong>G3:</strong> XNOR gate — using only NAND</p></div>
+    <div class="fragment answer-reveal">XOR = 4 NANDs. XNOR = NOT(XOR) = 1 more NAND. Total = <strong>5 NAND gates</strong></div>
+
+    <div class="practice-q"><p><strong>G4:</strong> <code>F = A + B.C</code> — using only NAND</p></div>
+    <div class="fragment answer-reveal">
+        <strong>F = (A'.(B.C)')' </strong> = NAND(NAND(A,A), NAND(B,C)) = <strong>3 NAND gates!</strong>
+    </div>
+</section>
+
+<!-- WEEKLY HOMEWORK: Week 1 -->
+<section>
+    <h2>Weekly Homework: Week 1</h2>
+    <p>Do these problems <strong>on paper</strong>. Write the step-by-step solution for each.</p>
+
+    <div class="practice-q">
+        <p><strong>H1:</strong> Trace this circuit (A=0, B=1, C=1, D=0):</p>
+        <div class="circuit-box" style="font-size:0.6em;">A ──┐
+    ├── XOR ── P ──┐
+B ──┘              ├── AND ── R ──┐
+C ──── NOT ── Q ───┘              ├── OR ── Output
+                                  │
+C ──┐                             │
+    ├── NOR ── S ─────────────────┘
+D ──┘</div>
+    </div>
+
+    <div class="practice-q">
+        <p><strong>H2:</strong> Write the SOP expression for this truth table and simplify:</p>
+        <table style="width:50%; font-size: 0.8em;">
+            <tr><th>A</th><th>B</th><th>C</th><th>F</th></tr>
+            <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+            <tr><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+            <tr><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+            <tr><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+            <tr><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+            <tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+        </table>
+    </div>
+
+    <div class="practice-q">
+        <p><strong>H3:</strong> Draw the circuit for <code>F = (A &oplus; B).C + A'.B</code> and verify with A=1, B=0, C=1.</p>
+    </div>
+</section>
+
+<section>
+    <h2>Week 1 Homework (continued)</h2>
+
+    <div class="practice-q">
+        <p><strong>H4:</strong> Find the expression for this circuit:</p>
+        <div class="circuit-box">A ──── NOT ── P ──┐
+                      ├── NAND ── W ──┐
+B ────────────────────┘               ├── OR ── Output
+                                      │
+A ──┐                                 │
+    ├── AND ── X ─────────────────────┘
+C ──┘</div>
+    </div>
+
+    <div class="practice-q">
+        <p><strong>H5:</strong> Design a circuit: output is 1 when <strong>exactly one</strong> of three inputs (A, B, C) is 1. Steps: truth table first, then SOP, then circuit.</p>
+    </div>
+
+    <div class="practice-q">
+        <p><strong>H6:</strong> Draw circuits for both expressions. Then find the output for A=1, B=0:</p>
+        <ol>
+            <li><code>F1 = A NAND B</code></li>
+            <li><code>F2 = A' + B'</code></li>
+        </ol>
+        <p>Do both give the same output? Why?</p>
+    </div>
+</section>
+
+<!-- WEEKLY HOMEWORK: Week 2 -->
+<section>
+    <h2>Weekly Homework: Week 2</h2>
+
+    <div class="practice-q">
+        <p><strong>H7:</strong> For 3 variables (A, B, C), build the full truth table (8 rows) where output is 1 when <strong>A and B are both 1, or C alone is 1</strong>. Write the SOP expression.</p>
+    </div>
+
+    <div class="practice-q">
+        <p><strong>H8:</strong> Trace this circuit (A=1, B=1, C=0, D=1):</p>
+        <div class="circuit-box" style="font-size:0.6em;">A ──┐
+    ├── NAND ── P ──┐
+B ──┘               │
+                    ├── NAND ── S ──┐
+C ──┐               │              │
+    ├── NOR ── Q ───┘              ├── XOR ── Output
+D ──┘                              │
+A ──┐                              │
+    ├── XOR ── R ──── NOT ── T ────┘
+C ──┘</div>
+    </div>
+
+    <div class="practice-q">
+        <p><strong>H9:</strong> Draw these circuits using <strong>only NAND gates</strong>:</p>
+        <ol>
+            <li><code>F = A + B</code></li>
+            <li><code>F = A.B + C</code></li>
+        </ol>
+    </div>
+
+    <div class="practice-q">
+        <p><strong>H10:</strong> Write SOP for this table, draw the circuit, and verify with any 2 input combinations:</p>
+        <table style="width:50%; font-size: 0.7em;">
+            <tr><th>A</th><th>B</th><th>C</th><th>F</th></tr>
+            <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+            <tr><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+            <tr><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+            <tr><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+            <tr><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+            <tr><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+            <tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+        </table>
+    </div>
+</section>
+
+<!-- Answer Keys -->
+<section>
+    <h2>Answer Key: Week 1</h2>
+    <div style="font-size: 0.82em;">
+        <p><strong>H1:</strong> P=XOR(0,1)=1, Q=NOT(1)=0, R=AND(1,0)=0, S=NOR(1,0)=0, Output=OR(0,0)=<strong>0</strong></p>
+        <p><strong>H2:</strong> SOP = A'.B.C' + A'.B.C + A.B.C' + A.B.C = B.(A'.C' + A'.C + A.C' + A.C) = <strong>B</strong></p>
+        <p><strong>H3:</strong> XOR(1,0)=1, 1.1=1, A'=0, 0.0=0, Output=1+0=<strong>1</strong></p>
+        <p><strong>H4:</strong> P=A', W=NAND(A',B)=(A'.B)', X=A.C, Output = (A'.B)' + A.C</p>
+        <p><strong>H5:</strong> F = A'.B'.C + A'.B.C' + A.B'.C' — exactly one is 1</p>
+        <p><strong>H6:</strong> F1: NAND(1,0)=1. F2: 1'+0'=0+1=1. Same! Because <strong>NAND = NOT(AND) = A'+B'</strong> (De Morgan's theorem!)</p>
+    </div>
+</section>
+
+<section>
+    <h2>Answer Key: Week 2</h2>
+    <div style="font-size: 0.82em;">
+        <p><strong>H7:</strong> Rows where F=1: (0,0,1), (0,1,1), (1,0,1), (1,1,0), (1,1,1). SOP = A'.B'.C + A'.B.C + A.B'.C + A.B.C' + A.B.C = <strong>A.B + C</strong></p>
+        <p><strong>H8:</strong> P=NAND(1,1)=0, Q=NOR(0,1)=0, R=XOR(1,0)=1, S=NAND(0,0)=1, T=NOT(1)=0, Output=XOR(1,0)=<strong>1</strong></p>
+        <p><strong>H9:</strong> (1) A+B = NAND(NAND(A,A), NAND(B,B)) = 3 NANDs. (2) A.B+C = NAND(NAND(A,B), NAND(C,C)) = 3 NANDs.</p>
+        <p><strong>H10:</strong> SOP = A'.B'.C + A'.B.C' + A'.B.C + A.B'.C + A.B.C = <strong>A'.B + C</strong></p>
+    </div>
+</section>
+
+<!-- Summary -->
+<section class="center-content">
+    <h2>What Did We Learn Today?</h2>
+    <div style="text-align: left; max-width: 700px; margin: 0 auto;">
+        <ul>
+            <li class="fragment"><strong>Inside a computer</strong> there are millions of gates — the same AND, OR, NOT we've been learning!</li>
+            <li class="fragment"><strong>Universal Gates:</strong> NAND or NOR alone can build any other gate — that's why chips are cheap</li>
+            <li class="fragment"><strong>Circuit Tracing:</strong> Step by step, gate by gate — from inputs to output</li>
+            <li class="fragment"><strong>SOP Method:</strong> Truth table to expression — find rows where output=1, write their product, OR them all</li>
+            <li class="fragment"><strong>Expression to Circuit:</strong> Read the formula, identify the gates, draw the circuit</li>
+            <li class="fragment"><strong>Everything is connected:</strong> Truth Table &harr; Expression &harr; Circuit</li>
+        </ul>
+    </div>
+    <div class="fragment" style="margin-top: 1em;">
+        <div class="success-box" style="text-align: center; font-size: 1.1em;">
+            <strong>Practice, make mistakes, try again. That's the path to mastery!</strong>
+        </div>
+    </div>
+</section>
+
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/highlight.js"></script>
+<script>
+    Reveal.initialize({
+        hash: true, center: false, slideNumber: true, transition: 'slide',
+        width: 1280, height: 720, margin: 0.04, minScale: 0.2, maxScale: 2.0,
+        plugins: [ RevealHighlight, RevealNotes ]
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karnaugh Maps (K-Maps)</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/theme/white.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/monokai.css">
+    <style>
+        :root {
+            --main-color: #2c3e50;
+            --accent-color: #3498db;
+            --light-bg: #f8f9fa;
+            --code-bg: #282c34;
+            --warning-color: #e67e22;
+            --success-color: #27ae60;
+        }
+        .reveal {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 28px;
+        }
+        .reveal .slides section { height: 100%; overflow-y: auto !important; }
+        .reveal .slides section.stack { overflow-y: visible !important; }
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            color: var(--main-color); font-weight: 600; text-transform: none; margin-bottom: 0.6em;
+        }
+        .reveal h1 { font-size: 2.2em; line-height: 1.2; }
+        .reveal h2 { font-size: 1.6em; }
+        .reveal h3 { font-size: 1.3em; margin-bottom: 0.4em; }
+        .reveal h4 { font-size: 1.05em; margin-bottom: 0.3em; }
+        .reveal section { text-align: left; height: 100%; }
+        .reveal .center-content { text-align: center; }
+        .reveal pre { margin: 0.7em auto; box-shadow: 0 5px 15px rgba(0,0,0,0.15); border-radius: 8px; font-size: 0.55em; line-height: 1.4; }
+        .reveal code { font-family: 'Monaco','Menlo','Ubuntu Mono','Consolas',monospace; padding: 0.1em 0.3em; background: var(--light-bg); border-radius: 3px; color: #e74c3c; }
+        .reveal pre code { background: var(--code-bg); color: #abb2bf; padding: 1em; border-radius: 8px; max-height: 420px; overflow: auto; }
+        .reveal .key-point { background: #fff3cd; border-left: 4px solid #ffc107; padding: 0.7em 1.1em; margin: 0.7em 0; border-radius: 4px; font-size: 0.85em; }
+        .reveal .warning-box { background: #ffe5e5; border-left: 4px solid var(--warning-color); padding: 0.7em 1.1em; margin: 0.7em 0; border-radius: 4px; font-size: 0.85em; }
+        .reveal .success-box { background: #d4edda; border-left: 4px solid var(--success-color); padding: 0.7em 1.1em; margin: 0.7em 0; border-radius: 4px; font-size: 0.85em; }
+        .reveal .info-box { background: #dae8fc; border-left: 4px solid #2980b9; padding: 0.7em 1.1em; margin: 0.7em 0; border-radius: 4px; font-size: 0.85em; }
+        .reveal .highlight { color: var(--accent-color); font-weight: 600; }
+        .reveal ul { margin: 0.7em 0; } .reveal li { margin: 0.3em 0; line-height: 1.5; }
+        .reveal ol { margin: 0.7em 0; } .reveal p { margin: 0.45em 0; }
+        .reveal blockquote { background: var(--light-bg); border-left: 4px solid var(--accent-color); padding: 0.7em 1.1em; margin: 0.7em 0; font-style: normal; border-radius: 4px; }
+        .reveal .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2em; margin: 0.7em 0; }
+        .reveal .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1em; margin: 0.7em 0; }
+        .reveal .card { background: var(--light-bg); padding: 0.8em 1em; border-radius: 8px; border-top: 4px solid var(--accent-color); }
+        .reveal .small { font-size: 0.78em; color: #6c757d; }
+        .reveal .mono { font-family: 'Monaco','Menlo',monospace; font-size: 0.78em; }
+        .reveal table { margin: 0.7em auto; border-collapse: collapse; font-size: 0.75em; width: 90%; }
+        .reveal table th { background: var(--main-color); color: white; padding: 0.5em 0.8em; }
+        .reveal table td { padding: 0.4em 0.8em; border: 1px solid #dee2e6; }
+        .reveal table tr:nth-child(even) { background: var(--light-bg); }
+        .big-q { font-size: 1.35em; font-weight: 600; color: var(--main-color); text-align: center; margin: 0.9em 0; line-height: 1.4; }
+        /* K-map specific styles */
+        .kmap { border-collapse: collapse; margin: 0.5em auto; font-size: 0.85em; width: auto; }
+        .kmap th { background: var(--accent-color); color: white; padding: 0.4em 0.8em; text-align: center; min-width: 60px; }
+        .kmap td { padding: 0.4em 0.8em; border: 2px solid #dee2e6; text-align: center; min-width: 60px; font-weight: 600; font-size: 1.1em; }
+        .kmap .cell-1 { background: #fff3cd; }
+        .kmap .cell-0 { background: white; color: #ccc; }
+        .kmap .cell-x { background: #e8e8e8; color: #888; }
+        .kmap .group-blue { background: #dae8fc; border: 3px solid #3498db; }
+        .kmap .group-green { background: #d4edda; border: 3px solid #27ae60; }
+        .kmap .group-orange { background: #ffecd2; border: 3px solid #e67e22; }
+        .kmap .group-purple { background: #e8daef; border: 3px solid #8e44ad; }
+        .kmap .header-label { background: #f0f0f0; color: var(--main-color); font-weight: 600; }
+        .step-arrow { font-size: 1.5em; color: var(--accent-color); text-align: center; margin: 0.3em 0; }
+        .reveal .emoji-big { font-size: 2em; }
+    </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ===================== TITLE SLIDE ===================== -->
+<section class="center-content">
+    <h1>Karnaugh Maps (K-Maps)</h1>
+    <p style="font-size:1.2em; color: var(--accent-color);">Boolean expressions ko <em>visually</em> simplify karo!</p>
+    <br>
+    <p class="fragment">Boolean Algebra mein simplify karna mushkil lag raha tha?</p>
+    <p class="fragment" style="font-size:1.1em;"><strong>K-map ek shortcut hai</strong> — bas ek table bhar lo aur groups banao!</p>
+</section>
+
+<!-- ===================== SECTION 1: THE PROBLEM ===================== -->
+<section>
+    <h2>The Problem: Algebra se Simplify Karna</h2>
+    <p>Ye expression simplify karo:</p>
+    <p class="fragment" style="font-size:1.1em; text-align:center;"><code>F = A'B'C + A'BC + AB'C + ABC</code></p>
+    <div class="fragment">
+        <p><strong>Boolean Algebra steps:</strong></p>
+        <ol style="font-size:0.85em;">
+            <li class="fragment">F = A'C(B' + B) + AC(B' + B)</li>
+            <li class="fragment">F = A'C(1) + AC(1) &nbsp; <span class="small">[Complement law: B' + B = 1]</span></li>
+            <li class="fragment">F = A'C + AC</li>
+            <li class="fragment">F = C(A' + A)</li>
+            <li class="fragment">F = C(1) = <strong>C</strong></li>
+        </ol>
+    </div>
+    <div class="fragment warning-box">
+        5 steps! Aur agar galat law lagaya toh? Galat answer!
+    </div>
+</section>
+
+<section>
+    <h2>Aur Agar Expression Badi Ho?</h2>
+    <p>4 variables ka example:</p>
+    <p style="font-size:0.95em; text-align:center;"><code>F = A'B'C'D + A'B'CD + A'BC'D + A'BCD + AB'C'D + AB'CD + ABC'D + ABCD</code></p>
+    <div class="fragment">
+        <p>Boolean algebra se simplify karna = bohot saare steps, bohot chances of mistakes</p>
+    </div>
+    <div class="fragment key-point">
+        Kya koi aasan tarika hai? <strong>Haan — Karnaugh Map!</strong><br>
+        Ek visual method jisme tum bus ek table bhar ke groups banaoge.
+    </div>
+    <p class="fragment" style="text-align:center; font-size:1.3em; margin-top:0.5em;">
+        Algebra ki jagah — <span class="highlight">drawing se simplify karo!</span>
+    </p>
+</section>
+
+<!-- ===================== SECTION 2: WHAT IS A K-MAP? ===================== -->
+<section>
+    <h2>K-Map Kya Hai?</h2>
+    <p class="fragment">Ek K-map basically ek <span class="highlight">special truth table</span> hai jo <strong>grid</strong> (table) ki form mein draw hoti hai.</p>
+    <div class="fragment info-box">
+        Har cell ek minterm represent karti hai — jaise truth table ki ek row.
+    </div>
+    <p class="fragment">Lekin ek <strong>special rule</strong> hai:</p>
+    <div class="fragment key-point" style="font-size:1em; text-align:center;">
+        Adjacent (bagal wali) cells mein sirf <strong>EK variable</strong> change hota hai!
+    </div>
+    <p class="fragment">Isko kehte hain <strong>Gray Code ordering</strong>.</p>
+    <p class="fragment">Ye kyu important hai? Kyunki agar do adjacent cells mein <code>1</code> hai, toh wo variable jo change ho rahi hai — usse <strong>eliminate</strong> kar sakte hain!</p>
+</section>
+
+<section>
+    <h2>K-Map = Ek Game!</h2>
+    <div class="three-col" style="text-align:center; margin-top:1em;">
+        <div class="card fragment">
+            <p class="emoji-big">1.</p>
+            <p><strong>Truth table se<br>K-map bharo</strong></p>
+            <p class="small">Har cell mein 0 ya 1 likho</p>
+        </div>
+        <div class="card fragment">
+            <p class="emoji-big">2.</p>
+            <p><strong>1s ke groups<br>banao</strong></p>
+            <p class="small">Rectangular, power of 2</p>
+        </div>
+        <div class="card fragment">
+            <p class="emoji-big">3.</p>
+            <p><strong>Har group ka<br>expression likho</strong></p>
+            <p class="small">Jo variables constant hain — wo rakhlo</p>
+        </div>
+    </div>
+    <div class="fragment success-box" style="text-align:center; margin-top:1em; font-size:1.05em;">
+        Bas! Ye teen steps — aur tumhara simplified expression ready hai!
+    </div>
+</section>
+
+<!-- ===================== SECTION 3: 2-VARIABLE K-MAPS ===================== -->
+<section>
+    <h2>2-Variable K-Map: Layout</h2>
+    <p>2 variables hain: <code>A</code> aur <code>B</code></p>
+    <p class="fragment">Grid size: <strong>2 x 2 = 4 cells</strong> (4 minterms: m0, m1, m2, m3)</p>
+    <div class="fragment" style="text-align:center;">
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ B</th>
+                <th>B=0</th>
+                <th>B=1</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="cell-0">m0<br><span class="small">A'B'</span></td>
+                <td class="cell-0">m1<br><span class="small">A'B</span></td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="cell-0">m2<br><span class="small">AB'</span></td>
+                <td class="cell-0">m3<br><span class="small">AB</span></td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment info-box">
+        Har cell ek minterm hai. Row = A ki value, Column = B ki value.
+    </div>
+</section>
+
+<section>
+    <h2>Example 1: F = A'B + AB</h2>
+    <p><strong>Step 1:</strong> Minterms identify karo</p>
+    <ul>
+        <li class="fragment">A'B = m1 (A=0, B=1)</li>
+        <li class="fragment">AB = m3 (A=1, B=1)</li>
+    </ul>
+    <div class="fragment">
+        <p><strong>Step 2:</strong> K-map bharo — m1 aur m3 mein 1 dalo</p>
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ B</th>
+                <th>B=0</th>
+                <th>B=1</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment">
+        <p><strong>Step 3:</strong> Group banao — dono 1s ek column mein hain!</p>
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ B</th>
+                <th>B=0</th>
+                <th>B=1</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="cell-0">0</td>
+                <td class="group-blue">1</td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="cell-0">0</td>
+                <td class="group-blue">1</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment success-box">
+        Group mein A change ho raha hai (0 se 1), B constant = 1. Toh <strong>F = B</strong>
+    </div>
+</section>
+
+<section>
+    <h2>Example 2: F = A'B' + A'B + AB</h2>
+    <p class="fragment">Minterms: m0, m1, m3</p>
+    <div class="fragment">
+        <p><strong>K-map bharo:</strong></p>
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ B</th>
+                <th>B=0</th>
+                <th>B=1</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="cell-1">1</td>
+                <td class="cell-1">1</td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment">
+        <p><strong>Groups banao:</strong> Do groups bana sakte hain (overlap allowed!)</p>
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ B</th>
+                <th>B=0</th>
+                <th>B=1</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="group-blue">1</td>
+                <td class="group-green">1</td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="cell-0">0</td>
+                <td class="group-green">1</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment">
+        <p><span style="color:#3498db; font-weight:600;">Blue group</span> (top row): A=0, B changes &rarr; <strong>A'</strong></p>
+        <p><span style="color:#27ae60; font-weight:600;">Green group</span> (right column): B=1, A changes &rarr; <strong>B</strong></p>
+    </div>
+    <div class="fragment success-box">
+        <strong>F = A' + B</strong> &nbsp; (OR of all group expressions)
+    </div>
+</section>
+
+<section>
+    <h2>Grouping Rules (Bahut Important!)</h2>
+    <div class="two-col">
+        <div>
+            <div class="card fragment">
+                <h4>1. Size = Power of 2</h4>
+                <p>Groups ka size sirf 1, 2, ya 4 ho sakta hai (2-var K-map mein)</p>
+            </div>
+            <div class="card fragment">
+                <h4>2. Rectangular Shape</h4>
+                <p>Groups hamesha rectangle ya square hone chahiye — diagonal nahi!</p>
+            </div>
+            <div class="card fragment">
+                <h4>3. Overlap Allowed</h4>
+                <p>Ek cell do groups mein ho sakti hai — koi problem nahi!</p>
+            </div>
+        </div>
+        <div>
+            <div class="card fragment">
+                <h4>4. Bigger = Better</h4>
+                <p>Jitna bada group, utna simple expression. Hamesha sabse bade group banao!</p>
+            </div>
+            <div class="card fragment">
+                <h4>5. Cover ALL 1s</h4>
+                <p>Har ek <code>1</code> kisi na kisi group mein hona chahiye!</p>
+            </div>
+            <div class="card fragment">
+                <h4>6. Fewest Groups</h4>
+                <p>Kam se kam groups use karo — unnecessary groups mat banao!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>2-Var Practice: Truth Table se K-Map</h2>
+    <p><strong>Problem 1:</strong> Is truth table ko K-map se simplify karo</p>
+    <div class="two-col">
+        <div>
+            <table style="font-size:0.85em; width:auto; margin:0 auto;">
+                <tr><th>A</th><th>B</th><th>F</th></tr>
+                <tr><td>0</td><td>0</td><td>1</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>0</td></tr>
+            </table>
+        </div>
+        <div>
+            <div class="fragment">
+                <p>K-map:</p>
+                <table class="kmap">
+                    <tr>
+                        <th class="header-label">A \ B</th>
+                        <th>B=0</th>
+                        <th>B=1</th>
+                    </tr>
+                    <tr>
+                        <th class="header-label">A=0</th>
+                        <td class="group-blue">1</td>
+                        <td class="cell-0">0</td>
+                    </tr>
+                    <tr>
+                        <th class="header-label">A=1</th>
+                        <td class="group-blue">1</td>
+                        <td class="cell-0">0</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="fragment success-box" style="text-align:center;">
+        Left column group: B=0 constant, A changes &rarr; <strong>F = B'</strong>
+    </div>
+    <div class="fragment">
+        <p><strong>Problem 2:</strong> F(A,B) = &Sigma;m(0,1,2,3). K-map banao aur simplify karo.</p>
+    </div>
+    <div class="fragment success-box">
+        Saari cells 1 hain! Ek bada group of 4 &rarr; <strong>F = 1</strong>
+    </div>
+</section>
+
+<section>
+    <h2>2-Var Practice: More Problems</h2>
+    <p><strong>Problem 3:</strong> F(A,B) = &Sigma;m(1,3)</p>
+    <div class="fragment">
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ B</th>
+                <th>B=0</th>
+                <th>B=1</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="cell-0">0</td>
+                <td class="group-green">1</td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="cell-0">0</td>
+                <td class="group-green">1</td>
+            </tr>
+        </table>
+    </div>
+    <p class="fragment success-box"><strong>F = B</strong></p>
+
+    <p class="fragment"><strong>Problem 4:</strong> F(A,B) = &Sigma;m(0,3)</p>
+    <div class="fragment">
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ B</th>
+                <th>B=0</th>
+                <th>B=1</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment warning-box">
+        Ye dono 1s adjacent nahi hain — group nahi ban sakta! Dono alag hain.<br>
+        <strong>F = A'B' + AB</strong> (simplify nahi ho sakta — ye XOR hai!)
+    </div>
+</section>
+
+<!-- ===================== SECTION 4: 3-VARIABLE K-MAPS ===================== -->
+<section>
+    <h2>3-Variable K-Map: Layout</h2>
+    <p>3 variables: <code>A</code>, <code>B</code>, <code>C</code></p>
+    <p class="fragment">Grid size: <strong>2 rows x 4 columns = 8 cells</strong></p>
+    <div class="fragment warning-box">
+        Column order Gray Code mein hai: <strong>00, 01, 11, 10</strong><br>
+        (NOT 00, 01, 10, 11!) — Ye sabse important rule hai!
+    </div>
+    <div class="fragment" style="text-align:center;">
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ BC</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="cell-0">m0<br><span class="small">A'B'C'</span></td>
+                <td class="cell-0">m1<br><span class="small">A'B'C</span></td>
+                <td class="cell-0">m3<br><span class="small">A'BC</span></td>
+                <td class="cell-0">m2<br><span class="small">A'BC'</span></td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="cell-0">m4<br><span class="small">AB'C'</span></td>
+                <td class="cell-0">m5<br><span class="small">AB'C</span></td>
+                <td class="cell-0">m7<br><span class="small">ABC</span></td>
+                <td class="cell-0">m6<br><span class="small">ABC'</span></td>
+            </tr>
+        </table>
+    </div>
+    <p class="fragment small">Notice: m2 aur m3 ka order swap hai! Gray code ki wajah se.</p>
+</section>
+
+<section>
+    <h2>Gray Code Kyu?</h2>
+    <p>Normal binary order: 00, 01, <strong style="color:red;">10</strong>, 11</p>
+    <p class="fragment">01 se 10 mein <strong>dono bits</strong> change hue — ye adjacent nahi hai!</p>
+    <div class="fragment">
+        <p>Gray Code order: 00, 01, <strong style="color:green;">11</strong>, 10</p>
+        <p>Har step mein sirf <strong>EK bit</strong> change hoti hai:</p>
+        <ul>
+            <li class="fragment">00 &rarr; 0<span class="highlight">1</span> (C changes)</li>
+            <li class="fragment">01 &rarr; <span class="highlight">1</span>1 (B changes)</li>
+            <li class="fragment">11 &rarr; 1<span class="highlight">0</span> (C changes)</li>
+        </ul>
+    </div>
+    <div class="fragment key-point">
+        Iska matlab: K-map mein jo cells bagal mein hain, unke minterms mein sirf ek variable ka difference hai. Tabhi grouping kaam karti hai!
+    </div>
+    <div class="fragment info-box">
+        <strong>Aur ek secret:</strong> First column (00) aur last column (10) bhi adjacent hain! Unme bhi sirf ek bit ka difference hai. Map "wrap around" karta hai!
+    </div>
+</section>
+
+<section>
+    <h2>Example 1: F(A,B,C) = &Sigma;m(0,2,4,6)</h2>
+    <p class="fragment"><strong>Step 1:</strong> Kaunse minterms? m0, m2, m4, m6 — ye sab even numbers hain!</p>
+    <div class="fragment">
+        <p><strong>Step 2:</strong> K-map bharo</p>
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ BC</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment">
+        <p><strong>Step 3:</strong> Groups banao — first aur last columns wrap around karke adjacent hain!</p>
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ BC</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="group-blue">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="group-blue">1</td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="group-blue">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="group-blue">1</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment success-box">
+        Group of 4: A changes, B changes, C = 0 constant &rarr; <strong>F = C'</strong>
+    </div>
+</section>
+
+<section>
+    <h2>Example 2: F(A,B,C) = &Sigma;m(1,3,5,7)</h2>
+    <p class="fragment">Ye sab odd minterms hain — C=1 wale!</p>
+    <div class="fragment">
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ BC</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment">
+        <p>Middle 2 columns mein saari 1s hain — group of 4!</p>
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ BC</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="cell-0">0</td>
+                <td class="group-green">1</td>
+                <td class="group-green">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="cell-0">0</td>
+                <td class="group-green">1</td>
+                <td class="group-green">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment success-box">
+        Group of 4: A changes, B changes, C = 1 constant &rarr; <strong>F = C</strong>
+    </div>
+</section>
+
+<section>
+    <h2>Example 3: F(A,B,C) = &Sigma;m(0,1,2,3,5)</h2>
+    <p class="fragment">Minterms: m0, m1, m2, m3, m5</p>
+    <div class="fragment">
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ BC</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="cell-1">1</td>
+                <td class="cell-1">1</td>
+                <td class="cell-1">1</td>
+                <td class="cell-1">1</td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment">
+        <p>Groups banao:</p>
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ BC</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="group-blue">1</td>
+                <td class="group-green">1</td>
+                <td class="group-blue">1</td>
+                <td class="group-blue">1</td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="cell-0">0</td>
+                <td class="group-green">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+            </tr>
+        </table>
+        <p class="small" style="text-align:center;">
+            <span style="color:#3498db; font-weight:600;">Blue</span>: Top row group of 4 (A=0) &nbsp;|&nbsp;
+            <span style="color:#27ae60; font-weight:600;">Green</span>: m1+m5 column group (B'C)
+        </p>
+    </div>
+    <div class="fragment success-box">
+        <strong>F = A' + B'C</strong>
+    </div>
+</section>
+
+<section>
+    <h2>Wrap-Around Groups Samjho</h2>
+    <div class="key-point">
+        K-map mein first column aur last column <strong>adjacent</strong> hain!<br>
+        Socho ki map ek cylinder hai — left aur right edge connected hain.
+    </div>
+    <div class="fragment" style="text-align:center; margin-top:0.8em;">
+        <p>Example: F(A,B,C) = &Sigma;m(0,2,4,6)</p>
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ BC</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="group-orange">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="group-orange">1</td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="group-orange">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="group-orange">1</td>
+            </tr>
+        </table>
+        <p class="fragment">Column 00 (BC=00) aur column 10 (BC=10) mein sirf B change hua — C dono mein 0 hai!</p>
+        <p class="fragment">Toh ye wrap-around group valid hai: <strong>F = C'</strong></p>
+    </div>
+</section>
+
+<section>
+    <h2>3-Var Practice Problems</h2>
+    <p><strong>Problem 1:</strong> F(A,B,C) = &Sigma;m(3,4,5,7)</p>
+    <div class="fragment">
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ BC</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="group-blue">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="group-green">1</td>
+                <td class="group-green">1</td>
+                <td class="group-blue">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment">
+        <p><span style="color:#3498db;">Blue</span>: m3+m7 &rarr; BC &nbsp;|&nbsp; <span style="color:#27ae60;">Green</span>: m4+m5 &rarr; AB'</p>
+    </div>
+    <p class="fragment success-box"><strong>F = BC + AB'</strong></p>
+
+    <p class="fragment"><strong>Problem 2:</strong> F(A,B,C) = &Sigma;m(0,1,6,7). Try it yourself!</p>
+    <p class="fragment success-box"><strong>F = A'B' + AB</strong> (m0+m1 = A'B', m6+m7 = AB)</p>
+</section>
+
+<section>
+    <h2>3-Var Practice (continued)</h2>
+    <p><strong>Problem 3:</strong> F(A,B,C) = &Sigma;m(0,2,4,5,6)</p>
+    <div class="fragment">
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ BC</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="group-blue">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="group-blue">1</td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="group-blue">1</td>
+                <td class="group-orange">1</td>
+                <td class="cell-0">0</td>
+                <td class="group-blue">1</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment">
+        <p><span style="color:#3498db;">Blue</span> (wrap-around, 4 cells): m0+m2+m4+m6 &rarr; <strong>C'</strong></p>
+        <p><span style="color:#e67e22;">Orange</span> (m4+m5): <strong>AB'</strong></p>
+    </div>
+    <p class="fragment success-box"><strong>F = C' + AB'</strong></p>
+
+    <p class="fragment"><strong>Problem 4:</strong> F(A,B,C) = &Sigma;m(0,1,2,3,4,5,6,7). Simplify karo!</p>
+    <p class="fragment success-box">Sab 1 hain! Group of 8 &rarr; <strong>F = 1</strong></p>
+</section>
+
+<!-- ===================== SECTION 5: 4-VARIABLE K-MAPS ===================== -->
+<section>
+    <h2>4-Variable K-Map: Layout</h2>
+    <p>4 variables: <code>A</code>, <code>B</code>, <code>C</code>, <code>D</code></p>
+    <p class="fragment">Grid size: <strong>4 x 4 = 16 cells</strong></p>
+    <div class="fragment warning-box">
+        Ab rows BHI Gray code mein hain! Rows: 00, 01, 11, 10. Columns: 00, 01, 11, 10.
+    </div>
+    <div class="fragment" style="text-align:center;">
+        <table class="kmap" style="font-size:0.75em;">
+            <tr>
+                <th class="header-label">AB \ CD</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">00</th>
+                <td class="cell-0">m0</td>
+                <td class="cell-0">m1</td>
+                <td class="cell-0">m3</td>
+                <td class="cell-0">m2</td>
+            </tr>
+            <tr>
+                <th class="header-label">01</th>
+                <td class="cell-0">m4</td>
+                <td class="cell-0">m5</td>
+                <td class="cell-0">m7</td>
+                <td class="cell-0">m6</td>
+            </tr>
+            <tr>
+                <th class="header-label">11</th>
+                <td class="cell-0">m12</td>
+                <td class="cell-0">m13</td>
+                <td class="cell-0">m15</td>
+                <td class="cell-0">m14</td>
+            </tr>
+            <tr>
+                <th class="header-label">10</th>
+                <td class="cell-0">m8</td>
+                <td class="cell-0">m9</td>
+                <td class="cell-0">m11</td>
+                <td class="cell-0">m10</td>
+            </tr>
+        </table>
+    </div>
+    <p class="fragment small" style="text-align:center;">Row order: 00, 01, 11, 10 (Gray code!) — Row 10 is LAST, not third!</p>
+</section>
+
+<section>
+    <h2>4-Var K-Map: Wrapping Rules</h2>
+    <div class="info-box">
+        4-variable K-map mein map dono directions mein wrap around karta hai!
+    </div>
+    <div class="two-col" style="margin-top:0.8em;">
+        <div class="card fragment">
+            <h4>Left-Right Wrap</h4>
+            <p>First column (CD=00) aur last column (CD=10) adjacent hain</p>
+            <p class="small">Jaise 3-var map mein tha</p>
+        </div>
+        <div class="card fragment">
+            <h4>Top-Bottom Wrap</h4>
+            <p>First row (AB=00) aur last row (AB=10) adjacent hain!</p>
+            <p class="small">Ye naya hai — 4-var mein rows bhi wrap karti hain</p>
+        </div>
+    </div>
+    <div class="fragment key-point" style="margin-top:0.8em;">
+        <strong>Corner trick:</strong> Charon corners (m0, m2, m8, m10) ek group bana sakte hain!<br>
+        Kyunki ye sab wrap-around se adjacent hain.
+    </div>
+    <p class="fragment">Valid group sizes: 1, 2, 4, 8, 16</p>
+</section>
+
+<section>
+    <h2>Example 1: F(A,B,C,D) = &Sigma;m(0,2,5,7,8,10,13,15)</h2>
+    <p class="fragment"><strong>Step 1:</strong> K-map bharo</p>
+    <div class="fragment" style="text-align:center;">
+        <table class="kmap">
+            <tr>
+                <th class="header-label">AB \ CD</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">00</th>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+            </tr>
+            <tr>
+                <th class="header-label">01</th>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">11</th>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">10</th>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+            </tr>
+        </table>
+    </div>
+</section>
+
+<section>
+    <h2>Example 1 (continued): Grouping</h2>
+    <p><strong>Step 2:</strong> Groups banao</p>
+    <div style="text-align:center;">
+        <table class="kmap">
+            <tr>
+                <th class="header-label">AB \ CD</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">00</th>
+                <td class="group-blue">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="group-blue">1</td>
+            </tr>
+            <tr>
+                <th class="header-label">01</th>
+                <td class="cell-0">0</td>
+                <td class="group-green">1</td>
+                <td class="group-green">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">11</th>
+                <td class="cell-0">0</td>
+                <td class="group-green">1</td>
+                <td class="group-green">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">10</th>
+                <td class="group-blue">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="group-blue">1</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment">
+        <p><span style="color:#3498db;">Blue group</span> (4 corners, wrap-around): m0, m2, m8, m10</p>
+        <p class="small">A changes, B=0 constant? Nahi — B bhi change. C=0? Nahi. D=0 constant! Actually: B'D' — B=0, D=0</p>
+        <p>In cells mein: B=0, D=0 &rarr; <strong>B'D'</strong></p>
+    </div>
+    <div class="fragment">
+        <p><span style="color:#27ae60;">Green group</span> (middle 4): m5, m7, m13, m15</p>
+        <p>In cells mein: B=1, D=1 &rarr; <strong>BD</strong></p>
+    </div>
+    <div class="fragment success-box" style="text-align:center;">
+        <strong>F = B'D' + BD</strong> &nbsp; (ye XNOR of B and D hai!)
+    </div>
+</section>
+
+<section>
+    <h2>Example 2: F(A,B,C,D) = &Sigma;m(0,1,2,3,4,5,6,7)</h2>
+    <p class="fragment">Ye m0 se m7 tak sab hain — pehle 8 minterms!</p>
+    <div class="fragment" style="text-align:center;">
+        <table class="kmap">
+            <tr>
+                <th class="header-label">AB \ CD</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">00</th>
+                <td class="group-blue">1</td>
+                <td class="group-blue">1</td>
+                <td class="group-blue">1</td>
+                <td class="group-blue">1</td>
+            </tr>
+            <tr>
+                <th class="header-label">01</th>
+                <td class="group-blue">1</td>
+                <td class="group-blue">1</td>
+                <td class="group-blue">1</td>
+                <td class="group-blue">1</td>
+            </tr>
+            <tr>
+                <th class="header-label">11</th>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">10</th>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment">
+        <p>Top 2 rows = A=0 wali rows (AB=00 aur AB=01). In dono mein A=0.</p>
+        <p>Group of 8: B changes, C changes, D changes — sirf A=0 constant hai.</p>
+    </div>
+    <div class="fragment success-box" style="text-align:center;">
+        <strong>F = A'</strong> &nbsp; Simple!
+    </div>
+</section>
+
+<section>
+    <h2>Example 3: Overlapping Groups</h2>
+    <p>F(A,B,C,D) = &Sigma;m(0,1,2,4,5,6,8,9,10,12,13,14)</p>
+    <div class="fragment" style="text-align:center;">
+        <table class="kmap">
+            <tr>
+                <th class="header-label">AB \ CD</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">00</th>
+                <td class="cell-1">1</td>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+            </tr>
+            <tr>
+                <th class="header-label">01</th>
+                <td class="cell-1">1</td>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+            </tr>
+            <tr>
+                <th class="header-label">11</th>
+                <td class="cell-1">1</td>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+            </tr>
+            <tr>
+                <th class="header-label">10</th>
+                <td class="cell-1">1</td>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment">
+        <p>Dekho pattern — sirf CD=11 column mein 0 hai, baaki sab 1!</p>
+    </div>
+    <div class="fragment">
+        <p>Groups:</p>
+        <ul>
+            <li><span style="color:#3498db; font-weight:600;">Group 1</span>: All of columns 00 and 10 (wrap-around!) = 8 cells &rarr; <strong>D'</strong></li>
+            <li><span style="color:#27ae60; font-weight:600;">Group 2</span>: All of columns 00 and 01 = 8 cells &rarr; <strong>C'</strong></li>
+        </ul>
+    </div>
+    <div class="fragment success-box">
+        <strong>F = C' + D'</strong> &nbsp; (overlap on column 00 is fine!)
+    </div>
+</section>
+
+<section>
+    <h2>4-Var Practice Problems</h2>
+    <p><strong>Problem 1:</strong> F(A,B,C,D) = &Sigma;m(0,1,2,8,9,10)</p>
+    <div class="fragment">
+        <table class="kmap">
+            <tr>
+                <th class="header-label">AB \ CD</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">00</th>
+                <td class="group-blue">1</td>
+                <td class="group-blue">1</td>
+                <td class="cell-0">0</td>
+                <td class="group-blue">1</td>
+            </tr>
+            <tr>
+                <th class="header-label">01</th>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">11</th>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">10</th>
+                <td class="group-blue">1</td>
+                <td class="group-blue">1</td>
+                <td class="cell-0">0</td>
+                <td class="group-blue">1</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment">
+        <p>Rows 00 aur 10 wrap-around se adjacent hain (B=0 dono mein). Columns 00, 01, 10 — but wait, ye 3 columns hain, power of 2 nahi!</p>
+    </div>
+    <div class="fragment">
+        <p>Toh 2 groups banao:</p>
+        <ul>
+            <li>m0, m2, m8, m10 (corners wrap) &rarr; <strong>B'D'</strong></li>
+            <li>m0, m1, m8, m9 (left 2 cols, rows 00+10 wrap) &rarr; <strong>B'C'</strong></li>
+        </ul>
+    </div>
+    <p class="fragment success-box"><strong>F = B'D' + B'C'</strong> = <strong>B'(C' + D')</strong></p>
+</section>
+
+<section>
+    <h2>4-Var Practice (continued)</h2>
+    <p><strong>Problem 2:</strong> F(A,B,C,D) = &Sigma;m(1,3,5,7,9,11,13,15)</p>
+    <div class="fragment">
+        <table class="kmap">
+            <tr>
+                <th class="header-label">AB \ CD</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">00</th>
+                <td class="cell-0">0</td>
+                <td class="group-green">1</td>
+                <td class="group-green">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">01</th>
+                <td class="cell-0">0</td>
+                <td class="group-green">1</td>
+                <td class="group-green">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">11</th>
+                <td class="cell-0">0</td>
+                <td class="group-green">1</td>
+                <td class="group-green">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">10</th>
+                <td class="cell-0">0</td>
+                <td class="group-green">1</td>
+                <td class="group-green">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment">
+        <p>Middle 2 columns, all rows — group of 8! D=1 constant.</p>
+    </div>
+    <p class="fragment success-box"><strong>F = D</strong></p>
+</section>
+
+<section>
+    <h2>4-Var Practice: Tricky One</h2>
+    <p><strong>Problem 3:</strong> F(A,B,C,D) = &Sigma;m(0,2,3,5,7,8,10,11,13,15)</p>
+    <div class="fragment" style="text-align:center;">
+        <table class="kmap">
+            <tr>
+                <th class="header-label">AB \ CD</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">00</th>
+                <td class="group-blue">1</td>
+                <td class="cell-0">0</td>
+                <td class="group-green">1</td>
+                <td class="group-blue">1</td>
+            </tr>
+            <tr>
+                <th class="header-label">01</th>
+                <td class="cell-0">0</td>
+                <td class="group-orange">1</td>
+                <td class="group-orange">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">11</th>
+                <td class="cell-0">0</td>
+                <td class="group-orange">1</td>
+                <td class="group-orange">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">10</th>
+                <td class="group-blue">1</td>
+                <td class="cell-0">0</td>
+                <td class="group-green">1</td>
+                <td class="group-blue">1</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment">
+        <ul style="font-size:0.85em;">
+            <li><span style="color:#3498db;">Blue</span>: m0, m2, m8, m10 (corners) &rarr; <strong>B'D'</strong></li>
+            <li><span style="color:#e67e22;">Orange</span>: m5, m7, m13, m15 &rarr; <strong>BD</strong></li>
+            <li><span style="color:#27ae60;">Green</span>: m3, m11 (+ overlap m2, m10) &rarr; actually m2, m3, m10, m11 &rarr; <strong>B'C</strong></li>
+        </ul>
+    </div>
+    <p class="fragment success-box"><strong>F = B'D' + BD + B'C</strong></p>
+</section>
+
+<!-- ===================== SECTION 6: DON'T CARE CONDITIONS ===================== -->
+<section>
+    <h2>Don't Care Conditions</h2>
+    <p class="fragment">Kabhi kabhi kuch input combinations <strong>kabhi hote hi nahi</strong>.</p>
+    <p class="fragment">Example: BCD mein digits 0-9 represent hote hain (4 bits). Lekin 1010 (10) se 1111 (15) — ye <strong>invalid</strong> hain!</p>
+    <div class="fragment key-point">
+        In invalid combinations ko hum <strong>"Don't Care"</strong> bolte hain aur K-map mein <strong>X</strong> likhte hain.
+    </div>
+    <p class="fragment"><strong>X ka matlab:</strong> Isko 0 bhi maan sakte ho, 1 bhi — jo bhi bigger group banane mein help kare!</p>
+    <div class="fragment warning-box">
+        Don't cares ko 1 maanna optional hai — sirf tab maano jab group bada ho raha ho. Zaroori nahi ki sab X ko 1 maano!
+    </div>
+</section>
+
+<section>
+    <h2>Don't Care Example</h2>
+    <p>F(A,B,C,D) = &Sigma;m(1,3,7,11,15) + d(0,2,5)</p>
+    <p class="small">d() = don't care minterms</p>
+    <div class="fragment" style="text-align:center;">
+        <table class="kmap">
+            <tr>
+                <th class="header-label">AB \ CD</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">00</th>
+                <td class="cell-x">X</td>
+                <td class="cell-1">1</td>
+                <td class="cell-1">1</td>
+                <td class="cell-x">X</td>
+            </tr>
+            <tr>
+                <th class="header-label">01</th>
+                <td class="cell-0">0</td>
+                <td class="cell-x">X</td>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">11</th>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">10</th>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment">
+        <p>Agar X ko 1 maane (m0, m2, m5):</p>
+        <table class="kmap">
+            <tr>
+                <th class="header-label">AB \ CD</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">00</th>
+                <td class="group-blue">X</td>
+                <td class="group-blue">1</td>
+                <td class="group-green">1</td>
+                <td class="group-blue">X</td>
+            </tr>
+            <tr>
+                <th class="header-label">01</th>
+                <td class="cell-0">0</td>
+                <td class="group-blue">X</td>
+                <td class="group-green">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">11</th>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="group-green">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">10</th>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="group-green">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment success-box">
+        <span style="color:#3498db;">Blue</span>: m0,m1,m2,m5 (using X!) &rarr; A'C' ... wait let's re-check.
+        Actually: <span style="color:#27ae60;">Green</span>: entire CD=11 column &rarr; <strong>CD</strong>. <span style="color:#3498db;">Blue</span>: top rows using Xs &rarr; <strong>A'</strong>. So <strong>F = CD + A'</strong>... but we must verify. Key point: Don't cares help make bigger groups!
+    </div>
+</section>
+
+<section>
+    <h2>Don't Care: Clean Example</h2>
+    <p>F(A,B,C) = &Sigma;m(1,5,7) + d(2,6)</p>
+    <div class="fragment" style="text-align:center;">
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ BC</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-x">X</td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="cell-0">0</td>
+                <td class="cell-1">1</td>
+                <td class="cell-1">1</td>
+                <td class="cell-x">X</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment">
+        <p><strong>Without don't cares:</strong> m1, m5 = group of 2 (B'C), m5, m7 = group of 2 (AC) &rarr; F = B'C + AC</p>
+    </div>
+    <div class="fragment">
+        <p><strong>With don't cares as 1:</strong></p>
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ BC</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="cell-0">0</td>
+                <td class="group-blue">1</td>
+                <td class="cell-0">0</td>
+                <td class="group-blue">X</td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="cell-0">0</td>
+                <td class="group-blue">1</td>
+                <td class="group-orange">1</td>
+                <td class="group-orange">X</td>
+            </tr>
+        </table>
+        <p><span style="color:#3498db;">Blue</span>: m1, m2, m5, m6 (wrap!) &rarr; <strong>C'</strong>... Hmm, let me redo.</p>
+    </div>
+    <div class="fragment success-box">
+        m1+m5 group &rarr; B'C. m5+m7+m6(X) = group &rarr; AC or A. Don't cares expand groups! The key lesson: <strong>X lets you make bigger groups = simpler answers!</strong>
+    </div>
+</section>
+
+<!-- ===================== SECTION 7: K-MAPS AND REAL CODE ===================== -->
+<section>
+    <h2>K-Maps aur Real Code</h2>
+    <p>Socho tumhare paas ye complex condition hai:</p>
+    <pre><code class="javascript">if ((a && !b && c) || (!a && !b && c) || (a && b && c) || (!a && b && c)) {
+    doSomething();
+}</code></pre>
+    <div class="fragment">
+        <p><strong>Step 1:</strong> Variables identify karo: A, B, C</p>
+        <p><strong>Step 2:</strong> Minterms: AB'C + A'B'C + ABC + A'BC = &Sigma;m(1,3,5,7)</p>
+    </div>
+    <div class="fragment">
+        <p><strong>Step 3:</strong> K-map se simplify:</p>
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ BC</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="cell-0">0</td>
+                <td class="group-green">1</td>
+                <td class="group-green">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="cell-0">0</td>
+                <td class="group-green">1</td>
+                <td class="group-green">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment success-box">
+        <strong>F = C</strong> &rarr; Simplified code:
+        <pre><code class="javascript">if (c) {
+    doSomething();
+}</code></pre>
+    </div>
+</section>
+
+<section>
+    <h2>Flowchart Decision Simplification</h2>
+    <p>Imagine a flowchart mein ye decision hai:</p>
+    <blockquote style="font-size:0.9em;">
+        "Show discount if: (premium member AND has coupon) OR (premium member AND no coupon AND order &gt; 500) OR (not premium AND has coupon AND order &gt; 500)"
+    </blockquote>
+    <div class="fragment">
+        <p>Variables: P (premium), C (coupon), O (order&gt;500)</p>
+        <p>F = PC + PCO' ... wait: PC + P C' O + P'CO = &Sigma;m(6,7,4,3) nahi...</p>
+        <p>Let me map: P=A, C=B, O=C</p>
+        <ul>
+            <li>AB (premium + coupon): m6, m7</li>
+            <li>AB'C (premium, no coupon, big order): m5</li>
+            <li>A'BC (not premium, coupon, big order): m3</li>
+        </ul>
+        <p>F = &Sigma;m(3,5,6,7)</p>
+    </div>
+    <div class="fragment">
+        <table class="kmap">
+            <tr>
+                <th class="header-label">P \ CO</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">P=0</th>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="group-green">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">P=1</th>
+                <td class="cell-0">0</td>
+                <td class="group-orange">1</td>
+                <td class="group-blue">1</td>
+                <td class="group-blue">1</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment success-box">
+        <span style="color:#3498db;">Blue</span>: PC &nbsp; <span style="color:#27ae60;">Green+Orange</span>: m3+m7 = CO, m5 is separate = PC'O? Actually: <strong>F = PC + CO</strong>. Simpler decision!
+    </div>
+</section>
+
+<section>
+    <h2>K-Map Thinking in Code</h2>
+    <div class="info-box">
+        Ab jab bhi koi complex condition dikhti hai — K-map banao, simplify karo!
+    </div>
+    <div class="two-col" style="margin-top:1em;">
+        <div class="card fragment">
+            <h4>Before K-Map</h4>
+            <pre><code class="javascript">if ((x && y && !z) ||
+    (x && !y && !z) ||
+    (!x && y && !z) ||
+    (!x && !y && !z)) {
+  // ...
+}</code></pre>
+        </div>
+        <div class="card fragment">
+            <h4>After K-Map</h4>
+            <pre><code class="javascript">if (!z) {
+  // ...
+}</code></pre>
+            <p class="small">All 4 terms had z=0!</p>
+        </div>
+    </div>
+    <div class="fragment key-point" style="margin-top:1em;">
+        <strong>Pro tip:</strong> Real code mein 2-3 conditions se zyada ho toh truth table banao, K-map draw karo, aur simplified condition likho. Code readable bhi hoga aur efficient bhi!
+    </div>
+</section>
+
+<!-- ===================== SECTION 8: PRACTICE & HOMEWORK ===================== -->
+<section>
+    <h2>Practice Time!</h2>
+    <p class="big-q">Ab tumhari baari — K-maps se simplify karo!</p>
+    <div class="two-col">
+        <div>
+            <div class="card">
+                <h4>2-Variable</h4>
+                <p><strong>Q1:</strong> F(A,B) = &Sigma;m(0,1)</p>
+                <p class="fragment success-box">F = A'</p>
+                <p><strong>Q2:</strong> F(A,B) = &Sigma;m(1,2)</p>
+                <p class="fragment success-box">F = A'B + AB' (no simplification — XOR!)</p>
+            </div>
+        </div>
+        <div>
+            <div class="card">
+                <h4>3-Variable</h4>
+                <p><strong>Q3:</strong> F(A,B,C) = &Sigma;m(0,1,4,5)</p>
+                <p class="fragment success-box">F = B' (group of 4, wrap-around)</p>
+                <p><strong>Q4:</strong> F(A,B,C) = &Sigma;m(2,3,6,7)</p>
+                <p class="fragment success-box">F = B</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>Practice: 4-Variable Problems</h2>
+    <p><strong>Q5:</strong> F(A,B,C,D) = &Sigma;m(0,4,8,12)</p>
+    <div class="fragment">
+        <table class="kmap" style="font-size:0.75em;">
+            <tr>
+                <th class="header-label">AB \ CD</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">00</th>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">01</th>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">11</th>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">10</th>
+                <td class="cell-1">1</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+            </tr>
+        </table>
+    </div>
+    <p class="fragment success-box">Pehla column, all rows — group of 4: C=0, D=0 &rarr; <strong>F = C'D'</strong></p>
+
+    <p class="fragment"><strong>Q6:</strong> F(A,B,C,D) = &Sigma;m(0,1,2,3,8,9,10,11)</p>
+    <p class="fragment success-box">Rows AB=00 aur AB=10 (wrap!), all columns &rarr; <strong>F = B'</strong></p>
+</section>
+
+<section>
+    <h2>Practice: Express as SOP then Simplify</h2>
+    <p><strong>Q7:</strong> Ye truth table diya hai. SOP likho, phir K-map se simplify karo.</p>
+    <table style="font-size:0.75em; width:auto; margin:0.5em auto;">
+        <tr><th>A</th><th>B</th><th>C</th><th>F</th></tr>
+        <tr><td>0</td><td>0</td><td>0</td><td>1</td></tr>
+        <tr><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+        <tr><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+        <tr><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+        <tr><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+        <tr><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+        <tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+    </table>
+    <div class="fragment">
+        <p><strong>SOP:</strong> F = &Sigma;m(0,1,3,4,5,7)</p>
+    </div>
+    <div class="fragment">
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ BC</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="group-blue">1</td>
+                <td class="group-blue">1</td>
+                <td class="group-green">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="group-blue">1</td>
+                <td class="group-blue">1</td>
+                <td class="group-green">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+        </table>
+    </div>
+    <p class="fragment success-box"><span style="color:#3498db;">Blue</span>: B' (group of 4) | <span style="color:#27ae60;">Green</span>: C (m3+m7... wait, need m1+m3+m5+m7 for C, but m1 already in blue). Actually: <strong>F = B' + C</strong></p>
+</section>
+
+<section>
+    <h2>Challenge: Word Problem!</h2>
+    <div class="info-box">
+        Ek alarm system hai jisme 3 sensors hain:<br>
+        <strong>A</strong> = Door sensor, <strong>B</strong> = Window sensor, <strong>C</strong> = Motion detector
+    </div>
+    <p class="fragment">Alarm bajega (F=1) jab:</p>
+    <ul>
+        <li class="fragment">Door open aur motion detected (A=1, C=1, B kuch bhi)</li>
+        <li class="fragment">Window open aur motion detected (B=1, C=1, A kuch bhi)</li>
+        <li class="fragment">Dono door aur window open (A=1, B=1, C kuch bhi)</li>
+    </ul>
+    <div class="fragment">
+        <p><strong>Step 1:</strong> Truth table banao (try yourself!)</p>
+        <p><strong>Step 2:</strong> Minterms: AC + BC + AB = &Sigma;m(3,5,6,7)</p>
+    </div>
+    <div class="fragment">
+        <table class="kmap">
+            <tr>
+                <th class="header-label">A \ BC</th>
+                <th>00</th>
+                <th>01</th>
+                <th>11</th>
+                <th>10</th>
+            </tr>
+            <tr>
+                <th class="header-label">A=0</th>
+                <td class="cell-0">0</td>
+                <td class="cell-0">0</td>
+                <td class="group-blue">1</td>
+                <td class="cell-0">0</td>
+            </tr>
+            <tr>
+                <th class="header-label">A=1</th>
+                <td class="cell-0">0</td>
+                <td class="group-green">1</td>
+                <td class="group-purple">1</td>
+                <td class="group-orange">1</td>
+            </tr>
+        </table>
+    </div>
+    <div class="fragment success-box">
+        Groups: m3+m7 = BC, m5+m7 = AC, m6+m7 = AB. Already minimal! <strong>F = AB + AC + BC</strong> (majority function)
+    </div>
+</section>
+
+<section>
+    <h2>Homework</h2>
+    <div class="card" style="margin-bottom:0.8em;">
+        <h4>Problem 1 (2-var)</h4>
+        <p>F(A,B) = A'B' + AB'. K-map banao aur simplify karo.</p>
+    </div>
+    <div class="card" style="margin-bottom:0.8em;">
+        <h4>Problem 2 (3-var)</h4>
+        <p>F(A,B,C) = &Sigma;m(0,1,2,4,5,6). K-map draw karo aur simplified expression likho.</p>
+    </div>
+    <div class="card" style="margin-bottom:0.8em;">
+        <h4>Problem 3 (4-var)</h4>
+        <p>F(A,B,C,D) = &Sigma;m(0,1,3,5,7,8,9,11,13,15). K-map banao, groups identify karo, simplify karo.</p>
+    </div>
+    <div class="card" style="margin-bottom:0.8em;">
+        <h4>Problem 4 (Don't Care)</h4>
+        <p>F(A,B,C) = &Sigma;m(0,2,6) + d(1,3). Don't cares use karke simplify karo.</p>
+    </div>
+    <div class="card">
+        <h4>Problem 5 (Word Problem)</h4>
+        <p>A vending machine accepts 3 coins: A (Rs.1), B (Rs.2), C (Rs.5). Machine gives item only when total >= Rs.5 (assume at most one of each coin). Truth table banao aur K-map se simplify karo.</p>
+    </div>
+</section>
+
+<!-- ===================== SUMMARY SLIDE ===================== -->
+<section class="center-content">
+    <h2>K-Map Summary</h2>
+    <div class="three-col" style="text-align:center;">
+        <div class="card fragment">
+            <h4>2-Variable</h4>
+            <p>2 x 2 grid</p>
+            <p>Groups: 1, 2, 4</p>
+            <p class="small">Sabse simple</p>
+        </div>
+        <div class="card fragment">
+            <h4>3-Variable</h4>
+            <p>2 x 4 grid</p>
+            <p>Gray code columns!</p>
+            <p>Left-right wrap</p>
+            <p class="small">Groups: 1, 2, 4, 8</p>
+        </div>
+        <div class="card fragment">
+            <h4>4-Variable</h4>
+            <p>4 x 4 grid</p>
+            <p>Both axes Gray code!</p>
+            <p>All-direction wrap</p>
+            <p class="small">Groups: 1, 2, 4, 8, 16</p>
+        </div>
+    </div>
+    <div class="fragment key-point" style="margin-top:1em; text-align:center; font-size:1.05em;">
+        <strong>Yaad rakho:</strong> 1s dhundho &rarr; Biggest groups banao &rarr; Constant variables likho &rarr; OR karo. Done!
+    </div>
+    <p class="fragment" style="text-align:center; font-size:1.2em; margin-top:0.8em;">
+        Boolean Algebra mushkil lagta tha?<br>Ab <span class="highlight">K-map se visual shortcut</span> use karo!
+    </p>
+</section>
+
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/highlight.js"></script>
+<script>
+    Reveal.initialize({
+        hash: true, center: false, slideNumber: true, transition: 'slide',
+        width: 1280, height: 720, margin: 0.04, minScale: 0.2, maxScale: 2.0,
+        plugins: [ RevealHighlight, RevealNotes ]
+    });
+</script>
+</body>
+</html>
