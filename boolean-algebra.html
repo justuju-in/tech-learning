@@ -53,292 +53,190 @@
         .reveal table td { padding: 0.4em 0.8em; border: 1px solid #dee2e6; text-align: center; }
         .reveal table tr:nth-child(even) { background: var(--light-bg); }
         .big-q { font-size: 1.35em; font-weight: 600; color: var(--main-color); text-align: center; margin: 0.9em 0; line-height: 1.4; }
-        .law-box { background: linear-gradient(135deg, #667eea11, #764ba211); border: 2px solid var(--accent-color); border-radius: 12px; padding: 0.8em 1.2em; margin: 0.5em 0; text-align: center; font-size: 1.1em; }
-        .step { background: var(--light-bg); border-left: 4px solid var(--accent-color); padding: 0.4em 0.8em; margin: 0.4em 0; border-radius: 0 6px 6px 0; font-family: 'Monaco','Menlo',monospace; font-size: 0.82em; }
+        .law-box { background: linear-gradient(135deg, #667eea11, #764ba211); border: 2px solid var(--accent-color); border-radius: 12px; padding: 0.7em 1.1em; margin: 0.4em 0; text-align: center; font-size: 1.1em; }
+        .step { background: var(--light-bg); border-left: 4px solid var(--accent-color); padding: 0.4em 0.8em; margin: 0.35em 0; border-radius: 0 6px 6px 0; font-family: 'Monaco','Menlo',monospace; font-size: 0.82em; }
         .step-label { color: var(--accent-color); font-weight: 600; font-family: sans-serif; font-size: 0.85em; }
-        .gate-visual { font-size: 2em; text-align: center; margin: 0.3em 0; }
-        .emoji-big { font-size: 1.5em; }
+        .practice-q { background: #e8f4fd; border-left: 4px solid var(--accent-color); padding: 0.7em 1.1em; margin: 0.7em 0; border-radius: 4px; font-size: 0.9em; }
+        .answer-reveal { background: #d4edda; border-left: 4px solid var(--success-color); padding: 0.7em 1.1em; margin: 0.7em 0; border-radius: 4px; font-size: 0.9em; }
+        .thread { background: #efe7fb; border-left: 4px solid #8e44ad; padding: 0.7em 1.1em; margin: 0.7em 0; border-radius: 4px; font-size: 0.85em; }
+        .section-banner { background: linear-gradient(135deg, #3498db, #2c3e50); color: white; padding: 1.2em; border-radius: 12px; margin: 0.5em 0; }
+        .section-banner h1, .section-banner h2, .section-banner p { color: white; }
     </style>
 </head>
 <body>
 <div class="reveal">
 <div class="slides">
 
-<!-- ============================================ -->
-<!-- TITLE SLIDE -->
-<!-- ============================================ -->
+<!-- ════════════════════════════════════════════════ TITLE ═══ -->
 <section class="center-content">
     <h1>Boolean Algebra</h1>
-    <p style="font-size: 1.3em; color: var(--accent-color);">Logic ko simplify karna seekho!</p>
+    <p style="font-size: 1.25em; color: #555;">Making logic <span class="highlight">simple</span></p>
     <br>
-    <p class="small">Justuju CS Fundamentals</p>
+    <p class="small">Justuju — CS Fundamentals · builds directly on Logic Gates</p>
 </section>
 
-<!-- ============================================ -->
-<!-- SECTION 1: THE PROBLEM -->
-<!-- ============================================ -->
+<!-- WHERE WE LEFT OFF -->
 <section>
-    <h2>Ek Situation Socho...</h2>
-    <p>Tumne ek circuit banaya. 5-6 gates lage hain. <span class="highlight">It works!</span></p>
-    <div class="fragment">
-        <p>Lekin sochke dekho:</p>
-        <ul>
-            <li class="fragment">Har gate ka <span class="highlight">paisa</span> lagta hai chip mein</li>
-            <li class="fragment">Zyada gates = zyada <span class="highlight">bijli</span> (power)</li>
-            <li class="fragment">Zyada gates = zyada <span class="highlight">slow</span> circuit</li>
-            <li class="fragment">Zyada gates = zyada <span class="highlight">garmi</span> (heat)</li>
-        </ul>
+    <h2>Where We Left Off</h2>
+    <p>In the Logic Gates lessons, we kept hitting expressions that looked <strong>too long</strong> — and we kept saying <em>"can this be shorter? We'll find out in Boolean Algebra."</em></p>
+    <div class="fragment thread">
+        <strong>Open thread 1:</strong> A circuit gave us <code>(A + B) &middot; A'</code>. Is there a simpler form?
+    </div>
+    <div class="fragment thread">
+        <strong>Open thread 2:</strong> The "majority" function came out as <code>A'BC + AB'C + ABC' + ABC</code> — four terms, about 10 gates.
+    </div>
+    <div class="fragment thread">
+        <strong>Open thread 3:</strong> A truth table gave <code>A'B'C' + A'B'C + AB'C' + AB'C + ABC'</code> — five whole terms!
+    </div>
+    <div class="fragment thread">
+        <strong>Open thread 4:</strong> We noticed <code>A NAND B</code> and <code>A' + B'</code> <em>always</em> give the same answer. Why?
     </div>
     <div class="fragment key-point">
-        Kya hum <strong>kam gates</strong> mein wahi kaam kar sakte hain? Bilkul! Lekin kaise?
+        Today we close all four. By the end, you'll shrink each of these yourself.
     </div>
 </section>
 
+<!-- WHY IT MATTERS -->
 <section>
-    <h2>Dekho Ye Expression</h2>
-    <div class="law-box" style="font-size: 1.3em;">
-        F = A'BC + AB'C + ABC' + ABC
-    </div>
-    <p class="fragment">Isme kitne gates lagenge?</p>
-    <ul>
-        <li class="fragment">4 AND gates (har term ke liye)</li>
-        <li class="fragment">3 NOT gates (A', B', C' ke liye)</li>
-        <li class="fragment">3 OR gates (4 terms ko combine karne ke liye)</li>
-        <li class="fragment"><strong>Total: 10 gates!</strong></li>
-    </ul>
-    <div class="fragment warning-box">
-        Kya ye expression simplify ho sakta hai? Haan! Lekin HOW?
-    </div>
-    <p class="fragment">Trial and error se toh mushkil hai... Hume ek <span class="highlight">systematic method</span> chahiye.</p>
-</section>
-
-<section>
-    <h2>Code Mein Bhi Yahi Problem Hai</h2>
-    <p>Ye padho aur batao kya ho raha hai:</p>
-    <pre><code class="javascript">if ((a && b) || (a && c) || (a && !b && c)) {
-    doSomething();
-}</code></pre>
-    <p class="fragment">Samajh aaya? Mushkil hai na padhna?</p>
-    <div class="fragment">
-        <p>Ab ye dekho:</p>
-        <pre><code class="javascript">if (a && (b || c)) {
-    doSomething();
-}</code></pre>
+    <h2>Why Shorter Is Better</h2>
+    <p>Every gate you remove from a circuit is a real saving:</p>
+    <div class="two-col">
+        <div>
+            <ul>
+                <li>Fewer gates &rarr; <strong>cheaper</strong> chip</li>
+                <li>Fewer gates &rarr; less <strong>power</strong> and <strong>heat</strong></li>
+                <li>Fewer gates &rarr; a <strong>faster</strong> signal path</li>
+            </ul>
+        </div>
+        <div>
+            <p>And it isn't only hardware. Read this condition:</p>
+            <pre><code class="javascript">if ((a && b) || (a && c)) { ... }</code></pre>
+            <p class="fragment">The same thing, simplified:</p>
+            <pre class="fragment"><code class="javascript">if (a && (b || c)) { ... }</code></pre>
+        </div>
     </div>
     <div class="fragment success-box">
-        Dono ka result SAME hai! Lekin doosra wala kitna <strong>simple</strong> hai!
+        Simpler logic = cheaper circuits <em>and</em> code that's easier to read and trust. Boolean Algebra gives us the rules to get there — on purpose, not by luck.
     </div>
-    <p class="fragment">Flowcharts mein bhi — simple conditions = simple flowchart.</p>
 </section>
 
+<!-- WHAT IS IT -->
 <section>
-    <h2>Boolean Algebra Kya Hai?</h2>
-    <p class="big-q">Ek set of RULES jo logic expressions ko simplify karte hain</p>
-    <div class="fragment">
-        <p>Jaise math mein rules hain:</p>
-        <ul>
-            <li><code>a + 0 = a</code></li>
-            <li><code>a * 1 = a</code></li>
-            <li><code>a * (b + c) = ab + ac</code></li>
-        </ul>
-    </div>
-    <div class="fragment">
-        <p>Waise hi Boolean Algebra mein rules hain AND, OR, NOT ke liye!</p>
+    <h2>What Boolean Algebra Is</h2>
+    <p class="big-q">A set of rules for rewriting logic expressions without changing what they mean.</p>
+    <div class="fragment two-col">
+        <div class="card">
+            <h4>You already know algebra</h4>
+            <p><code>a + 0 = a</code></p>
+            <p><code>a &times; 1 = a</code></p>
+            <p><code>a(b + c) = ab + ac</code></p>
+        </div>
+        <div class="card">
+            <h4>Boolean is the same idea</h4>
+            <p><strong>OR</strong> behaves like <strong>+</strong></p>
+            <p><strong>AND</strong> behaves like <strong>&middot;</strong> (and <code>AB</code> means <code>A&middot;B</code>)</p>
+            <p><strong>NOT</strong> is the <strong>'</strong> mark: <code>A'</code></p>
+        </div>
     </div>
     <div class="fragment info-box">
-        <strong>Yaad rakho:</strong> OR is like addition (+), AND is like multiplication (.), NOT is the bar on top (A')
+        <strong>One big difference:</strong> in Boolean, every variable is only ever <strong>0 or 1</strong>. That makes some new rules possible that ordinary algebra doesn't have.
     </div>
 </section>
 
-<!-- ============================================ -->
-<!-- SECTION 2: BASIC LAWS -->
-<!-- ============================================ -->
+<!-- ════════════════════════════════════════════════ THE LAWS ═══ -->
 <section class="center-content">
-    <h1>Basic Laws</h1>
-    <p style="font-size: 1.2em;">The Rules of the Game</p>
-    <p class="small">In rules ko yaad karo — ye tumhare tools hain simplification ke liye</p>
+    <div class="section-banner">
+        <h1>The Laws</h1>
+        <p>Your toolkit for simplification</p>
+    </div>
+    <p class="small">Each one can be checked with a truth table — none of them is magic.</p>
 </section>
 
 <section>
-    <h2>1. Identity Law</h2>
-    <p><em>"Koi cheez aur zero ko OR karo — woh cheez hi rahegi"</em></p>
+    <h2>Identity &amp; Null</h2>
+    <p>What happens when you combine a variable with a plain 0 or 1?</p>
     <div class="two-col">
         <div class="card">
-            <h4>OR Identity</h4>
+            <h4>Identity — the harmless one</h4>
             <div class="law-box">A + 0 = A</div>
-            <p class="fragment small">Zero ke saath OR karna = kuch nahi karna</p>
-            <table class="fragment">
-                <tr><th>A</th><th>0</th><th>A + 0</th></tr>
-                <tr><td>0</td><td>0</td><td>0</td></tr>
-                <tr><td>1</td><td>0</td><td>1</td></tr>
-            </table>
-        </div>
-        <div class="card">
-            <h4>AND Identity</h4>
             <div class="law-box">A &middot; 1 = A</div>
-            <p class="fragment small">Ek ke saath AND karna = kuch nahi karna</p>
-            <table class="fragment">
-                <tr><th>A</th><th>1</th><th>A &middot; 1</th></tr>
-                <tr><td>0</td><td>1</td><td>0</td></tr>
-                <tr><td>1</td><td>1</td><td>1</td></tr>
-            </table>
+            <p class="small">OR-ing with 0, or AND-ing with 1, changes nothing.</p>
         </div>
-    </div>
-    <div class="fragment key-point">
-        <strong>Real life:</strong> "Main jaaungi YA koi nahi jaayega" = "Main jaaungi." Zero ka matlab = koi nahi.
-    </div>
-</section>
-
-<section>
-    <h2>2. Null / Domination Law</h2>
-    <p><em>"Ek bada player aata hai toh baaki sab cancel"</em></p>
-    <div class="two-col">
         <div class="card">
-            <h4>OR Domination</h4>
+            <h4>Null — the takeover</h4>
             <div class="law-box">A + 1 = 1</div>
-            <p class="fragment small">1 ke saath OR = hamesha 1 (TRUE wins!)</p>
-            <table class="fragment">
-                <tr><th>A</th><th>1</th><th>A + 1</th></tr>
-                <tr><td>0</td><td>1</td><td>1</td></tr>
-                <tr><td>1</td><td>1</td><td>1</td></tr>
-            </table>
-        </div>
-        <div class="card">
-            <h4>AND Domination</h4>
             <div class="law-box">A &middot; 0 = 0</div>
-            <p class="fragment small">0 ke saath AND = hamesha 0 (FALSE wins!)</p>
-            <table class="fragment">
-                <tr><th>A</th><th>0</th><th>A &middot; 0</th></tr>
-                <tr><td>0</td><td>0</td><td>0</td></tr>
-                <tr><td>1</td><td>0</td><td>0</td></tr>
-            </table>
+            <p class="small">OR-ing with 1 forces 1. AND-ing with 0 forces 0.</p>
         </div>
     </div>
     <div class="fragment key-point">
-        <strong>Real life:</strong> "Sab log jaayenge AUR koi nahi jaayega" = "Koi nahi jaayega." Zero sabko dominate karta hai AND mein!
+        <strong>In words:</strong> "rain OR <em>(something always true)</em>" is always true. "rain AND <em>(something always false)</em>" is always false.
     </div>
 </section>
 
 <section>
-    <h2>3. Idempotent Law</h2>
-    <p><em>"Ek cheez ko do baar karo — wahi rahega"</em></p>
+    <h2>Idempotent &amp; Complement</h2>
+    <p>What happens when you combine a variable with <em>itself</em>, or with its <em>opposite</em>?</p>
     <div class="two-col">
         <div class="card">
-            <h4>OR version</h4>
+            <h4>Idempotent — repeating is free</h4>
             <div class="law-box">A + A = A</div>
-            <p class="fragment small">Apne aap ko OR karo = wahi result</p>
-            <table class="fragment">
-                <tr><th>A</th><th>A</th><th>A + A</th></tr>
-                <tr><td>0</td><td>0</td><td>0</td></tr>
-                <tr><td>1</td><td>1</td><td>1</td></tr>
-            </table>
-        </div>
-        <div class="card">
-            <h4>AND version</h4>
             <div class="law-box">A &middot; A = A</div>
-            <p class="fragment small">Apne aap ko AND karo = wahi result</p>
-            <table class="fragment">
-                <tr><th>A</th><th>A</th><th>A &middot; A</th></tr>
-                <tr><td>0</td><td>0</td><td>0</td></tr>
-                <tr><td>1</td><td>1</td><td>1</td></tr>
-            </table>
+            <p class="small">Saying the same thing twice adds nothing. (We'll use this trick later!)</p>
         </div>
-    </div>
-    <div class="fragment key-point">
-        <strong>Real life:</strong> "Main jaaungi YA main jaaungi" — bhai, ek baar bol do bas! Result same hai.
-    </div>
-</section>
-
-<section>
-    <h2>4. Complement Law</h2>
-    <p><em>"Koi cheez OR uska opposite = hamesha TRUE"</em></p>
-    <div class="two-col">
         <div class="card">
-            <h4>OR Complement</h4>
+            <h4>Complement — a thing vs its opposite</h4>
             <div class="law-box">A + A' = 1</div>
-            <p class="fragment small">Kuch YA uska ulta = guaranteed TRUE</p>
-            <table class="fragment">
-                <tr><th>A</th><th>A'</th><th>A + A'</th></tr>
-                <tr><td>0</td><td>1</td><td>1</td></tr>
-                <tr><td>1</td><td>0</td><td>1</td></tr>
-            </table>
-        </div>
-        <div class="card">
-            <h4>AND Complement</h4>
             <div class="law-box">A &middot; A' = 0</div>
-            <p class="fragment small">Kuch AUR uska ulta = guaranteed FALSE</p>
-            <table class="fragment">
-                <tr><th>A</th><th>A'</th><th>A &middot; A'</th></tr>
-                <tr><td>0</td><td>1</td><td>0</td></tr>
-                <tr><td>1</td><td>0</td><td>0</td></tr>
-            </table>
+            <p class="small">"A or not-A" must be true. "A and not-A" is impossible.</p>
         </div>
     </div>
     <div class="fragment key-point">
-        <strong>Real life:</strong> "Baarish hogi YA nahi hogi" — ye toh 100% TRUE hai! Aur "Baarish hogi AUR nahi hogi" — ye toh impossible hai = FALSE.
+        Complement is the engine of simplification: whenever you can make an <code>A + A'</code> appear, a whole chunk collapses to <strong>1</strong>.
     </div>
 </section>
 
 <section>
-    <h2>5. Double Negation</h2>
-    <p><em>"NOT ka NOT = original wapas"</em></p>
-    <div class="law-box" style="font-size: 1.4em;">(A')' = A</div>
-    <div class="fragment">
-        <table style="width: 60%;">
-            <tr><th>A</th><th>A'</th><th>(A')'</th></tr>
-            <tr><td>0</td><td>1</td><td>0</td></tr>
-            <tr><td>1</td><td>0</td><td>1</td></tr>
-        </table>
-    </div>
-    <div class="fragment key-point">
-        <strong>Real life:</strong> "Ye sach nahi hai ki main nahi jaaungi" = "Main jaaungi!"<br>
-        Double negative = positive. Hindi mein bhi, English mein bhi, aur Boolean mein bhi!
+    <h2>The "Nothing New" Laws</h2>
+    <p>These three work exactly like ordinary algebra — you already use them without thinking.</p>
+    <div class="three-col">
+        <div class="card">
+            <h4>Double Negation</h4>
+            <div class="law-box" style="font-size:1em;">(A')' = A</div>
+            <p class="small">NOT of NOT undoes itself. In code: <code>!!x === x</code>.</p>
+        </div>
+        <div class="card">
+            <h4>Commutative</h4>
+            <div class="law-box" style="font-size:0.95em;">A + B = B + A</div>
+            <div class="law-box" style="font-size:0.95em;">AB = BA</div>
+            <p class="small">Order doesn't matter.</p>
+        </div>
+        <div class="card">
+            <h4>Associative</h4>
+            <div class="law-box" style="font-size:0.9em;">(A+B)+C = A+(B+C)</div>
+            <div class="law-box" style="font-size:0.9em;">(AB)C = A(BC)</div>
+            <p class="small">Grouping doesn't matter.</p>
+        </div>
     </div>
     <div class="fragment info-box">
-        <strong>Code mein:</strong> <code>!!true === true</code> &nbsp; aur &nbsp; <code>!!false === false</code>
+        Don't memorise these as something foreign. They're the same moves you make with numbers.
     </div>
 </section>
 
 <section>
-    <h2>6. Commutative &amp; Associative Laws</h2>
-    <div class="two-col">
-        <div class="card">
-            <h4>Commutative (Order doesn't matter)</h4>
-            <div class="law-box">A + B = B + A</div>
-            <div class="law-box">A &middot; B = B &middot; A</div>
-            <p class="fragment small">Jaise 3 + 5 = 5 + 3, waise hi OR aur AND mein order se farak nahi padta</p>
-        </div>
-        <div class="card fragment">
-            <h4>Associative (Grouping doesn't matter)</h4>
-            <div class="law-box">(A + B) + C = A + (B + C)</div>
-            <div class="law-box">(A &middot; B) &middot; C = A &middot; (B &middot; C)</div>
-            <p class="fragment small">Brackets kahin bhi lagao, result same — jaise (2+3)+4 = 2+(3+4)</p>
-        </div>
+    <h2>Distributive — the workhorse</h2>
+    <p>This is the rule you'll reach for most. It comes in two forms:</p>
+    <div class="law-box">A(B + C) = AB + AC &nbsp; <span class="small">(just like ordinary algebra)</span></div>
+    <div class="fragment law-box" style="border-color: var(--warning-color);">
+        A + BC = (A + B)(A + C) &nbsp; <span class="small">(this one is Boolean-only!)</span>
     </div>
-    <div class="fragment key-point">
-        Ye dono rules math se bilkul same hain — kuch naya nahi! Tum pehle se jaanti ho ye.
-    </div>
-</section>
-
-<section>
-    <h2>7. Distributive Law</h2>
-    <p><em>"Ye sabse POWERFUL rule hai simplification ke liye!"</em></p>
-    <div class="law-box" style="font-size: 1.1em;">
-        A &middot; (B + C) = A&middot;B + A&middot;C
-    </div>
-    <p class="fragment">Ye toh math wala hi hai: <code>a(b + c) = ab + ac</code></p>
-    <div class="fragment">
-        <div class="law-box" style="font-size: 1.1em; border-color: var(--warning-color);">
-            A + B&middot;C = (A + B) &middot; (A + C)
-        </div>
-        <div class="warning-box">
-            Ye wala math mein NAHI hota! Ye Boolean special hai. Yaad rakho!
-        </div>
+    <div class="fragment warning-box">
+        The second form does <strong>not</strong> work with ordinary numbers — try it with 2, 3, 4 and you'll get nonsense. It works here because variables are only 0 or 1.
     </div>
     <div class="fragment">
-        <p><strong>Verify karo truth table se:</strong></p>
-        <table style="width: 100%; font-size: 0.65em;">
-            <tr><th>A</th><th>B</th><th>C</th><th>B&middot;C</th><th>A + B&middot;C</th><th>A+B</th><th>A+C</th><th>(A+B)&middot;(A+C)</th></tr>
+        <p class="small">Proof of the second form by truth table — compare the two highlighted columns:</p>
+        <table style="font-size: 0.62em; width: 100%;">
+            <tr><th>A</th><th>B</th><th>C</th><th>BC</th><th style="background:#27ae60;">A+BC</th><th>A+B</th><th>A+C</th><th style="background:#27ae60;">(A+B)(A+C)</th></tr>
             <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
             <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
             <tr><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
@@ -348,627 +246,432 @@
             <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
             <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
         </table>
-        <p class="small">Dekho — column 5 aur column 8 SAME hain!</p>
     </div>
 </section>
 
 <section>
-    <h2>Quick Recap: All Basic Laws</h2>
+    <h2>Absorption — the great shortcut</h2>
+    <p>This one saves you the most time. Two forms:</p>
+    <div class="two-col">
+        <div class="card">
+            <div class="law-box">A + AB = A</div>
+            <div class="law-box">A(A + B) = A</div>
+            <p class="small">If A already decides the result, the extra B is dead weight.</p>
+        </div>
+        <div class="card">
+            <div class="law-box">A + A'B = A + B</div>
+            <div class="law-box">A(A' + B) = AB</div>
+            <p class="small">The "mismatched" version — drop the repeated variable from the second term.</p>
+        </div>
+    </div>
+    <div class="fragment">
+        <p><strong>Why <code>A + AB = A</code>?</strong> Watch:</p>
+        <div class="step"><span class="step-label">factor A:</span> A + AB = A(1 + B)</div>
+        <div class="step"><span class="step-label">Null:</span> = A &middot; 1</div>
+        <div class="step"><span class="step-label">Identity:</span> = A</div>
+    </div>
+    <div class="fragment key-point">
+        You can prove every absorption form from the basic laws — but they're so common that it pays to <strong>recognise them on sight</strong>.
+    </div>
+</section>
+
+<section>
+    <h2>The Whole Toolkit, On One Slide</h2>
     <table style="font-size: 0.7em; width: 100%;">
-        <tr><th>Law</th><th>OR Form (+)</th><th>AND Form (&middot;)</th></tr>
+        <tr><th>Law</th><th>OR form (+)</th><th>AND form (&middot;)</th></tr>
         <tr><td><strong>Identity</strong></td><td>A + 0 = A</td><td>A &middot; 1 = A</td></tr>
-        <tr><td><strong>Null/Domination</strong></td><td>A + 1 = 1</td><td>A &middot; 0 = 0</td></tr>
+        <tr><td><strong>Null</strong></td><td>A + 1 = 1</td><td>A &middot; 0 = 0</td></tr>
         <tr><td><strong>Idempotent</strong></td><td>A + A = A</td><td>A &middot; A = A</td></tr>
         <tr><td><strong>Complement</strong></td><td>A + A' = 1</td><td>A &middot; A' = 0</td></tr>
-        <tr><td><strong>Double Neg.</strong></td><td colspan="2">(A')' = A</td></tr>
-        <tr><td><strong>Commutative</strong></td><td>A + B = B + A</td><td>A &middot; B = B &middot; A</td></tr>
+        <tr><td><strong>Double Negation</strong></td><td colspan="2">(A')' = A</td></tr>
+        <tr><td><strong>Commutative</strong></td><td>A + B = B + A</td><td>AB = BA</td></tr>
         <tr><td><strong>Associative</strong></td><td>(A+B)+C = A+(B+C)</td><td>(AB)C = A(BC)</td></tr>
         <tr><td><strong>Distributive</strong></td><td>A + BC = (A+B)(A+C)</td><td>A(B+C) = AB + AC</td></tr>
+        <tr><td><strong>Absorption</strong></td><td>A + AB = A</td><td>A(A+B) = A</td></tr>
+        <tr style="background:#fff3cd;"><td><strong>De Morgan's</strong></td><td>(A+B)' = A'B'</td><td>(AB)' = A'+B'</td></tr>
     </table>
-    <div class="fragment key-point">
-        In rules ko yaad karo! Ye tumhare <strong>weapons</strong> hain simplification ke liye.
-    </div>
+    <p class="small">De Morgan's is so important it gets its own section — next.</p>
 </section>
 
-<!-- ============================================ -->
-<!-- SECTION 3: DE MORGAN'S THEOREMS -->
-<!-- ============================================ -->
+<!-- ════════════════════════════════════════════════ DE MORGAN ═══ -->
 <section class="center-content">
-    <h1>De Morgan's Theorems</h1>
-    <p style="font-size: 1.2em;">Ye BOHOT important hai!</p>
-    <p class="small">Gates, code, circuits — har jagah kaam aata hai</p>
+    <div class="section-banner">
+        <h1>De Morgan's Theorems</h1>
+        <p>How to push a NOT through a bracket</p>
+    </div>
+    <p class="small">The single most useful rule for gates, circuits, and code.</p>
 </section>
 
 <section>
-    <h2>De Morgan's Theorem 1</h2>
-    <div class="law-box" style="font-size: 1.4em;">
-        (A + B)' = A' &middot; B'
-    </div>
-    <p class="fragment" style="font-size: 1.1em; text-align: center;"><strong>"NOT of OR = AND of NOTs"</strong></p>
+    <h2>Theorem 1: NOT of an OR</h2>
+    <div class="law-box" style="font-size: 1.3em;">(A + B)' = A' &middot; B'</div>
+    <p style="text-align:center;"><strong>"NOT of an OR = AND of the NOTs"</strong></p>
     <div class="fragment">
-        <p>Truth table se prove karte hain:</p>
         <table style="width: 80%;">
-            <tr><th>A</th><th>B</th><th>A+B</th><th>(A+B)'</th><th>A'</th><th>B'</th><th>A'&middot;B'</th></tr>
-            <tr><td>0</td><td>0</td><td>0</td><td style="background:#d4edda;font-weight:bold;">1</td><td>1</td><td>1</td><td style="background:#d4edda;font-weight:bold;">1</td></tr>
-            <tr><td>0</td><td>1</td><td>1</td><td style="background:#d4edda;font-weight:bold;">0</td><td>1</td><td>0</td><td style="background:#d4edda;font-weight:bold;">0</td></tr>
-            <tr><td>1</td><td>0</td><td>1</td><td style="background:#d4edda;font-weight:bold;">0</td><td>0</td><td>1</td><td style="background:#d4edda;font-weight:bold;">0</td></tr>
-            <tr><td>1</td><td>1</td><td>1</td><td style="background:#d4edda;font-weight:bold;">0</td><td>0</td><td>0</td><td style="background:#d4edda;font-weight:bold;">0</td></tr>
+            <tr><th>A</th><th>B</th><th>A+B</th><th style="background:#27ae60;">(A+B)'</th><th>A'</th><th>B'</th><th style="background:#27ae60;">A'B'</th></tr>
+            <tr><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+            <tr><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+            <tr><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+            <tr><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
         </table>
     </div>
-    <div class="fragment success-box">
-        Column 4 aur Column 7 <strong>exactly same</strong> hain! Proved!
-    </div>
+    <div class="fragment success-box">The two highlighted columns match in every row. Proved.</div>
 </section>
 
 <section>
-    <h2>De Morgan's Theorem 2</h2>
-    <div class="law-box" style="font-size: 1.4em;">
-        (A &middot; B)' = A' + B'
-    </div>
-    <p class="fragment" style="font-size: 1.1em; text-align: center;"><strong>"NOT of AND = OR of NOTs"</strong></p>
+    <h2>Theorem 2: NOT of an AND</h2>
+    <div class="law-box" style="font-size: 1.3em;">(A &middot; B)' = A' + B'</div>
+    <p style="text-align:center;"><strong>"NOT of an AND = OR of the NOTs"</strong></p>
     <div class="fragment">
-        <p>Truth table se prove karte hain:</p>
         <table style="width: 80%;">
-            <tr><th>A</th><th>B</th><th>A&middot;B</th><th>(A&middot;B)'</th><th>A'</th><th>B'</th><th>A'+B'</th></tr>
-            <tr><td>0</td><td>0</td><td>0</td><td style="background:#d4edda;font-weight:bold;">1</td><td>1</td><td>1</td><td style="background:#d4edda;font-weight:bold;">1</td></tr>
-            <tr><td>0</td><td>1</td><td>0</td><td style="background:#d4edda;font-weight:bold;">1</td><td>1</td><td>0</td><td style="background:#d4edda;font-weight:bold;">1</td></tr>
-            <tr><td>1</td><td>0</td><td>0</td><td style="background:#d4edda;font-weight:bold;">1</td><td>0</td><td>1</td><td style="background:#d4edda;font-weight:bold;">1</td></tr>
-            <tr><td>1</td><td>1</td><td>1</td><td style="background:#d4edda;font-weight:bold;">0</td><td>0</td><td>0</td><td style="background:#d4edda;font-weight:bold;">0</td></tr>
+            <tr><th>A</th><th>B</th><th>AB</th><th style="background:#27ae60;">(AB)'</th><th>A'</th><th>B'</th><th style="background:#27ae60;">A'+B'</th></tr>
+            <tr><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+            <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+            <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+            <tr><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
         </table>
     </div>
-    <div class="fragment success-box">
-        Yahan bhi Column 4 aur Column 7 <strong>same</strong> hain! Proved!
+    <div class="fragment thread">
+        <strong>Open thread 4, closed!</strong> In Logic Gates you saw that <code>A NAND B</code> and <code>A' + B'</code> always matched. Now you know why: <code>A NAND B = (AB)'</code>, and De Morgan's says that <em>equals</em> <code>A' + B'</code>. Same thing, always.
     </div>
 </section>
 
 <section>
-    <h2>De Morgan's — Gates Se Connect Karo</h2>
-    <p>Yaad hai universal gates?</p>
-    <div class="two-col">
-        <div class="card fragment">
-            <h4>NOR Gate = NOT(OR)</h4>
-            <p><code>NOR(A,B) = (A + B)'</code></p>
-            <p>De Morgan's se:</p>
-            <p><code>= A' &middot; B'</code></p>
-            <p class="small">NOR = dono ka NOT, phir AND!</p>
-        </div>
-        <div class="card fragment">
-            <h4>NAND Gate = NOT(AND)</h4>
-            <p><code>NAND(A,B) = (A &middot; B)'</code></p>
-            <p>De Morgan's se:</p>
-            <p><code>= A' + B'</code></p>
-            <p class="small">NAND = dono ka NOT, phir OR!</p>
-        </div>
+    <h2>De Morgan's, the Easy Way to Remember</h2>
+    <p>To take a NOT through a bracket, do three things:</p>
+    <ol>
+        <li class="fragment"><strong>Flip every variable</strong> (A becomes A', A' becomes A)</li>
+        <li class="fragment"><strong>Swap the operator</strong> (AND &harr; OR)</li>
+        <li class="fragment"><strong>Drop the outer NOT</strong></li>
+    </ol>
+    <div class="fragment">
+        <p>It works for more than two variables too:</p>
+        <div class="law-box">(A + B + C)' = A' &middot; B' &middot; C'</div>
+        <div class="law-box">(A &middot; B &middot; C)' = A' + B' + C'</div>
     </div>
     <div class="fragment key-point">
-        Ye toh tum pehle se jaanti ho! NAND aur NOR universal gates hain — De Morgan's batata hai <strong>kyun</strong> ye itne powerful hain.
+        Picture it on a gate symbol: a NOT "bubble" pushed back through the gate <strong>flips the gate type</strong> (AND&harr;OR) and puts a bubble on each input. That's De Morgan's, drawn.
     </div>
 </section>
 
 <section>
-    <h2>De Morgan's — Code Mein</h2>
-    <p>JavaScript/React mein ye BOHOT kaam aata hai:</p>
+    <h2>De Morgan's in Code</h2>
+    <p>This is where you'll use it most often as a programmer:</p>
     <div class="fragment">
-        <h4>Theorem 1: NOT of OR = AND of NOTs</h4>
-        <pre><code class="javascript">// Ye dono same hain:
-!(a || b)    ===    (!a && !b)</code></pre>
-    </div>
-    <div class="fragment">
-        <h4>Theorem 2: NOT of AND = OR of NOTs</h4>
-        <pre><code class="javascript">// Ye dono same hain:
-!(a && b)    ===    (!a || !b)</code></pre>
+        <pre><code class="javascript">// These are identical:
+!(a || b)   ===   (!a && !b)     // Theorem 1
+!(a && b)   ===   (!a || !b)     // Theorem 2</code></pre>
     </div>
     <div class="fragment info-box">
-        <strong>Example:</strong> "User logged in NAHI hai AUR admin NAHI hai"<br>
-        <code>!loggedIn && !isAdmin</code> is same as <code>!(loggedIn || isAdmin)</code>
+        <strong>Real example.</strong> "Block the page unless the user is logged in <em>and</em> verified":
+        <pre><code class="javascript">if (!(isLoggedIn && isVerified)) blockPage();
+// De Morgan's makes the intent clearer:
+if (!isLoggedIn || !isVerified) blockPage();</code></pre>
+        <em>"If they're not logged in, OR not verified — block."</em>
     </div>
     <div class="fragment key-point">
-        Jab bhi code mein <code>!(... || ...)</code> ya <code>!(... && ...)</code> dikhe, De Morgan's use karo to simplify!
+        Whenever you see <code>!(... &amp;&amp; ...)</code> or <code>!(... || ...)</code>, De Morgan's can make it readable.
     </div>
 </section>
 
-<!-- ============================================ -->
-<!-- SECTION 4: SIMPLIFICATION -->
-<!-- ============================================ -->
+<!-- ════════════════════════════════════════════════ SIMPLIFY ═══ -->
 <section class="center-content">
-    <h1>Simplification</h1>
-    <p style="font-size: 1.2em;">Ab Rules Use Karte Hain!</p>
-    <p class="small">Step by step, ek ek law lagaake expressions chhote karo</p>
+    <div class="section-banner">
+        <h1>Simplification</h1>
+        <p>Now we use the tools — one law at a time</p>
+    </div>
+    <p class="small">Let's close those open threads from Logic Gates.</p>
 </section>
 
 <section>
-    <h2>Example 1 (Easy)</h2>
-    <p>Simplify karo:</p>
-    <div class="law-box">AB + AB' = ?</div>
-    <div class="fragment">
-        <div class="step">
-            <span class="step-label">Step 1:</span> AB + AB'
-        </div>
-    </div>
-    <div class="fragment">
-        <div class="step">
-            <span class="step-label">Step 2:</span> A(B + B') &nbsp;&nbsp; <span class="small">[Distributive law — A ko bahar nikalo]</span>
-        </div>
-    </div>
-    <div class="fragment">
-        <div class="step">
-            <span class="step-label">Step 3:</span> A &middot; 1 &nbsp;&nbsp; <span class="small">[Complement law — B + B' = 1]</span>
-        </div>
-    </div>
-    <div class="fragment">
-        <div class="step">
-            <span class="step-label">Step 4:</span> A &nbsp;&nbsp; <span class="small">[Identity law — A &middot; 1 = A]</span>
-        </div>
-    </div>
-    <div class="fragment success-box">
-        <strong>AB + AB' = A</strong><br>
-        Matlab: Agar A TRUE hai, toh B kuch bhi ho — result TRUE hi hoga. B matter hi nahi karta!
-    </div>
-</section>
-
-<section>
-    <h2>Example 2 (Medium)</h2>
-    <p>Simplify karo:</p>
-    <div class="law-box">A'B + AB + AB' = ?</div>
-    <div class="fragment">
-        <div class="step">
-            <span class="step-label">Step 1:</span> A'B + AB + AB'
-        </div>
-    </div>
-    <div class="fragment">
-        <div class="step">
-            <span class="step-label">Step 2:</span> (A' + A)B + AB' &nbsp;&nbsp; <span class="small">[First 2 terms se B ko bahar nikalo — Distributive]</span>
-        </div>
-    </div>
-    <div class="fragment">
-        <div class="step">
-            <span class="step-label">Step 3:</span> 1 &middot; B + AB' &nbsp;&nbsp; <span class="small">[Complement — A' + A = 1]</span>
-        </div>
-    </div>
-    <div class="fragment">
-        <div class="step">
-            <span class="step-label">Step 4:</span> B + AB' &nbsp;&nbsp; <span class="small">[Identity — 1 &middot; B = B]</span>
-        </div>
-    </div>
-    <div class="fragment">
-        <div class="step">
-            <span class="step-label">Step 5:</span> (B + A)(B + B') &nbsp;&nbsp; <span class="small">[Distributive — B + AC = (B+A)(B+C) form]</span>
-        </div>
-    </div>
-    <div class="fragment">
-        <div class="step">
-            <span class="step-label">Step 6:</span> (B + A) &middot; 1 &nbsp;&nbsp; <span class="small">[Complement — B + B' = 1]</span>
-        </div>
-    </div>
-    <div class="fragment">
-        <div class="step" style="border-left-color: var(--success-color);">
-            <span class="step-label" style="color: var(--success-color);">Answer:</span> A + B &nbsp;&nbsp; <span class="small">[Identity + Commutative]</span>
-        </div>
-    </div>
-</section>
-
-<section>
-    <h2>Example 3 (Harder) — Wahi Motivation Wala!</h2>
-    <p>Yaad hai ye?</p>
-    <div class="law-box">F = A'BC + AB'C + ABC' + ABC</div>
-    <div class="fragment">
-        <div class="step">
-            <span class="step-label">Step 1:</span> A'BC + AB'C + ABC' + ABC
-        </div>
-    </div>
-    <div class="fragment">
-        <div class="step">
-            <span class="step-label">Step 2:</span> A'BC + AB'C + AB(C' + C) &nbsp;&nbsp; <span class="small">[Last 2 terms se AB bahar nikalo]</span>
-        </div>
-    </div>
-    <div class="fragment">
-        <div class="step">
-            <span class="step-label">Step 3:</span> A'BC + AB'C + AB &nbsp;&nbsp; <span class="small">[Complement — C' + C = 1, Identity — AB&middot;1 = AB]</span>
-        </div>
-    </div>
-    <div class="fragment">
-        <div class="step">
-            <span class="step-label">Step 4:</span> (A' + A)BC + AB &nbsp;&nbsp; <span class="small">[Nahi... wait, ye nahi chalega. Sochte hain...]</span>
-        </div>
-    </div>
-    <p class="fragment small">Galat approach? Koi nahi! Doosra raasta try karte hain...</p>
-</section>
-
-<section>
-    <h2>Example 3 (continued)</h2>
-    <p>Step 3 se wapas shuru:</p>
-    <div class="step">
-        <span class="step-label">Step 3:</span> A'BC + AB'C + AB
-    </div>
-    <div class="fragment">
-        <p>Trick: AB term ko DUPLICATE karo (A + A = A, toh ek extra copy add karna allowed hai!)</p>
-        <div class="step">
-            <span class="step-label">Step 4:</span> A'BC + AB'C + AB + AB &nbsp;&nbsp; <span class="small">[Idempotent — AB + AB = AB, toh extra copy allowed]</span>
-        </div>
-    </div>
-    <div class="fragment">
-        <div class="step">
-            <span class="step-label">Step 5:</span> (A' + A)BC + A(B'C + B) &nbsp;&nbsp; <span class="small">[Group differently + Distributive]</span>
-        </div>
-    </div>
-    <div class="fragment">
-        <div class="step">
-            <span class="step-label">Step 6:</span> BC + A(B + C) &nbsp;&nbsp; <span class="small">[Complement + simplify B'C + B = B + C]</span>
-        </div>
-    </div>
-    <div class="fragment">
-        <div class="step" style="border-left-color: var(--success-color);">
-            <span class="step-label" style="color: var(--success-color);">Answer:</span> AB + AC + BC
-        </div>
-    </div>
-    <div class="fragment success-box">
-        <strong>10 gates se ghataake 5 gates!</strong> Almost aadhe! Yahi hai Boolean Algebra ki power.
-    </div>
-</section>
-
-<section>
-    <h2>Simplification Tips</h2>
-    <div class="key-point">
-        <strong>Strategy yaad rakho:</strong>
-    </div>
+    <h2>How to Approach a Simplification</h2>
+    <div class="key-point"><strong>A reliable order of attack:</strong></div>
     <ol>
-        <li class="fragment"><strong>Common terms dhundho</strong> — Distributive law se bahar nikalo</li>
-        <li class="fragment"><strong>Complement pairs dhundho</strong> — A + A' = 1 dikhta hai toh use karo</li>
-        <li class="fragment"><strong>Term duplicate karo agar zaroorat ho</strong> — A + A = A, toh extra copy FREE hai</li>
-        <li class="fragment"><strong>De Morgan's use karo</strong> — NOT wale expressions ke liye</li>
-        <li class="fragment"><strong>Identity / Null laws se clean up karo</strong> — Last mein 0 aur 1 hataao</li>
+        <li class="fragment"><strong>Spot common factors</strong> — pull them out with the distributive law.</li>
+        <li class="fragment"><strong>Hunt for complement pairs</strong> — an <code>A + A'</code> collapses to 1.</li>
+        <li class="fragment"><strong>Use absorption</strong> — <code>A + AB = A</code> and <code>A + A'B = A + B</code> on sight.</li>
+        <li class="fragment"><strong>Push NOTs in</strong> with De Morgan's when you see a bracket with a bar.</li>
+        <li class="fragment"><strong>Clean up</strong> the 0s and 1s with Identity and Null.</li>
     </ol>
     <div class="fragment warning-box">
-        Har step mein <strong>ek hi law</strong> lagao. Jaldi mat karo — galti hogi!
+        Apply <strong>one law per step</strong>, and write its name. Rushing two laws at once is where mistakes hide.
     </div>
 </section>
 
 <section>
-    <h2>Ek Aur Example: De Morgan's Wala</h2>
-    <p>Simplify karo:</p>
-    <div class="law-box">(A + B)' + AB = ?</div>
-    <div class="fragment">
-        <div class="step">
-            <span class="step-label">Step 1:</span> (A + B)' + AB
-        </div>
-    </div>
-    <div class="fragment">
-        <div class="step">
-            <span class="step-label">Step 2:</span> A'B' + AB &nbsp;&nbsp; <span class="small">[De Morgan's — (A+B)' = A'B']</span>
-        </div>
-    </div>
-    <div class="fragment">
-        <p>Hmm, ye XNOR jaisa lag raha hai! Verify karte hain truth table se:</p>
-        <table style="width: 70%;">
-            <tr><th>A</th><th>B</th><th>A'B'</th><th>AB</th><th>A'B' + AB</th><th>A XNOR B</th></tr>
-            <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td></tr>
-            <tr><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-            <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-            <tr><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td></tr>
-        </table>
-    </div>
-    <div class="fragment success-box">
-        Haan! <strong>(A + B)' + AB = A XNOR B</strong>. Tumne gate connection discover kar liya!
-    </div>
-</section>
-
-<!-- ============================================ -->
-<!-- SECTION 5: CODE SIMPLIFICATION -->
-<!-- ============================================ -->
-<section class="center-content">
-    <h1>Code Mein Boolean Algebra</h1>
-    <p style="font-size: 1.2em;">if-conditions ko simple banao</p>
-</section>
-
-<section>
-    <h2>Code Example 1</h2>
-    <p>Ye code hai:</p>
-    <pre><code class="javascript">if ((x && y) || (x && !y)) {
-    console.log("Yes!");
-}</code></pre>
-    <div class="fragment">
-        <p>Boolean form mein likho:</p>
-        <div class="step"><span class="step-label">Expression:</span> XY + XY'</div>
-    </div>
-    <div class="fragment">
-        <div class="step"><span class="step-label">Step 1:</span> X(Y + Y') &nbsp;&nbsp; <span class="small">[Distributive]</span></div>
-    </div>
-    <div class="fragment">
-        <div class="step"><span class="step-label">Step 2:</span> X &middot; 1 = X &nbsp;&nbsp; <span class="small">[Complement + Identity]</span></div>
-    </div>
-    <div class="fragment">
-        <p>Simplified code:</p>
-        <pre><code class="javascript">if (x) {
-    console.log("Yes!");
-}</code></pre>
-    </div>
-    <div class="fragment success-box">
-        Kitna clean ho gaya! Y ka koi role hi nahi tha expression mein.
+    <h2>Example 1 — Open Thread 1</h2>
+    <p>Remember the circuit that gave <code>(A + B) &middot; A'</code>? Let's simplify it.</p>
+    <div class="law-box">(A + B) &middot; A'</div>
+    <div class="fragment"><div class="step"><span class="step-label">Distributive:</span> = A&middot;A' + B&middot;A'</div></div>
+    <div class="fragment"><div class="step"><span class="step-label">Complement (A&middot;A' = 0):</span> = 0 + A'B</div></div>
+    <div class="fragment"><div class="step"><span class="step-label">Identity (0 + X = X):</span> = A'B</div></div>
+    <div class="fragment thread">
+        <strong>Thread 1, closed!</strong> <code>(A + B)&middot;A' = A'B</code>. The circuit needed an OR, a NOT, and an AND — but it's really just "NOT A, AND B." Two gates become one idea.
     </div>
 </section>
 
 <section>
-    <h2>Code Example 2 — De Morgan's!</h2>
-    <p>Ye code hai:</p>
-    <pre><code class="javascript">if (!(isLoggedIn && hasPermission)) {
-    showError("Access denied");
-}</code></pre>
-    <div class="fragment">
-        <p>De Morgan's Theorem 2: <code>(A &middot; B)' = A' + B'</code></p>
-    </div>
-    <div class="fragment">
-        <p>Simplified (more readable):</p>
-        <pre><code class="javascript">if (!isLoggedIn || !hasPermission) {
-    showError("Access denied");
-}</code></pre>
-    </div>
+    <h2>Example 2 — The Majority Function (Thread 2)</h2>
+    <p>Our four-term monster from Logic Gates:</p>
+    <div class="law-box">F = A'BC + AB'C + ABC' + ABC</div>
     <div class="fragment info-box">
-        Dono same kaam karte hain, lekin doosra wala padhne mein zyada clear hai:<br>
-        <em>"Agar logged in NAHI hai YA permission NAHI hai — toh error dikhao"</em>
+        <strong>The trick:</strong> Idempotent says <code>ABC + ABC = ABC</code>. So we may quietly make <em>two extra copies</em> of <code>ABC</code> — they cost nothing — and pair one with each other term.
+    </div>
+    <div class="fragment"><div class="step"><span class="step-label">Add copies of ABC:</span> A'BC + ABC &nbsp;|&nbsp; AB'C + ABC &nbsp;|&nbsp; ABC' + ABC</div></div>
+    <div class="fragment"><div class="step"><span class="step-label">Factor each pair:</span> BC(A'+A) + AC(B'+B) + AB(C'+C)</div></div>
+    <div class="fragment"><div class="step"><span class="step-label">Complement (X+X' = 1):</span> BC&middot;1 + AC&middot;1 + AB&middot;1</div></div>
+    <div class="fragment"><div class="step" style="border-left-color: var(--success-color);"><span class="step-label" style="color:var(--success-color);">Answer:</span> F = AB + BC + CA</div></div>
+    <div class="fragment thread">
+        <strong>Thread 2, closed!</strong> From about 10 gates down to roughly 5. (This says "output 1 when at least two inputs are 1" — the majority vote.)
     </div>
 </section>
 
 <section>
-    <h2>Code Example 3 — Complex Condition</h2>
-    <p>Flowchart mein ye condition hai:</p>
+    <h2>Example 3 — The Five-Term Table (Thread 3)</h2>
+    <p>The worst one — five product terms:</p>
+    <div class="law-box" style="font-size:0.95em;">F = A'B'C' + A'B'C + AB'C' + AB'C + ABC'</div>
+    <div class="fragment"><div class="step"><span class="step-label">Group by pairs:</span> A'B'(C'+C) + AB'(C'+C) + ABC'</div></div>
+    <div class="fragment"><div class="step"><span class="step-label">Complement (C'+C = 1):</span> A'B' + AB' + ABC'</div></div>
+    <div class="fragment"><div class="step"><span class="step-label">Factor B' from first two:</span> B'(A'+A) + ABC'</div></div>
+    <div class="fragment"><div class="step"><span class="step-label">Complement (A'+A = 1):</span> B' + ABC'</div></div>
+    <div class="fragment"><div class="step"><span class="step-label">Absorption (B' + B&middot;X = B' + X):</span> B' + AC'</div></div>
+    <div class="fragment"><div class="step" style="border-left-color: var(--success-color);"><span class="step-label" style="color:var(--success-color);">Answer:</span> F = B' + AC'</div></div>
+    <div class="fragment thread">
+        <strong>Thread 3, closed!</strong> Five terms became two. Check any row of the original table — it matches.
+    </div>
+</section>
+
+<section>
+    <h2>Naming the Law at Each Step</h2>
+    <p>In an exam, the marks are for naming the law you used. Practice it:</p>
+    <table style="font-size: 0.8em;">
+        <tr><th>Step</th><th>Expression</th><th>Law used</th></tr>
+        <tr><td>Start</td><td>AB + A'B + B</td><td>—</td></tr>
+        <tr class="fragment"><td>1</td><td>(A + A')B + B</td><td class="fragment">Distributive</td></tr>
+        <tr class="fragment"><td>2</td><td>1 &middot; B + B</td><td class="fragment">Complement</td></tr>
+        <tr class="fragment"><td>3</td><td>B + B</td><td class="fragment">Identity</td></tr>
+        <tr class="fragment"><td>4</td><td><strong>B</strong></td><td class="fragment">Idempotent</td></tr>
+    </table>
+    <div class="fragment key-point">Three different terms collapsed to a single <strong>B</strong>.</div>
+</section>
+
+<!-- ════════════════════════════════════════════════ CODE ═══ -->
+<section class="center-content">
+    <div class="section-banner">
+        <h1>Back to Code</h1>
+        <p>The same rules clean up your conditions</p>
+    </div>
+</section>
+
+<section>
+    <h2>Code Example — A Tangled Condition</h2>
     <pre><code class="javascript">if ((a && b) || (a && c) || (a && !b && c)) {
     processData();
 }</code></pre>
-    <div class="fragment">
-        <div class="step"><span class="step-label">Expression:</span> AB + AC + AB'C</div>
-    </div>
-    <div class="fragment">
-        <div class="step"><span class="step-label">Step 1:</span> A(B + C + B'C) &nbsp;&nbsp; <span class="small">[A common hai — Distributive]</span></div>
-    </div>
-    <div class="fragment">
-        <div class="step"><span class="step-label">Step 2:</span> A(B + C) &nbsp;&nbsp; <span class="small">[C + B'C = C by absorption, aur B stays]</span></div>
-    </div>
+    <div class="fragment"><div class="step"><span class="step-label">As Boolean:</span> AB + AC + AB'C</div></div>
+    <div class="fragment"><div class="step"><span class="step-label">Factor A:</span> A(B + C + B'C)</div></div>
+    <div class="fragment"><div class="step"><span class="step-label">Absorption (C + B'C = C):</span> A(B + C)</div></div>
     <div class="fragment">
         <pre><code class="javascript">if (a && (b || c)) {
     processData();
 }</code></pre>
     </div>
-    <div class="fragment success-box">
-        3 conditions se 2 conditions! Flowchart bhi simple ho jayega.
-    </div>
+    <div class="fragment success-box">Three conditions became one clear line. A flowchart drawn from this is far simpler too.</div>
 </section>
 
-<!-- ============================================ -->
-<!-- SECTION 6: PRACTICE PROBLEMS -->
-<!-- ============================================ -->
-<section class="center-content">
-    <h1>Practice Problems</h1>
-    <p style="font-size: 1.2em;">Ab tumhari baari!</p>
-    <p class="small">Try karo, phir answer check karo</p>
-</section>
-
+<!-- ════════════════════════════════════════════════ DUALITY ═══ -->
 <section>
-    <h2>Practice: Simplify Karo (Level 1)</h2>
+    <h2>One Elegant Pattern: Duality</h2>
+    <p>Did you notice the laws come in <strong>pairs</strong>? There's a reason.</p>
+    <div class="info-box">
+        <strong>The Duality Principle:</strong> take any true Boolean law, swap every <strong>AND &harr; OR</strong> and every <strong>0 &harr; 1</strong>, and you get another true law — for free.
+    </div>
     <div class="two-col">
         <div class="card">
-            <h4>Problem 1</h4>
-            <div class="law-box">A + AB = ?</div>
-            <div class="fragment success-box">
-                <strong>Answer: A</strong><br>
-                A(1 + B) = A &middot; 1 = A<br>
-                <span class="small">[Distributive, Null, Identity]</span>
-            </div>
+            <p>Start with:</p>
+            <div class="law-box" style="font-size:0.95em;">A + 0 = A</div>
+            <p>Swap + &harr; &middot; and 0 &harr; 1:</p>
+            <div class="law-box" style="font-size:0.95em;">A &middot; 1 = A</div>
         </div>
-        <div class="card">
-            <h4>Problem 2</h4>
-            <div class="law-box">A(A + B) = ?</div>
-            <div class="fragment success-box">
-                <strong>Answer: A</strong><br>
-                AA + AB = A + AB = A<br>
-                <span class="small">[Distributive, Idempotent, then same as Problem 1]</span>
-            </div>
+        <div class="card fragment">
+            <p>Start with:</p>
+            <div class="law-box" style="font-size:0.95em;">A + A' = 1</div>
+            <p>Swap:</p>
+            <div class="law-box" style="font-size:0.95em;">A &middot; A' = 0</div>
         </div>
     </div>
     <div class="fragment key-point">
-        Ye dono <strong>Absorption Law</strong> kehlate hain: A + AB = A aur A(A+B) = A.<br>
-        Inhe shortcut ki tarah yaad rakh sakte ho!
+        That's why the toolkit table had two columns. Learn one side, and duality hands you the other.
     </div>
 </section>
 
-<section>
-    <h2>Practice: Simplify Karo (Level 2)</h2>
-    <div class="card" style="margin-bottom: 0.5em;">
-        <h4>Problem 3</h4>
-        <div class="law-box">A'B'C + A'BC + AB'C + ABC = ?</div>
-        <div class="fragment">
-            <div class="step"><span class="step-label">Hint:</span> C common hai sabmein!</div>
-        </div>
-        <div class="fragment">
-            <div class="step"><span class="step-label">Step 1:</span> C(A'B' + A'B + AB' + AB)</div>
-        </div>
-        <div class="fragment">
-            <div class="step"><span class="step-label">Step 2:</span> C(A'(B'+B) + A(B'+B))</div>
-        </div>
-        <div class="fragment">
-            <div class="step"><span class="step-label">Step 3:</span> C(A' &middot; 1 + A &middot; 1) = C(A' + A)</div>
-        </div>
-        <div class="fragment">
-            <div class="step" style="border-left-color: var(--success-color);"><span class="step-label" style="color: var(--success-color);">Answer:</span> C</div>
-        </div>
-    </div>
-    <div class="fragment success-box">
-        4 terms ka expression sirf <strong>C</strong> ban gaya! A aur B matter hi nahi karte jab C = 1.
-    </div>
-</section>
-
-<section>
-    <h2>Practice: Which Law? (Identify Karo)</h2>
-    <p>Har step mein konsa law use hua hai?</p>
-    <table style="font-size: 0.75em;">
-        <tr><th>Step</th><th>Expression</th><th>Law Used?</th></tr>
-        <tr>
-            <td>Start</td>
-            <td>AB + A'B + B</td>
-            <td></td>
-        </tr>
-        <tr class="fragment">
-            <td>1</td>
-            <td>(A + A')B + B</td>
-            <td class="fragment">Distributive</td>
-        </tr>
-        <tr class="fragment">
-            <td>2</td>
-            <td>1 &middot; B + B</td>
-            <td class="fragment">Complement</td>
-        </tr>
-        <tr class="fragment">
-            <td>3</td>
-            <td>B + B</td>
-            <td class="fragment">Identity</td>
-        </tr>
-        <tr class="fragment">
-            <td>4</td>
-            <td><strong>B</strong></td>
-            <td class="fragment">Idempotent</td>
-        </tr>
-    </table>
-    <div class="fragment key-point">
-        Har step mein law identify karna practice karo — exam mein marks isi se milte hain!
-    </div>
-</section>
-
-<section>
-    <h2>Practice: Truth Table Se Expression</h2>
-    <p>Is truth table ka simplified expression likho:</p>
-    <table style="width: 50%;">
-        <tr><th>A</th><th>B</th><th>F</th></tr>
-        <tr><td>0</td><td>0</td><td>0</td></tr>
-        <tr><td>0</td><td>1</td><td>1</td></tr>
-        <tr><td>1</td><td>0</td><td>1</td></tr>
-        <tr><td>1</td><td>1</td><td>1</td></tr>
-    </table>
-    <div class="fragment">
-        <p><strong>Step 1:</strong> SOP (Sum of Products) likho — jahan F = 1:</p>
-        <div class="step">F = A'B + AB' + AB</div>
-    </div>
-    <div class="fragment">
-        <p><strong>Step 2:</strong> Simplify karo:</p>
-        <div class="step">F = A'B + A(B' + B) = A'B + A = A + B</div>
-    </div>
-    <div class="fragment success-box">
-        <strong>F = A + B</strong> — ye toh OR gate hai! Truth table se pehchaan liya hota toh aur jaldi hota.
-    </div>
-</section>
-
-<section>
-    <h2>Challenge Problem!</h2>
-    <div class="warning-box">
-        <strong>Ye thoda mushkil hai — but try karo!</strong>
-    </div>
-    <div class="law-box" style="font-size: 1.2em;">
-        F = (A + B)(A + B')(A' + B)
-    </div>
-    <div class="fragment">
-        <div class="step"><span class="step-label">Hint 1:</span> Pehle do terms ko multiply karo</div>
-    </div>
-    <div class="fragment">
-        <div class="step"><span class="step-label">Step 1:</span> (A + B)(A + B') = A + BB' = A + 0 = A &nbsp;&nbsp; <span class="small">[Distributive (special form), Complement, Identity]</span></div>
-    </div>
-    <div class="fragment">
-        <div class="step"><span class="step-label">Step 2:</span> A &middot; (A' + B) &nbsp;&nbsp; <span class="small">[Remaining term]</span></div>
-    </div>
-    <div class="fragment">
-        <div class="step"><span class="step-label">Step 3:</span> AA' + AB = 0 + AB = AB &nbsp;&nbsp; <span class="small">[Distributive, Complement, Identity]</span></div>
-    </div>
-    <div class="fragment success-box">
-        <strong>F = AB</strong><br>
-        3 terms with 6 variables simplified to just 2 variables and 1 AND gate!
-    </div>
-</section>
-
-<!-- ============================================ -->
-<!-- SECTION 7: HOMEWORK -->
-<!-- ============================================ -->
+<!-- ════════════════════════════════════════════════ PRACTICE ═══ -->
 <section class="center-content">
-    <h1>Homework</h1>
-    <p style="font-size: 1.2em;">Ghar pe practice karo!</p>
-    <p class="small">Har step likhna — sirf answer nahi, pura kaam dikhao</p>
-</section>
-
-<section>
-    <h2>Homework Problems (Part 1: Simplify)</h2>
-    <p>In expressions ko simplify karo. <strong>Har step mein law ka naam likho.</strong></p>
-    <div class="card" style="margin-bottom: 0.5em;">
-        <p><strong>Q1.</strong> &nbsp; A + A'B</p>
-    </div>
-    <div class="card" style="margin-bottom: 0.5em;">
-        <p><strong>Q2.</strong> &nbsp; AB + AB'C + AB'C'</p>
-    </div>
-    <div class="card" style="margin-bottom: 0.5em;">
-        <p><strong>Q3.</strong> &nbsp; (A + B)(A + C)</p>
-    </div>
-    <div class="card" style="margin-bottom: 0.5em;">
-        <p><strong>Q4.</strong> &nbsp; A'B + AB + A'B'</p>
-    </div>
-    <div class="card" style="margin-bottom: 0.5em;">
-        <p><strong>Q5.</strong> &nbsp; (AB')' + A'B</p>
-        <p class="small">Hint: De Morgan's use karo pehle!</p>
-    </div>
-    <div class="card">
-        <p><strong>Q6.</strong> &nbsp; ABC + ABC' + A'BC + AB'C</p>
+    <div class="section-banner">
+        <h1>Practice</h1>
+        <p>Try each one before you reveal the answer</p>
     </div>
 </section>
 
 <section>
-    <h2>Homework Problems (Part 2: Truth Tables + Code)</h2>
-    <div class="card" style="margin-bottom: 0.8em;">
-        <h4>Q7. Truth Table se Expression</h4>
-        <p>Is truth table ka SOP likho, phir simplify karo:</p>
-        <table style="width: 50%; font-size: 0.7em;">
-            <tr><th>A</th><th>B</th><th>C</th><th>F</th></tr>
-            <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-            <tr><td>0</td><td>0</td><td>1</td><td>0</td></tr>
-            <tr><td>0</td><td>1</td><td>0</td><td>1</td></tr>
-            <tr><td>0</td><td>1</td><td>1</td><td>1</td></tr>
-            <tr><td>1</td><td>0</td><td>0</td><td>0</td></tr>
-            <tr><td>1</td><td>0</td><td>1</td><td>1</td></tr>
-            <tr><td>1</td><td>1</td><td>0</td><td>1</td></tr>
-            <tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
-        </table>
+    <h2>Practice — Level 1</h2>
+    <div class="two-col">
+        <div>
+            <div class="practice-q"><strong>P1:</strong> &nbsp; A + AB</div>
+            <div class="fragment answer-reveal"><strong>= A</strong> &nbsp; [Absorption]</div>
+            <div class="practice-q"><strong>P2:</strong> &nbsp; A(A + B)</div>
+            <div class="fragment answer-reveal"><strong>= A</strong> &nbsp; [Absorption]</div>
+        </div>
+        <div>
+            <div class="practice-q"><strong>P3:</strong> &nbsp; A + A'B</div>
+            <div class="fragment answer-reveal"><strong>= A + B</strong> &nbsp; [Absorption, mismatched form]</div>
+            <div class="practice-q"><strong>P4:</strong> &nbsp; AB + AB'</div>
+            <div class="fragment answer-reveal">A(B + B') = A&middot;1 = <strong>A</strong> &nbsp; [Distributive, Complement, Identity]</div>
+        </div>
     </div>
-    <div class="card" style="margin-bottom: 0.8em;">
-        <h4>Q8. Truth Table se Expression</h4>
-        <table style="width: 40%; font-size: 0.7em;">
-            <tr><th>A</th><th>B</th><th>F</th></tr>
-            <tr><td>0</td><td>0</td><td>1</td></tr>
-            <tr><td>0</td><td>1</td><td>0</td></tr>
-            <tr><td>1</td><td>0</td><td>0</td></tr>
-            <tr><td>1</td><td>1</td><td>0</td></tr>
-        </table>
-        <p class="small">Hint: result mein sirf ek term aayegi. Kya ye koi known gate hai?</p>
+</section>
+
+<section>
+    <h2>Practice — Level 2</h2>
+    <div class="practice-q"><strong>P5:</strong> &nbsp; Simplify &nbsp; A'B'C + A'BC + AB'C + ABC</div>
+    <div class="fragment"><div class="step"><span class="step-label">Factor C:</span> C(A'B' + A'B + AB' + AB)</div></div>
+    <div class="fragment"><div class="step"><span class="step-label">Factor inside:</span> C(A'(B'+B) + A(B'+B))</div></div>
+    <div class="fragment"><div class="step"><span class="step-label">Complement &amp; Identity:</span> C(A' + A)</div></div>
+    <div class="fragment"><div class="step" style="border-left-color:var(--success-color);"><span class="step-label" style="color:var(--success-color);">Answer:</span> C</div></div>
+    <div class="fragment success-box">When C = 1 the output is 1 no matter what A and B do — so the whole thing is just <strong>C</strong>.</div>
+</section>
+
+<section>
+    <h2>Practice — From a Truth Table</h2>
+    <div class="two-col">
+        <div>
+            <table style="width: 100%;">
+                <tr><th>A</th><th>B</th><th>F</th></tr>
+                <tr><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td></tr>
+            </table>
+            <p class="practice-q"><strong>Write the SOP, then simplify.</strong></p>
+        </div>
+        <div>
+            <div class="fragment"><div class="step"><span class="step-label">SOP (F=1 rows):</span> A'B + AB' + AB</div></div>
+            <div class="fragment"><div class="step"><span class="step-label">Copy AB, group:</span> A'B + AB + AB' + AB</div></div>
+            <div class="fragment"><div class="step"><span class="step-label">Factor:</span> B(A'+A) + A(B'+B)</div></div>
+            <div class="fragment"><div class="step" style="border-left-color:var(--success-color);"><span class="step-label" style="color:var(--success-color);">Answer:</span> B + A = A + B</div></div>
+            <div class="fragment success-box">It's just an <strong>OR</strong> gate.</div>
+        </div>
     </div>
-    <div class="card">
-        <h4>Q9. Code Simplification</h4>
-        <p>Is code ko Boolean Algebra se simplify karo:</p>
-        <pre><code class="javascript">if ((!a && b) || (a && b) || (!a && !b)) {
-    doSomething();
+</section>
+
+<section>
+    <h2>Challenge — Product of Sums</h2>
+    <div class="info-box">
+        Remember <strong>Product of Sums</strong> from the Logic Gates lesson? A product (AND) of sum (OR) terms, like below. The same laws simplify it — the brackets are just multiplied out.
+    </div>
+    <div class="law-box">F = (A + B)(A + B')(A' + B)</div>
+    <div class="fragment"><div class="step"><span class="step-label">Multiply first two — use A + BC = (A+B)(A+C) backwards:</span> (A + B)(A + B') = A + BB'</div></div>
+    <div class="fragment"><div class="step"><span class="step-label">Complement (BB' = 0) &amp; Identity:</span> = A</div></div>
+    <div class="fragment"><div class="step"><span class="step-label">Now A(A' + B):</span> = AA' + AB</div></div>
+    <div class="fragment"><div class="step"><span class="step-label">Complement (AA' = 0) &amp; Identity:</span> = AB</div></div>
+    <div class="fragment"><div class="step" style="border-left-color:var(--success-color);"><span class="step-label" style="color:var(--success-color);">Answer:</span> F = AB</div></div>
+    <div class="fragment success-box">Three brackets and six letters collapse to a single AND gate.</div>
+</section>
+
+<!-- ════════════════════════════════════════════════ HOMEWORK ═══ -->
+<section class="center-content">
+    <div class="section-banner">
+        <h1>Homework</h1>
+        <p>Show every step — write the law's name beside it</p>
+    </div>
+</section>
+
+<section>
+    <h2>Homework — Part 1: Simplify</h2>
+    <p>Simplify each. Name the law at every step.</p>
+    <div class="two-col">
+        <div>
+            <div class="card" style="margin-bottom:0.4em;"><strong>H1.</strong> &nbsp; A + A'B</div>
+            <div class="card" style="margin-bottom:0.4em;"><strong>H2.</strong> &nbsp; AB + AB'C + AB'C'</div>
+            <div class="card" style="margin-bottom:0.4em;"><strong>H3.</strong> &nbsp; (A + B)(A + C)</div>
+        </div>
+        <div>
+            <div class="card" style="margin-bottom:0.4em;"><strong>H4.</strong> &nbsp; A'B + AB + A'B'</div>
+            <div class="card" style="margin-bottom:0.4em;"><strong>H5.</strong> &nbsp; (AB')' + A'B &nbsp; <span class="small">(De Morgan's first)</span></div>
+            <div class="card" style="margin-bottom:0.4em;"><strong>H6.</strong> &nbsp; ABC + ABC' + A'BC + AB'C</div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>Homework — Part 2: Tables &amp; Code</h2>
+    <div class="two-col">
+        <div class="card">
+            <h4>H7. Table &rarr; simplest expression</h4>
+            <table style="width: 90%; font-size: 0.68em;">
+                <tr><th>A</th><th>B</th><th>C</th><th>F</th></tr>
+                <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+            </table>
+        </div>
+        <div>
+            <div class="card" style="margin-bottom:0.6em;">
+                <h4>H8. Name the gate</h4>
+                <table style="width: 70%; font-size: 0.7em;">
+                    <tr><th>A</th><th>B</th><th>F</th></tr>
+                    <tr><td>0</td><td>0</td><td>1</td></tr>
+                    <tr><td>0</td><td>1</td><td>0</td></tr>
+                    <tr><td>1</td><td>0</td><td>0</td></tr>
+                    <tr><td>1</td><td>1</td><td>0</td></tr>
+                </table>
+                <p class="small">One term. Is it a known gate?</p>
+            </div>
+            <div class="card">
+                <h4>H9. Simplify this code</h4>
+                <pre><code class="javascript">if ((!a && b) || (a && b)
+     || (!a && !b)) {
+    run();
 }</code></pre>
+            </div>
+        </div>
     </div>
 </section>
 
-<!-- ============================================ -->
-<!-- SUMMARY SLIDE -->
-<!-- ============================================ -->
 <section>
-    <h2>Aaj Kya Seekha?</h2>
+    <h2>Homework — Answer Key</h2>
+    <div style="font-size:0.78em;">
+        <p><strong>H1.</strong> A + A'B = A + B &nbsp;[Absorption]</p>
+        <p><strong>H2.</strong> AB + AB'C + AB'C' = AB + AB'(C+C') = AB + AB' = A(B+B') = <strong>A</strong></p>
+        <p><strong>H3.</strong> (A+B)(A+C) = A + BC &nbsp;[Distributive, the Boolean-only form]</p>
+        <p><strong>H4.</strong> A'B + AB + A'B' = (A'+A)B + A'B' = B + A'B' = B + A' = <strong>A' + B</strong> &nbsp;[Absorption at the end]</p>
+        <p><strong>H5.</strong> (AB')' + A'B = (A' + B) + A'B = A' + B &nbsp;[De Morgan's, then Absorption] = <strong>A' + B</strong></p>
+        <p><strong>H6.</strong> ABC + ABC' + A'BC + AB'C = AB(C+C') + A'BC + AB'C = AB + A'BC + AB'C = <strong>AB + BC + AC</strong> (the majority function again — try it!)</p>
+        <p><strong>H7.</strong> F = 1 wherever B = 1, plus the row (1,0,1). SOP simplifies to <strong>B + AC</strong>.</p>
+        <p><strong>H8.</strong> F = A'B' = (A+B)' &rarr; this is a <strong>NOR</strong> gate.</p>
+        <p><strong>H9.</strong> A'B + AB + A'B' = B + A'B' = <strong>A' + B</strong> &rarr; <code>if (!a || b) run();</code></p>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════════ SUMMARY ═══ -->
+<section>
+    <h2>What We Learned Today</h2>
     <ul>
-        <li class="fragment"><strong>Boolean Algebra</strong> = rules to simplify logic expressions</li>
-        <li class="fragment"><strong>Basic Laws:</strong> Identity, Null, Idempotent, Complement, Double Negation, Commutative, Associative, Distributive</li>
-        <li class="fragment"><strong>De Morgan's Theorems</strong> — NOT of OR = AND of NOTs (aur ulta bhi)</li>
-        <li class="fragment"><strong>Simplification</strong> — step by step, ek law at a time</li>
-        <li class="fragment"><strong>Code mein bhi kaam aata hai</strong> — if-conditions ko clean banao</li>
+        <li class="fragment"><strong>Boolean Algebra</strong> rewrites logic without changing its meaning — to use fewer gates and clearer code.</li>
+        <li class="fragment"><strong>The laws:</strong> Identity, Null, Idempotent, Complement, Distributive, and the great shortcut, <strong>Absorption</strong>.</li>
+        <li class="fragment"><strong>De Morgan's:</strong> flip the variables, swap AND&harr;OR, drop the NOT. It explained <code>NAND = A' + B'</code>.</li>
+        <li class="fragment"><strong>We closed every open thread</strong> from Logic Gates — the long expressions really were shorter.</li>
+        <li class="fragment"><strong>Duality:</strong> every law has a partner, found by swapping AND&harr;OR and 0&harr;1.</li>
     </ul>
     <div class="fragment key-point">
-        <strong>Next class:</strong> Karnaugh Maps (K-Maps) — ek VISUAL method simplification ka. Aur bhi easy!
+        <strong>Next lesson — Karnaugh Maps.</strong> Algebra works, but it takes cleverness to spot the right step. K-maps turn simplification into a <em>visual</em> method — you'll just look and see the answer.
     </div>
-    <div class="fragment info-box">
-        Homework karo, har step likhke lao. Questions ho toh group mein poochho!
-    </div>
+    <div class="fragment info-box">Do the homework with every step written out. Bring your questions to the group.</div>
 </section>
 
 </div>

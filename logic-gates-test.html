@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Gates — Self-Test</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reset.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/theme/white.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/monokai.css">
+    <style>
+        :root {
+            --main-color: #2c3e50;
+            --accent-color: #3498db;
+            --light-bg: #f8f9fa;
+            --code-bg: #282c34;
+            --warning-color: #e67e22;
+            --success-color: #27ae60;
+        }
+        .reveal {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 28px;
+        }
+        .reveal .slides section { height: 100%; overflow-y: auto !important; }
+        .reveal .slides section.stack { overflow-y: visible !important; }
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+            color: var(--main-color); font-weight: 600; text-transform: none; margin-bottom: 0.6em;
+        }
+        .reveal h1 { font-size: 2.2em; line-height: 1.2; }
+        .reveal h2 { font-size: 1.6em; }
+        .reveal h3 { font-size: 1.3em; margin-bottom: 0.4em; }
+        .reveal h4 { font-size: 1.05em; margin-bottom: 0.3em; }
+        .reveal section { text-align: left; height: 100%; }
+        .reveal .center-content { text-align: center; }
+        .reveal pre { margin: 0.7em auto; box-shadow: 0 5px 15px rgba(0,0,0,0.15); border-radius: 8px; font-size: 0.55em; line-height: 1.4; }
+        .reveal code { font-family: 'Monaco','Menlo','Ubuntu Mono','Consolas',monospace; padding: 0.1em 0.3em; background: var(--light-bg); border-radius: 3px; color: #e74c3c; }
+        .reveal pre code { background: var(--code-bg); color: #abb2bf; padding: 1em; border-radius: 8px; max-height: 420px; overflow: auto; }
+        .reveal .key-point { background: #fff3cd; border-left: 4px solid #ffc107; padding: 0.7em 1.1em; margin: 0.7em 0; border-radius: 4px; font-size: 0.85em; }
+        .reveal .warning-box { background: #ffe5e5; border-left: 4px solid var(--warning-color); padding: 0.7em 1.1em; margin: 0.7em 0; border-radius: 4px; font-size: 0.85em; }
+        .reveal .success-box { background: #d4edda; border-left: 4px solid var(--success-color); padding: 0.7em 1.1em; margin: 0.7em 0; border-radius: 4px; font-size: 0.85em; }
+        .reveal .info-box { background: #dae8fc; border-left: 4px solid #2980b9; padding: 0.7em 1.1em; margin: 0.7em 0; border-radius: 4px; font-size: 0.85em; }
+        .reveal .highlight { color: var(--accent-color); font-weight: 600; }
+        .reveal ul { margin: 0.7em 0; } .reveal li { margin: 0.3em 0; line-height: 1.5; }
+        .reveal ol { margin: 0.7em 0; } .reveal p { margin: 0.45em 0; }
+        .reveal blockquote { background: var(--light-bg); border-left: 4px solid var(--accent-color); padding: 0.7em 1.1em; margin: 0.7em 0; font-style: normal; border-radius: 4px; }
+        .reveal .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2em; margin: 0.7em 0; }
+        .reveal .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1em; margin: 0.7em 0; }
+        .reveal .card { background: var(--light-bg); padding: 0.8em 1em; border-radius: 8px; border-top: 4px solid var(--accent-color); }
+        .reveal .small { font-size: 0.78em; color: #6c757d; }
+        .reveal .mono { font-family: 'Monaco','Menlo',monospace; font-size: 0.78em; }
+        .reveal table { margin: 0.7em auto; border-collapse: collapse; font-size: 0.75em; width: 90%; }
+        .reveal table th { background: var(--main-color); color: white; padding: 0.5em 0.8em; }
+        .reveal table td { padding: 0.4em 0.8em; border: 1px solid #dee2e6; text-align: center; }
+        .reveal table tr:nth-child(even) { background: var(--light-bg); }
+        .big-q { font-size: 1.35em; font-weight: 600; color: var(--main-color); text-align: center; margin: 0.9em 0; line-height: 1.4; }
+        .circuit-box { background: #fff; border: 2px solid var(--accent-color); padding: 1em; border-radius: 8px; margin: 0.5em 0; font-family: 'Monaco','Menlo',monospace; font-size: 0.65em; line-height: 1.5; white-space: pre; }
+        .practice-q { background: #e8f4fd; border-left: 4px solid var(--accent-color); padding: 0.7em 1.1em; margin: 0.7em 0; border-radius: 4px; font-size: 0.9em; }
+        .answer-reveal { background: #d4edda; border-left: 4px solid var(--success-color); padding: 0.7em 1.1em; margin: 0.7em 0; border-radius: 4px; font-size: 0.9em; }
+        .section-banner { background: linear-gradient(135deg, #3498db, #2c3e50); color: white; padding: 1.2em; border-radius: 12px; margin: 0.5em 0; }
+        .section-banner h1, .section-banner h2, .section-banner p { color: white; }
+        .pts { display: inline-block; background: var(--accent-color); color: white; font-size: 0.6em; padding: 0.1em 0.6em; border-radius: 12px; vertical-align: middle; margin-left: 0.4em; font-weight: 600; }
+        .scorebar { font-size: 0.8em; color: var(--muted, #7f8c8d); text-align: right; margin-top: -0.3em; }
+    </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ════════════════════════════════════════════════ TITLE ═══ -->
+<section class="center-content">
+    <h1>Logic Gates — Self-Test</h1>
+    <p style="font-size: 1.25em; color: #555;">How well do you really know your gates?</p>
+    <br>
+    <p class="small">A diagnostic. Work each problem on paper first — <em>then</em> reveal the answer.</p>
+</section>
+
+<!-- HOW TO USE -->
+<section>
+    <h2>How to Take This Test</h2>
+    <ol>
+        <li class="fragment">Keep <strong>paper and a pen</strong> ready. Write your answer <em>before</em> you reveal.</li>
+        <li class="fragment">Press the arrow / spacebar to reveal each answer. <strong>No peeking early!</strong></li>
+        <li class="fragment">Give yourself <strong>1 point</strong> per correct answer (each problem shows its points).</li>
+        <li class="fragment">Don't rush. This is about finding what you know — and what to revise.</li>
+    </ol>
+    <div class="fragment info-box">
+        <strong>7 sections, 60 points total.</strong> Sections go from warm-up to challenge.
+        At the end there's a scoring guide to tell you if you're ready for <strong>Boolean Algebra</strong>.
+    </div>
+    <div class="fragment key-point">
+        Remember the precedence: <strong>NOT &gt; AND &gt; OR / XOR</strong>. When in doubt, brackets win.
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════════ SECTION A ═══ -->
+<section class="center-content">
+    <div class="section-banner">
+        <h2>Section A — Gate Evaluation</h2>
+        <p>14 quick questions. Just the output: 0 or 1.</p>
+    </div>
+    <p class="small">14 points</p>
+</section>
+
+<section>
+    <h2>A — Single Gates <span class="pts">8 pts</span></h2>
+    <p>What is the output of each?</p>
+    <div class="two-col" style="font-size:0.9em;">
+        <div>
+            <div class="practice-q"><strong>A1:</strong> <code>1 AND 0</code> = ?
+                <span class="fragment" style="color:var(--success-color);font-weight:bold;">0</span></div>
+            <div class="practice-q"><strong>A2:</strong> <code>0 OR 0</code> = ?
+                <span class="fragment" style="color:var(--success-color);font-weight:bold;">0</span></div>
+            <div class="practice-q"><strong>A3:</strong> <code>NOT 1</code> = ?
+                <span class="fragment" style="color:var(--success-color);font-weight:bold;">0</span></div>
+            <div class="practice-q"><strong>A4:</strong> <code>1 XOR 1</code> = ?
+                <span class="fragment" style="color:var(--success-color);font-weight:bold;">0</span></div>
+        </div>
+        <div>
+            <div class="practice-q"><strong>A5:</strong> <code>1 NAND 1</code> = ?
+                <span class="fragment" style="color:var(--success-color);font-weight:bold;">0</span></div>
+            <div class="practice-q"><strong>A6:</strong> <code>0 NOR 0</code> = ?
+                <span class="fragment" style="color:var(--success-color);font-weight:bold;">1</span></div>
+            <div class="practice-q"><strong>A7:</strong> <code>1 XNOR 0</code> = ?
+                <span class="fragment" style="color:var(--success-color);font-weight:bold;">0</span></div>
+            <div class="practice-q"><strong>A8:</strong> <code>0 NAND 0</code> = ?
+                <span class="fragment" style="color:var(--success-color);font-weight:bold;">1</span></div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>A — Precedence &amp; Brackets <span class="pts">6 pts</span></h2>
+    <p>These have more than one gate. Watch the order.</p>
+    <div class="practice-q"><strong>A9:</strong> <code>1 OR 0 AND 0</code> = ?
+        <span class="fragment answer-reveal">AND first: <code>0 AND 0 = 0</code>, then <code>1 OR 0 = </code><strong>1</strong></span></div>
+    <div class="practice-q"><strong>A10:</strong> <code>NOT 1 AND 1</code> = ?
+        <span class="fragment answer-reveal">NOT first: <code>NOT 1 = 0</code>, then <code>0 AND 1 = </code><strong>0</strong></span></div>
+    <div class="practice-q"><strong>A11:</strong> <code>(1 OR 0) AND (1 XOR 1)</code> = ?
+        <span class="fragment answer-reveal"><code>1 AND 0 = </code><strong>0</strong></span></div>
+    <div class="practice-q"><strong>A12:</strong> <code>NOT(1 AND 0) OR (0 NOR 1)</code> = ?
+        <span class="fragment answer-reveal"><code>NOT(0)=1</code>, <code>NOR(0,1)=0</code>, <code>1 OR 0 = </code><strong>1</strong></span></div>
+    <div class="practice-q"><strong>A13:</strong> <code>(1 NAND 1) XOR (1 NOR 0)</code> = ?
+        <span class="fragment answer-reveal"><code>NAND(1,1)=0</code>, <code>NOR(1,0)=0</code>, <code>0 XOR 0 = </code><strong>0</strong></span></div>
+    <div class="practice-q"><strong>A14:</strong> <code>NOT((1 OR 1) AND (0 OR 1))</code> = ?
+        <span class="fragment answer-reveal"><code>1 AND 1 = 1</code>, <code>NOT(1) = </code><strong>0</strong></span></div>
+</section>
+
+<!-- ════════════════════════════════════════════════ SECTION B ═══ -->
+<section class="center-content">
+    <div class="section-banner">
+        <h2>Section B — Circuit Tracing</h2>
+        <p>Numbers go in. Find what comes out.</p>
+    </div>
+    <p class="small">10 points · show your working at each gate</p>
+</section>
+
+<section>
+    <h2>B1 <span class="pts">2 pts</span></h2>
+    <div class="circuit-box">Inputs: A = 1, B = 0, C = 1
+
+A ──┐
+    ├── AND ── W ──┐
+B ──┘              ├── OR ── Output
+C ─────────────────┘</div>
+    <div class="practice-q"><strong>Find the output.</strong></div>
+    <div class="fragment answer-reveal">W = AND(1,0) = 0 &nbsp;|&nbsp; Output = OR(0,1) = <strong>1</strong></div>
+</section>
+
+<section>
+    <h2>B2 <span class="pts">2 pts</span></h2>
+    <div class="circuit-box">Inputs: A = 0, B = 1, C = 1
+
+A ──── NOT ── P ──┐
+                  ├── NAND ── Output
+B ──┐             │
+    ├── OR ── Q ──┘
+C ──┘</div>
+    <div class="practice-q"><strong>Find the output.</strong></div>
+    <div class="fragment answer-reveal">P = NOT(0) = 1 &nbsp;|&nbsp; Q = OR(1,1) = 1 &nbsp;|&nbsp; Output = NAND(1,1) = <strong>0</strong></div>
+</section>
+
+<section>
+    <h2>B3 <span class="pts">2 pts</span></h2>
+    <div class="circuit-box">Inputs: A = 1, B = 1, C = 0, D = 1
+
+A ──┐
+    ├── XOR ── W ──┐
+B ──┘              ├── AND ── Output
+C ──┐              │
+    ├── NOR ── X ──┘
+D ──┘</div>
+    <div class="practice-q"><strong>Find the output.</strong></div>
+    <div class="fragment answer-reveal">W = XOR(1,1) = 0 &nbsp;|&nbsp; X = NOR(0,1) = 0 &nbsp;|&nbsp; Output = AND(0,0) = <strong>0</strong></div>
+</section>
+
+<section>
+    <h2>B4 (two levels) <span class="pts">2 pts</span></h2>
+    <div class="circuit-box">Inputs: A = 0, B = 1, C = 1, D = 0
+
+A ──┐
+    ├── NAND ── P ──┐
+B ──┘               ├── XOR ── R ──┐
+C ──┐               │              │
+    ├── AND ── Q ────┘              ├── OR ── Output
+D ──┘                               │
+B ──── NOT ── S ────────────────────┘</div>
+    <div class="practice-q"><strong>Find the output.</strong></div>
+    <div class="fragment answer-reveal">P = NAND(0,1) = 1 &nbsp;|&nbsp; Q = AND(1,0) = 0 &nbsp;|&nbsp; R = XOR(1,0) = 1 &nbsp;|&nbsp; S = NOT(1) = 0 &nbsp;|&nbsp; Output = OR(1,0) = <strong>1</strong></div>
+</section>
+
+<section>
+    <h2>B5 (two outputs) <span class="pts">2 pts</span></h2>
+    <div class="circuit-box">Inputs: A = 1, B = 0, C = 1
+
+A ──┐
+    ├── XNOR ── Output1
+B ──┘
+
+B ──┐
+    ├── NOR ── X ──┐
+C ──┘             ├── NAND ── Output2
+A ────────────────┘</div>
+    <div class="practice-q"><strong>Find both outputs.</strong> (1 pt each)</div>
+    <div class="fragment answer-reveal">Output1 = XNOR(1,0) = <strong>0</strong><br>
+        X = NOR(0,1) = 0 &nbsp;|&nbsp; Output2 = NAND(0,1) = <strong>1</strong></div>
+</section>
+
+<!-- ════════════════════════════════════════════════ SECTION C ═══ -->
+<section class="center-content">
+    <div class="section-banner">
+        <h2>Section C — Find the Expression</h2>
+        <p>No numbers. Read the circuit, write the Boolean expression.</p>
+    </div>
+    <p class="small">10 points</p>
+</section>
+
+<section>
+    <h2>C1 <span class="pts">2 pts</span></h2>
+    <div class="circuit-box">A ──┐
+    ├── OR ── W ──── NOT ── Output
+B ──┘</div>
+    <div class="practice-q"><strong>Write the output expression.</strong></div>
+    <div class="fragment answer-reveal">Output = <strong>(A + B)'</strong> &nbsp;— that's a <strong>NOR</strong> gate!</div>
+</section>
+
+<section>
+    <h2>C2 <span class="pts">2 pts</span></h2>
+    <div class="circuit-box">A ──── NOT ──┐
+             ├── AND ── Output
+B ───────────┘</div>
+    <div class="practice-q"><strong>Write the output expression.</strong></div>
+    <div class="fragment answer-reveal">Output = <strong>A' &middot; B</strong></div>
+</section>
+
+<section>
+    <h2>C3 <span class="pts">2 pts</span></h2>
+    <div class="circuit-box">A ──┐
+    ├── XOR ── W ──┐
+B ──┘              ├── AND ── Output
+C ─────────────────┘</div>
+    <div class="practice-q"><strong>Write the output expression.</strong></div>
+    <div class="fragment answer-reveal">Output = <strong>(A &oplus; B) &middot; C</strong></div>
+</section>
+
+<section>
+    <h2>C4 <span class="pts">2 pts</span></h2>
+    <div class="circuit-box">A ──┐
+    ├── NAND ── W ──┐
+B ──┘               ├── OR ── Output
+C ──── NOT ── X ────┘</div>
+    <div class="practice-q"><strong>Write the output expression.</strong></div>
+    <div class="fragment answer-reveal">W = (A&middot;B)' &nbsp;|&nbsp; X = C' &nbsp;|&nbsp; Output = <strong>(A&middot;B)' + C'</strong></div>
+</section>
+
+<section>
+    <h2>C5 <span class="pts">2 pts</span></h2>
+    <div class="circuit-box">A ──── NOT ── P ──┐
+                  ├── AND ── W ──┐
+B ────────────────┘              ├── OR ── Output
+C ───────────────────────────────┘</div>
+    <div class="practice-q"><strong>Write the output expression.</strong></div>
+    <div class="fragment answer-reveal">P = A' &nbsp;|&nbsp; W = A'&middot;B &nbsp;|&nbsp; Output = <strong>A'&middot;B + C</strong></div>
+</section>
+
+<!-- ════════════════════════════════════════════════ SECTION D ═══ -->
+<section class="center-content">
+    <div class="section-banner">
+        <h2>Section D — Truth Table → Expression</h2>
+        <p>Use the SOP method: find the rows where output = 1.</p>
+    </div>
+    <p class="small">10 points</p>
+</section>
+
+<section>
+    <h2>D1 (2 variables) <span class="pts">2 pts</span></h2>
+    <div class="two-col">
+        <div>
+            <table style="width:100%;">
+                <tr><th>A</th><th>B</th><th>F</th></tr>
+                <tr><td>0</td><td>0</td><td>1</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td></tr>
+            </table>
+            <p class="practice-q"><strong>Write the SOP expression.</strong></p>
+        </div>
+        <div>
+            <div class="fragment answer-reveal">
+                Rows where F=1: (0,0), (0,1), (1,1)<br>
+                <strong>F = A'B' + A'B + AB</strong>
+                <p class="small">Bonus: this is the same as <code>A' + B</code> — output is 0 only when A=1, B=0.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>D2 (3 variables) <span class="pts">3 pts</span></h2>
+    <div class="two-col">
+        <div>
+            <table style="width:100%; font-size:0.9em;">
+                <tr><th>A</th><th>B</th><th>C</th><th>F</th></tr>
+                <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+            </table>
+        </div>
+        <div>
+            <p class="practice-q"><strong>Write the SOP expression.</strong></p>
+            <div class="fragment answer-reveal">
+                F=1 rows: (0,0,1),(0,1,1),(1,0,1),(1,1,1)<br>
+                <strong>F = A'B'C + A'BC + AB'C + ABC</strong>
+                <p class="small">Notice C=1 in every winning row. The short answer is just <strong>C</strong> — but you'll prove that with Boolean Algebra next!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>D3 (3 variables) <span class="pts">3 pts</span></h2>
+    <div class="two-col">
+        <div>
+            <table style="width:100%; font-size:0.9em;">
+                <tr><th>A</th><th>B</th><th>C</th><th>F</th></tr>
+                <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+                <tr><td>1</td><td>1</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+            </table>
+        </div>
+        <div>
+            <p class="practice-q"><strong>Write the SOP expression. What pattern do you see?</strong></p>
+            <div class="fragment answer-reveal">
+                F=1 rows: (0,0,1),(0,1,0),(1,0,0),(1,1,1)<br>
+                <strong>F = A'B'C + A'BC' + AB'C' + ABC</strong>
+                <p class="small">Pattern: F=1 when an <strong>odd number</strong> of inputs are 1. This is <code>A &oplus; B &oplus; C</code> — three-way XOR (parity)!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>D4 (recognise the gate) <span class="pts">2 pts</span></h2>
+    <div class="two-col">
+        <div>
+            <table style="width:100%;">
+                <tr><th>A</th><th>B</th><th>F</th></tr>
+                <tr><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>0</td></tr>
+            </table>
+            <p class="practice-q"><strong>SOP expression, and name the gate.</strong></p>
+        </div>
+        <div>
+            <div class="fragment answer-reveal">
+                F=1 rows: (0,1),(1,0)<br>
+                <strong>F = A'B + AB'</strong><br>
+                Output is 1 only when A and B differ — this is <strong>XOR</strong> (A &oplus; B). (1 pt expression, 1 pt name)
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════════ SECTION E ═══ -->
+<section class="center-content">
+    <div class="section-banner">
+        <h2>Section E — Expression → Circuit</h2>
+        <p>Read the formula. Which gates, in what order?</p>
+    </div>
+    <p class="small">6 points · sketch it on paper, then check the gate list</p>
+</section>
+
+<section>
+    <h2>E1 <span class="pts">2 pts</span></h2>
+    <div class="practice-q"><strong>Draw the circuit for:</strong> &nbsp;<code>F = A&middot;B' + C</code></div>
+    <div class="fragment answer-reveal">
+        <strong>Gates:</strong> NOT (on B) → AND (A with B') → OR (result with C).
+        <div class="circuit-box" style="margin-top:0.5em;">B ──── NOT ── B' ──┐
+                   ├── AND ── (A&middot;B') ──┐
+A ─────────────────┘                    ├── OR ── F
+                                        │
+C ──────────────────────────────────────┘</div>
+        <span class="small">Check A=1,B=0,C=0 → B'=1, A&middot;B'=1, F=1 &#10003;</span>
+    </div>
+</section>
+
+<section>
+    <h2>E2 <span class="pts">2 pts</span></h2>
+    <div class="practice-q"><strong>Draw the circuit for:</strong> &nbsp;<code>F = (A + B) &middot; (B + C)'</code></div>
+    <div class="fragment answer-reveal">
+        <strong>Gates:</strong> OR (A,B) → NOR (B,C) for the <code>(B+C)'</code> part → AND the two results.
+        <div class="circuit-box" style="margin-top:0.5em;">A ──┐
+    ├── OR ── W ──┐
+B ──┘             ├── AND ── F
+B ──┐             │
+    ├── NOR ── X ─┘
+C ──┘</div>
+        <span class="small">Tip: <code>(B+C)'</code> is exactly one NOR gate — you don't need OR-then-NOT.</span>
+    </div>
+</section>
+
+<section>
+    <h2>E3 <span class="pts">2 pts</span></h2>
+    <div class="practice-q"><strong>Draw the circuit for:</strong> &nbsp;<code>F = (A &oplus; B)' + A&middot;C</code></div>
+    <div class="fragment answer-reveal">
+        <strong>Gates:</strong> XNOR (A,B) for <code>(A&oplus;B)'</code> → AND (A,C) → OR the two results.
+        <div class="circuit-box" style="margin-top:0.5em;">A ──┐
+    ├── XNOR ── W ──┐
+B ──┘               ├── OR ── F
+A ──┐               │
+    ├── AND ── X ───┘
+C ──┘</div>
+        <span class="small"><code>(A&oplus;B)'</code> is one XNOR gate.</span>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════════ SECTION F ═══ -->
+<section class="center-content">
+    <div class="section-banner">
+        <h2>Section F — Universal Gates</h2>
+        <p>Everything from NAND (and NOR).</p>
+    </div>
+    <p class="small">5 points</p>
+</section>
+
+<section>
+    <h2>F1 <span class="pts">1 pt</span></h2>
+    <div class="practice-q"><strong>How do you make a NOT gate out of a single NOR gate?</strong></div>
+    <div class="fragment answer-reveal">
+        Tie both inputs together: <code>NOR(A, A) = (A + A)' = A'</code>. Same trick works with NAND.
+    </div>
+</section>
+
+<section>
+    <h2>F2 <span class="pts">2 pts</span></h2>
+    <div class="practice-q"><strong>How many NAND gates do you need to build an AND gate? Show how.</strong></div>
+    <div class="fragment answer-reveal">
+        <strong>2 NAND gates.</strong> First <code>NAND(A,B) = (A&middot;B)'</code>, then NAND its output with itself to undo the NOT:
+        <code>((A&middot;B)')' = A&middot;B</code>.
+    </div>
+</section>
+
+<section>
+    <h2>F3 <span class="pts">2 pts</span></h2>
+    <div class="circuit-box">A ──┐
+    ├── NAND ── W ──┐
+B ──┘               ├── NAND ── Output
+W ──────────────────┘   (W feeds both inputs)</div>
+    <div class="practice-q"><strong>What does this circuit compute? Name the gate.</strong></div>
+    <div class="fragment answer-reveal">
+        W = (A&middot;B)'. The second NAND takes W on both inputs → <code>(W&middot;W)' = W' = ((A&middot;B)')' = A&middot;B</code>.
+        <br>It's an <strong>AND</strong> gate. (Same as F2.)
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════════ SECTION G ═══ -->
+<section class="center-content">
+    <div class="section-banner">
+        <h2>Section G — Design Problems</h2>
+        <p>From a word problem to a circuit. The real skill.</p>
+    </div>
+    <p class="small">5 points</p>
+</section>
+
+<section>
+    <h2>G1 — The Alarm <span class="pts">2 pts</span></h2>
+    <div class="practice-q">
+        A home alarm should sound when the system is <strong>armed (S)</strong> AND either
+        <strong>motion is detected (M)</strong> OR a <strong>door is opened (D)</strong>.
+        <br>Write the Boolean expression for the alarm.
+    </div>
+    <div class="fragment answer-reveal">
+        <strong>Alarm = S&middot;M + S&middot;D</strong> &nbsp;(also fine: <code>S&middot;(M + D)</code>).
+        <p class="small">If you wrote the factored form S&middot;(M+D) — excellent, that's already one gate fewer. That's the Boolean Algebra mindset coming next.</p>
+    </div>
+</section>
+
+<section>
+    <h2>G2 — Majority Vote <span class="pts">3 pts</span></h2>
+    <div class="practice-q">
+        Three judges (A, B, C) each vote 1 (yes) or 0 (no). A contestant advances if
+        <strong>the majority say yes</strong> (two or more 1s).
+        <br>Build the truth table, then write the SOP expression.
+    </div>
+    <div class="fragment answer-reveal">
+        F=1 rows: (0,1,1), (1,0,1), (1,1,0), (1,1,1)<br>
+        <strong>F = A'BC + AB'C + ABC' + ABC</strong>
+        <p class="small">Circuit: 4 AND gates (with NOTs) feeding one big OR. (1 pt table, 2 pts expression.)
+        This is the "majority function" — keep it in mind; it simplifies beautifully in the next lesson.</p>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════════ BRIDGE ═══ -->
+<section>
+    <h2>One Last Question — Looking Ahead</h2>
+    <p>Fill in the truth table for both expressions:</p>
+    <div class="two-col">
+        <div>
+            <table style="width:100%;">
+                <tr><th>A</th><th>B</th><th>(A&middot;B)'</th><th>A'+B'</th></tr>
+                <tr><td>0</td><td>0</td><td class="fragment">1</td><td class="fragment">1</td></tr>
+                <tr><td>0</td><td>1</td><td class="fragment">1</td><td class="fragment">1</td></tr>
+                <tr><td>1</td><td>0</td><td class="fragment">1</td><td class="fragment">1</td></tr>
+                <tr><td>1</td><td>1</td><td class="fragment">0</td><td class="fragment">0</td></tr>
+            </table>
+        </div>
+        <div>
+            <p class="practice-q"><strong>Are <code>(A&middot;B)'</code> and <code>A' + B'</code> always equal?</strong></p>
+            <div class="fragment answer-reveal">
+                <strong>Yes — every row matches!</strong> "NOT of an AND" equals "OR of the NOTs."
+                <p class="small">This is <strong>De Morgan's theorem</strong>. You just discovered it from a table. Next lesson, we'll use it as a tool.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════════ SCORING ═══ -->
+<section class="center-content">
+    <div class="section-banner">
+        <h1>Score Yourself</h1>
+    </div>
+    <p class="small">Add up your points across all 7 sections. Total: 60.</p>
+</section>
+
+<section>
+    <h2>What Your Score Means</h2>
+    <table style="font-size:0.8em; width:100%;">
+        <tr><th>Score</th><th>Where you are</th><th>What to do</th></tr>
+        <tr>
+            <td><strong>50–60</strong></td>
+            <td>Strong. Gates, tracing, and SOP are solid.</td>
+            <td>You're ready for <strong>Boolean Algebra</strong>. Go!</td>
+        </tr>
+        <tr>
+            <td><strong>38–49</strong></td>
+            <td>Good foundation, a few shaky spots.</td>
+            <td>Redo the sections you missed, then move on.</td>
+        </tr>
+        <tr>
+            <td><strong>25–37</strong></td>
+            <td>The ideas are there but not automatic yet.</td>
+            <td>Revisit the practice deck for your weak sections before Boolean Algebra.</td>
+        </tr>
+        <tr>
+            <td><strong>0–24</strong></td>
+            <td>Needs more practice.</td>
+            <td>Re-watch the Logic Gates lesson and redo the practice problems. No rush — get this solid first.</td>
+        </tr>
+    </table>
+    <div class="key-point">
+        <strong>Which section hurt the most?</strong> That's exactly what to revise. A weak Section A or B means go back to basics;
+        a weak Section D or G means practice turning problems into expressions.
+    </div>
+</section>
+
+<section class="center-content">
+    <h2>Coming Up Next</h2>
+    <div style="max-width:720px; margin:0 auto; text-align:left;">
+        <p>You can already turn a problem into a truth table, an expression, and a circuit.</p>
+        <p class="fragment">But your expressions are often <strong>longer than they need to be</strong> — remember all those problems where we said <em>"can this be shorter?"</em></p>
+        <p class="fragment">In <strong>Boolean Algebra</strong>, you'll learn the rules to shrink them — fewer gates, cheaper chips, cleaner code.</p>
+    </div>
+    <div class="fragment success-box" style="font-size:1.1em; margin-top:1em;">
+        See you in <strong>Boolean Algebra</strong> — where we finally make these expressions <em>simple</em>.
+    </div>
+</section>
+
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/notes/notes.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.0.4/plugin/highlight/highlight.js"></script>
+<script>
+    Reveal.initialize({
+        hash: true, center: false, slideNumber: true, transition: 'slide',
+        width: 1280, height: 720, margin: 0.04, minScale: 0.2, maxScale: 2.0,
+        plugins: [ RevealHighlight, RevealNotes ]
+    });
+</script>
+</body>
+</html>
