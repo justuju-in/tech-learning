@@ -88,7 +88,7 @@
         At the end there's a scoring guide to tell you if you're ready for <strong>Boolean Algebra</strong>.
     </div>
     <div class="fragment key-point">
-        Remember the precedence: <strong>NOT &gt; AND &gt; OR / XOR</strong>. When in doubt, brackets win.
+        Remember the precedence: <strong>NOT first, then AND, then OR / XOR</strong> — unless brackets say otherwise. When in doubt, brackets win.
     </div>
 </section>
 
@@ -457,7 +457,7 @@ C ──┘</div>
     <h2>F1 <span class="pts">1 pt</span></h2>
     <div class="practice-q"><strong>How do you make a NOT gate out of a single NOR gate?</strong></div>
     <div class="fragment answer-reveal">
-        Tie both inputs together: <code>NOR(A, A) = (A + A)' = A'</code>. Same trick works with NAND.
+        Tie both inputs together: <code>NOR(A, A) = (A + A)' = A'</code>. <span class="small">(As an aside, the same trick also works with NAND.)</span>
     </div>
 </section>
 
@@ -514,7 +514,8 @@ W ──────────────────┘   (W feeds both inpu
     </div>
     <div class="fragment answer-reveal">
         F=1 rows: (0,1,1), (1,0,1), (1,1,0), (1,1,1)<br>
-        <strong>F = A'BC + AB'C + ABC' + ABC</strong>
+        <strong>F = A'BC + AB'C + ABC' + ABC</strong><br>
+        Simplified: <strong>F = AB + AC + BC</strong>
         <p class="small">Circuit: 4 AND gates (with NOTs) feeding one big OR. (1 pt table, 2 pts expression.)
         This is the "majority function" — keep it in mind; it simplifies beautifully in the next lesson.</p>
     </div>
@@ -522,8 +523,8 @@ W ──────────────────┘   (W feeds both inpu
 
 <!-- ════════════════════════════════════════════════ BRIDGE ═══ -->
 <section>
-    <h2>One Last Question — Looking Ahead</h2>
-    <p>Fill in the truth table for both expressions:</p>
+    <h2>Bonus — Looking Ahead <span class="pts" style="background:var(--warning-color);">not scored</span></h2>
+    <p>This one isn't part of the 60 points — just a taste of the next lesson. Fill in the truth table for both expressions:</p>
     <div class="two-col">
         <div>
             <table style="width:100%;">
