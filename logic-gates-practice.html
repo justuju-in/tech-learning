@@ -324,7 +324,7 @@
         <p class="fragment answer-reveal">AND goes first (higher precedence): <code>0 AND 1 = 0</code>, then <code>1 XOR 0 = <strong>1</strong></code></p>
     </div>
     <div class="fragment key-point">
-        <strong>Remember precedence:</strong> NOT &gt; AND &gt; OR/XOR. Use <strong>brackets</strong> to avoid confusion!
+        <strong>Remember precedence:</strong> NOT first, then AND, then OR/XOR. And whenever <strong>OR and XOR appear together</strong>, always use <strong>brackets</strong> — don't rely on guessing the order.
     </div>
 </section>
 
@@ -345,11 +345,11 @@
     </div>
 
     <div class="fragment key-point">
-        <strong>Answer:</strong> Millions and millions of tiny switches. These switches are the <strong>logic gates</strong> we've been learning — the very same AND, OR, NOT!
+        <strong>Answer:</strong> Millions and millions of tiny <strong>transistors</strong> — each one acts like a switch that can be ON or OFF. Groups of these transistors are wired together to form the <strong>logic gates</strong> we've been learning — AND, OR, NOT!
     </div>
 
     <div class="fragment info-box">
-        A modern phone's processor has about <strong>15 billion gates</strong> inside it! All of them working together to do addition, subtraction, comparison — everything.
+        A modern phone's processor can contain <strong>billions of transistors</strong> (Apple's A15, for example, has about 15 billion). Those transistors build the logic gates and larger circuits that do addition, comparison — everything.
     </div>
 </section>
 
@@ -360,8 +360,8 @@
     <div class="two-col">
         <div>
             <p>From the outside, a chip looks like a small black square with silver pins.</p>
-            <p class="fragment" style="margin-top:0.6em;">But if you zoom in with a <strong>microscope</strong>, you'd see tiny tiny wires and switches — all arranged in a pattern.</p>
-            <p class="fragment" style="margin-top:0.6em;">These switches are the gates — AND, OR, NOT, NAND, NOR...</p>
+            <p class="fragment" style="margin-top:0.6em;">But if you zoom in with a <strong>microscope</strong>, you'd see tiny tiny wires and transistors — all arranged in a pattern.</p>
+            <p class="fragment" style="margin-top:0.6em;">Groups of transistors form the gates — AND, OR, NOT, NAND, NOR...</p>
         </div>
         <div style="text-align: center;">
             <div style="background: #1a1a2e; color: #e0e0e0; padding: 1.5em; border-radius: 12px; font-family: monospace; font-size: 0.6em; line-height: 1.8; text-align: left;">
@@ -387,27 +387,21 @@
 
 <!-- The Factory Problem -->
 <section>
-    <h2>The Factory Problem: 7 Types vs 1 Type</h2>
+    <h2>Why Fewer Building Blocks Help</h2>
 
-    <p>Now think about this — a company needs to manufacture this chip. They need to put <strong>billions of gates</strong> inside it.</p>
+    <p>Designing and building a chip with <strong>billions of gates</strong> is hard. Here's a useful way to think about it.</p>
 
     <div class="fragment warning-box">
-        <strong>Problem:</strong> If the chip uses 7 different types of gates (AND, OR, NOT, XOR, NAND, NOR, XNOR), then:
-        <ul>
-            <li>The factory needs <strong>7 different machines</strong> — one for each gate type</li>
-            <li><strong>7 different designs</strong> need to be tested</li>
-            <li>If there's a defect in one type, it's hard to find — <strong>check 7 places</strong></li>
-            <li>The cost goes way up!</li>
-        </ul>
+        <strong>An analogy:</strong> imagine building with LEGO. If every model needed 7 completely different special-shaped bricks, you'd have to design, make, and test 7 separate things — and any one of them could go wrong.
     </div>
 
     <div class="fragment">
-        <div class="big-q">What if we could use <em>just ONE type</em> of gate to build ALL the others?</div>
+        <div class="big-q">What if <em>one</em> kind of brick could build <em>everything</em>?</div>
     </div>
 
     <div class="fragment success-box">
-        <strong>Yes we can!</strong> If you only manufacture NAND gates — one machine, one design, one testing process. Then use NAND to build AND, OR, NOT, XOR — everything!<br>
-        This makes chips <strong>cheaper, simpler, and more reliable</strong>.
+        In logic, that's possible! A single gate type — <strong>NAND</strong> — can be wired up to make AND, OR, NOT, XOR, and any other function.<br>
+        Reusing one well-understood building block makes designing, testing, and optimizing a chip much easier.
     </div>
 </section>
 
@@ -415,10 +409,10 @@
 <section>
     <h2>That's Why NAND and NOR Are Called "Universal"</h2>
 
-    <p>In the real world, most chips are built using only NAND gates!</p>
+    <p>NAND gates are especially useful because <strong>NAND alone can build any logic function</strong> — so designers can lean on it heavily.</p>
 
     <div class="fragment info-box">
-        <strong>Fun fact:</strong> NAND gates are the easiest to manufacture on silicon (the material chips are made of). That's why NAND is the most popular gate in the industry.
+        <strong>Reality check:</strong> real chips don't use <em>only</em> NAND — they use a whole library of ready-made blocks (gates, memory cells, flip-flops, multiplexers, buffers, and more). But NAND's universality is one reason it shows up so often.
     </div>
 
     <div class="fragment">
@@ -1391,8 +1385,9 @@ C ──┘</div>
     </div>
 
     <div class="fragment answer-reveal">
-        Output=1 rows: (0,0,0), (0,1,0), (1,0,0), (1,1,0) — in all of them C=0!<br>
-        <strong>F = C' (just NOT C!)</strong>
+        Output=1 rows: (0,0,0), (0,1,0), (1,0,0), (1,1,0).<br>
+        <strong>SOP:</strong> F = A'B'C' + A'BC' + AB'C' + ABC'<br>
+        Notice C=0 in every winning row — so it simplifies to <strong>F = C'</strong> (just NOT C!). You'll prove that step in Boolean Algebra.
     </div>
 </section>
 
@@ -1601,7 +1596,7 @@ C ──┘</div>
     <h2>Weekly Homework: Week 2</h2>
 
     <div class="practice-q">
-        <p><strong>H7:</strong> For 3 variables (A, B, C), build the full truth table (8 rows) where output is 1 when <strong>A and B are both 1, or C alone is 1</strong>. Write the SOP expression.</p>
+        <p><strong>H7:</strong> For 3 variables (A, B, C), build the full truth table (8 rows) where output is 1 when <strong>A and B are both 1, or when C is 1</strong>. Write the SOP expression.</p>
     </div>
 
     <div class="practice-q">
