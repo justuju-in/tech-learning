@@ -82,7 +82,7 @@
 <!-- ════════════════════════════════════════════════ SESSION 1 ═══ -->
 <section class="center-content">
     <div class="session-divider">
-        <p class="kicker">Session 1 of 3</p>
+        <p class="kicker">Teaching Session 1 of 3</p>
         <h1>The Toolkit</h1>
         <p>Today: recall the open threads from Logic Gates, see why a shorter circuit is worth the trouble, and meet all the laws we'll use to shrink expressions.</p>
         <p class="small"><strong>The plan — three classes, then a practice day:</strong> &nbsp;①&nbsp;the laws &nbsp;·&nbsp; ②&nbsp;De Morgan's &amp; our first simplifications &nbsp;·&nbsp; ③&nbsp;the harder examples &nbsp;·&nbsp; ④&nbsp;a practice day. &nbsp;<em>Duality near the end is optional enrichment.</em></p>
@@ -183,6 +183,7 @@
     </div>
     <div class="fragment info-box">
         <strong>One big difference:</strong> in Boolean, every variable is only ever <strong>0 or 1</strong>. That makes some new rules possible that ordinary algebra doesn't have.
+        <br><span class="small">(Small convention: we write Boolean variables as capitals — <code>A, B, C</code>. The lowercase <code>a, b, c</code> in the warm-up were just ordinary-number stand-ins.)</span>
     </div>
 </section>
 
@@ -211,6 +212,9 @@
             <div class="law-box">A &middot; 0 = 0</div>
             <p class="small">OR-ing with 1 forces 1. AND-ing with 0 forces 0.</p>
         </div>
+    </div>
+    <div class="fragment warning-box">
+        <strong>Careful — this isn't ordinary arithmetic.</strong> Here <code>+</code> means <strong>OR</strong>, not add. That's why <code>A + 1 = 1</code> (not 2): "anything OR true" is simply true. (For the same reason <code>A + A = A</code>, coming next — not 2A.)
     </div>
     <div class="fragment key-point">
         <strong>In words:</strong> "rain OR <em>(something always true)</em>" is always true. "rain AND <em>(something always false)</em>" is always false.
@@ -379,7 +383,7 @@
 <!-- ════════════════════════════════════════════════ SESSION 2 ═══ -->
 <section class="center-content">
     <div class="session-divider">
-        <p class="kicker">Session 2 of 3</p>
+        <p class="kicker">Teaching Session 2 of 3</p>
         <h1>De Morgan's &amp; Our First Simplifications</h1>
         <div class="success-box"><strong>Last class we built the toolkit:</strong> Identity, Null, Idempotent, Complement, Distributive, and Absorption. Keep the one-slide toolkit table open — we'll lean on it all session.</div>
         <div class="info-box"><strong>This class:</strong> the one rule for pushing a NOT through a bracket — De Morgan's — and then we finally close Open Thread 1.</div>
@@ -506,7 +510,7 @@ if (!isLoggedIn || !isVerified) blockPage();</code></pre>
 <!-- ════════════════════════════════════════════════ SESSION 3 ═══ -->
 <section class="center-content">
     <div class="session-divider">
-        <p class="kicker">Session 3 of 3</p>
+        <p class="kicker">Teaching Session 3 of 3</p>
         <h1>The Harder Ones</h1>
         <div class="success-box"><strong>Last class:</strong> De Morgan's theorems, and we simplified <code>(A + B)&middot;A'</code> all the way down to <code>A'B</code>.</div>
         <div class="info-box"><strong>This class:</strong> the multi-step simplifications (the majority function and the five-term table) and the same trick on real code. <em>Duality at the end is optional enrichment; skip it if time is short.</em> Next time is a full <strong>practice day</strong>.</div>
@@ -518,10 +522,8 @@ if (!isLoggedIn || !isVerified) blockPage();</code></pre>
     <p>Our four-term monster from Logic Gates:</p>
     <div class="law-box">F = A'BC + AB'C + ABC' + ABC</div>
     <div class="fragment warning-box">
-        <strong>Heads up — this is the clever, hard way.</strong> The step below is a neat trick, but it's tricky to spot on your own. Don't worry if you wouldn't have thought of it. <strong>Next week, Karnaugh Maps give you this same answer just by looking</strong> — no trick needed. Watch it once here so the K-map feels like magic later.
-    </div>
-    <div class="fragment info-box">
-        <strong>The trick:</strong> Idempotent says <code>ABC + ABC = ABC</code>. So we may quietly make <em>two extra copies</em> of <code>ABC</code> — they cost nothing — and pair one with each other term.
+        <strong>Heads up — this is the clever, hard way.</strong> Don't worry if you wouldn't have spotted it; <strong>next week K-maps give this answer just by looking</strong>.<br>
+        <strong>The trick:</strong> since <code>ABC + ABC = ABC</code> (Idempotent), we can add <em>two free extra copies</em> of <code>ABC</code> and pair one with each other term.
     </div>
     <div class="fragment"><div class="step"><span class="step-label">Add copies of ABC:</span> A'BC + ABC &nbsp;|&nbsp; AB'C + ABC &nbsp;|&nbsp; ABC' + ABC</div></div>
     <div class="fragment"><div class="step"><span class="step-label">Factor each pair:</span> BC(A'+A) + AC(B'+B) + AB(C'+C)</div></div>
@@ -614,7 +616,7 @@ if (!isLoggedIn || !isVerified) blockPage();</code></pre>
 <!-- ════════════════════════════════════════════════ SESSION 4 / PRACTICE DAY ═══ -->
 <section class="center-content">
     <div class="session-divider">
-        <p class="kicker">Practice Day</p>
+        <p class="kicker">Practice Day · after the 3 sessions</p>
         <h1>Now You Try</h1>
         <div class="success-box"><strong>Over three classes you built the whole toolkit, learned De Morgan's, and shrank some long expressions.</strong> Today it's your turn — work each one on paper before you reveal the answer.</div>
         <p class="small">Start with the single-law warm-ups, then the multi-step ones. The Product-of-Sums challenge at the end is optional enrichment.</p>
@@ -774,7 +776,7 @@ if (!isLoggedIn || !isVerified) blockPage();</code></pre>
         <li class="fragment"><strong>The laws:</strong> Identity, Null, Idempotent, Complement, Distributive, and the great shortcut, <strong>Absorption</strong>.</li>
         <li class="fragment"><strong>De Morgan's:</strong> flip the variables, swap AND&harr;OR, drop the NOT. It explained <code>NAND = A' + B'</code>.</li>
         <li class="fragment"><strong>We closed every open thread</strong> from Logic Gates — the long expressions really were shorter.</li>
-        <li class="fragment"><strong>Duality:</strong> every law has a partner, found by swapping AND&harr;OR and 0&harr;1.</li>
+        <li class="fragment"><strong>Duality (optional enrichment):</strong> if you covered it — every law has a partner, found by swapping AND&harr;OR and 0&harr;1.</li>
     </ul>
     <div class="fragment key-point">
         <strong>Next lesson — Karnaugh Maps.</strong> Algebra works, but it takes cleverness to spot the right step. K-maps turn simplification into a <em>visual</em> method — you'll just look and see the answer.
