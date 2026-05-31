@@ -61,6 +61,10 @@
         .thread { background: #efe7fb; border-left: 4px solid #8e44ad; padding: 0.7em 1.1em; margin: 0.7em 0; border-radius: 4px; font-size: 0.85em; }
         .section-banner { background: linear-gradient(135deg, #3498db, #2c3e50); color: white; padding: 1.2em; border-radius: 12px; margin: 0.5em 0; }
         .section-banner h1, .section-banner h2, .section-banner p { color: white; }
+        .session-divider { border: 3px dashed var(--success-color); border-radius: 16px; padding: 1.1em 1.6em; margin: 0.3em auto; max-width: 92%; }
+        .session-divider .kicker { color: var(--success-color); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.85em; margin-bottom: 0.2em; }
+        .session-divider .success-box, .session-divider .info-box { text-align: left; }
+        .enrichment-tag { font-size: 0.5em; vertical-align: middle; background: #f3e5f5; color: #8e44ad; padding: 0.25em 0.7em; border-radius: 20px; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -73,6 +77,16 @@
     <p style="font-size: 1.25em; color: #555;">Making logic <span class="highlight">simple</span></p>
     <br>
     <p class="small">Justuju — CS Fundamentals · builds directly on Logic Gates</p>
+</section>
+
+<!-- ════════════════════════════════════════════════ SESSION 1 ═══ -->
+<section class="center-content">
+    <div class="session-divider">
+        <p class="kicker">Session 1 of 3</p>
+        <h1>The Toolkit</h1>
+        <p>Today: recall the open threads from Logic Gates, see why a shorter circuit is worth the trouble, and meet all the laws we'll use to shrink expressions.</p>
+        <p class="small"><strong>The plan — three classes, then a practice day:</strong> &nbsp;①&nbsp;the laws &nbsp;·&nbsp; ②&nbsp;De Morgan's &amp; our first simplifications &nbsp;·&nbsp; ③&nbsp;the harder examples &nbsp;·&nbsp; ④&nbsp;a practice day. &nbsp;<em>Duality near the end is optional enrichment.</em></p>
+    </div>
 </section>
 
 <!-- WHERE WE LEFT OFF -->
@@ -120,16 +134,45 @@
     </div>
 </section>
 
+<!-- ALGEBRA WARM-UP -->
+<section>
+    <h2>A 60-Second Warm-Up (with numbers)</h2>
+    <p>Before we touch any letters, here are three moves with plain numbers you already trust:</p>
+    <div class="three-col">
+        <div class="card">
+            <h4>Add nothing</h4>
+            <div class="law-box" style="font-size:1em;">3 + 0 = 3</div>
+            <p class="small">Adding 0 changes nothing.</p>
+        </div>
+        <div class="card">
+            <h4>Times one</h4>
+            <div class="law-box" style="font-size:1em;">7 &times; 1 = 7</div>
+            <p class="small">Multiplying by 1 changes nothing.</p>
+        </div>
+        <div class="card">
+            <h4>Pull out a common number</h4>
+            <div class="law-box" style="font-size:0.92em;">2&times;5 + 2&times;3 = 2&times;(5+3)</div>
+            <p class="small">See the <strong>2</strong> in both parts? Pull it out front.</p>
+        </div>
+    </div>
+    <div class="fragment info-box">
+        Check the last one: <code>2&times;5 + 2&times;3 = 10 + 6 = 16</code>, and <code>2&times;(5+3) = 2&times;8 = 16</code>. Same answer — pulling the 2 out front didn't change a thing.
+    </div>
+    <div class="fragment key-point">
+        That move — <strong>"pull out the common part"</strong> — is the one we'll use again and again today. Get it feeling obvious with numbers first; then we do the <em>exact same move</em> with A and B.
+    </div>
+</section>
+
 <!-- WHAT IS IT -->
 <section>
     <h2>What Boolean Algebra Is</h2>
     <p class="big-q">A set of rules for rewriting logic expressions without changing what they mean.</p>
     <div class="fragment two-col">
         <div class="card">
-            <h4>You already know algebra</h4>
-            <p><code>a + 0 = a</code></p>
-            <p><code>a &times; 1 = a</code></p>
-            <p><code>a(b + c) = ab + ac</code></p>
+            <h4>The warm-up, now with letters</h4>
+            <p><code>a + 0 = a</code> &nbsp;<span class="small">(add nothing)</span></p>
+            <p><code>a &times; 1 = a</code> &nbsp;<span class="small">(times one)</span></p>
+            <p><code>a(b + c) = ab + ac</code> &nbsp;<span class="small">(pull out a)</span></p>
         </div>
         <div class="card">
             <h4>Boolean is the same idea</h4>
@@ -233,19 +276,28 @@
     <div class="fragment warning-box">
         The second form does <strong>not</strong> work with ordinary numbers — try it with 2, 3, 4 and you'll get nonsense. It works here because variables are only 0 or 1.
     </div>
-    <div class="fragment">
-        <p class="small">Proof of the second form by truth table — compare the two highlighted columns:</p>
-        <table style="font-size: 0.62em; width: 100%;">
-            <tr><th>A</th><th>B</th><th>C</th><th>BC</th><th style="background:#27ae60;">A+BC</th><th>A+B</th><th>A+C</th><th style="background:#27ae60;">(A+B)(A+C)</th></tr>
-            <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
-            <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
-            <tr><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
-            <tr><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
-            <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
-            <tr><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
-            <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
-            <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
-        </table>
+    <div class="fragment key-point">
+        Don't worry if that second form feels strange — you don't have to take it on faith. On the next slide a truth table proves it, row by row.
+    </div>
+</section>
+
+<section>
+    <h2>Distributive — the Boolean-only Form, Proved</h2>
+    <div class="law-box" style="border-color: var(--warning-color);">A + BC = (A + B)(A + C)</div>
+    <p class="small">Compare the two highlighted columns — they agree in every single row:</p>
+    <table style="font-size: 0.7em; width: 100%;">
+        <tr><th>A</th><th>B</th><th>C</th><th>BC</th><th style="background:#27ae60;">A+BC</th><th>A+B</th><th>A+C</th><th style="background:#27ae60;">(A+B)(A+C)</th></tr>
+        <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td></tr>
+        <tr><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td></tr>
+        <tr><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+    </table>
+    <div class="fragment success-box">
+        <code>A + BC</code> and <code>(A+B)(A+C)</code> match on all 8 rows. That's the proof — no faith required.
     </div>
 </section>
 
@@ -270,6 +322,10 @@
         <div class="step"><span class="step-label">Null:</span> = A &middot; 1</div>
         <div class="step"><span class="step-label">Identity:</span> = A</div>
     </div>
+    <div class="fragment info-box">
+        <strong>And why <code>A + A'B = A + B</code>?</strong> In plain words: if A is true, the whole thing is true. If A is <em>false</em>, then <code>A'</code> is true, so <code>A'B</code> is just <code>B</code>. Either way, A and B together decide it — same as <code>A + B</code>.
+        <br><br>Its AND-twin <code>A(A' + B) = AB</code> mirrors this: A and A' can't both be true, so the <code>A'</code> inside the bracket is dead weight — only <code>B</code> can survive alongside <code>A</code>, leaving <code>AB</code>.
+    </div>
     <div class="fragment key-point">
         You can prove every absorption form from the basic laws — but they're so common that it pays to <strong>recognise them on sight</strong>.
     </div>
@@ -290,7 +346,44 @@
         <tr><td><strong>Absorption</strong></td><td>A + AB = A</td><td>A(A+B) = A</td></tr>
         <tr style="background:#fff3cd;"><td><strong>De Morgan's</strong></td><td>(A+B)' = A'B'</td><td>(AB)' = A'+B'</td></tr>
     </table>
-    <p class="small">De Morgan's is so important it gets its own section — next.</p>
+    <p class="small">De Morgan's is so important it gets its own section — in the next session.</p>
+</section>
+
+<!-- QUICK CHECK: SINGLE-LAW RECOGNITION (end of Session 1) -->
+<section>
+    <h2>Quick Check — Spot the Law</h2>
+    <p>One law each — just the answer. Try before you reveal. (No factoring yet, that comes next session.)</p>
+    <div class="two-col" style="font-size:0.92em;">
+        <div>
+            <div class="practice-q"><strong>1.</strong> &nbsp;A + 0 = ?
+                <span class="fragment answer-reveal"><strong>A</strong> &nbsp;<span class="small">[Identity]</span></span></div>
+            <div class="practice-q"><strong>2.</strong> &nbsp;A &middot; 0 = ?
+                <span class="fragment answer-reveal"><strong>0</strong> &nbsp;<span class="small">[Null]</span></span></div>
+            <div class="practice-q"><strong>3.</strong> &nbsp;A + A = ?
+                <span class="fragment answer-reveal"><strong>A</strong> &nbsp;<span class="small">[Idempotent]</span></span></div>
+        </div>
+        <div>
+            <div class="practice-q"><strong>4.</strong> &nbsp;A + A' = ?
+                <span class="fragment answer-reveal"><strong>1</strong> &nbsp;<span class="small">[Complement]</span></span></div>
+            <div class="practice-q"><strong>5.</strong> &nbsp;(A')' = ?
+                <span class="fragment answer-reveal"><strong>A</strong> &nbsp;<span class="small">[Double Negation]</span></span></div>
+            <div class="practice-q"><strong>6.</strong> &nbsp;A + AB = ?
+                <span class="fragment answer-reveal"><strong>A</strong> &nbsp;<span class="small">[Absorption]</span></span></div>
+        </div>
+    </div>
+    <div class="fragment key-point">
+        If these feel automatic, you're ready. Next session we start <em>combining</em> them to shrink real expressions.
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════════ SESSION 2 ═══ -->
+<section class="center-content">
+    <div class="session-divider">
+        <p class="kicker">Session 2 of 3</p>
+        <h1>De Morgan's &amp; Our First Simplifications</h1>
+        <div class="success-box"><strong>Last class we built the toolkit:</strong> Identity, Null, Idempotent, Complement, Distributive, and Absorption. Keep the one-slide toolkit table open — we'll lean on it all session.</div>
+        <div class="info-box"><strong>This class:</strong> the one rule for pushing a NOT through a bracket — De Morgan's — and then we finally close Open Thread 1.</div>
+    </div>
 </section>
 
 <!-- ════════════════════════════════════════════════ DE MORGAN ═══ -->
@@ -410,10 +503,23 @@ if (!isLoggedIn || !isVerified) blockPage();</code></pre>
     </div>
 </section>
 
+<!-- ════════════════════════════════════════════════ SESSION 3 ═══ -->
+<section class="center-content">
+    <div class="session-divider">
+        <p class="kicker">Session 3 of 3</p>
+        <h1>The Harder Ones</h1>
+        <div class="success-box"><strong>Last class:</strong> De Morgan's theorems, and we simplified <code>(A + B)&middot;A'</code> all the way down to <code>A'B</code>.</div>
+        <div class="info-box"><strong>This class:</strong> the multi-step simplifications (the majority function and the five-term table) and the same trick on real code. <em>Duality at the end is optional enrichment; skip it if time is short.</em> Next time is a full <strong>practice day</strong>.</div>
+    </div>
+</section>
+
 <section>
     <h2>Example 2 — The Majority Function (Thread 2)</h2>
     <p>Our four-term monster from Logic Gates:</p>
     <div class="law-box">F = A'BC + AB'C + ABC' + ABC</div>
+    <div class="fragment warning-box">
+        <strong>Heads up — this is the clever, hard way.</strong> The step below is a neat trick, but it's tricky to spot on your own. Don't worry if you wouldn't have thought of it. <strong>Next week, Karnaugh Maps give you this same answer just by looking</strong> — no trick needed. Watch it once here so the K-map feels like magic later.
+    </div>
     <div class="fragment info-box">
         <strong>The trick:</strong> Idempotent says <code>ABC + ABC = ABC</code>. So we may quietly make <em>two extra copies</em> of <code>ABC</code> — they cost nothing — and pair one with each other term.
     </div>
@@ -481,7 +587,7 @@ if (!isLoggedIn || !isVerified) blockPage();</code></pre>
 
 <!-- ════════════════════════════════════════════════ DUALITY ═══ -->
 <section>
-    <h2>One Elegant Pattern: Duality</h2>
+    <h2>One Elegant Pattern: Duality <span class="enrichment-tag">Enrichment — optional</span></h2>
     <p>Did you notice the laws come in <strong>pairs</strong>? There's a reason.</p>
     <div class="info-box">
         <strong>The Duality Principle:</strong> take any true Boolean law, swap every <strong>AND &harr; OR</strong> and every <strong>0 &harr; 1</strong>, and you get another true law — for free.
@@ -505,11 +611,13 @@ if (!isLoggedIn || !isVerified) blockPage();</code></pre>
     </div>
 </section>
 
-<!-- ════════════════════════════════════════════════ PRACTICE ═══ -->
+<!-- ════════════════════════════════════════════════ SESSION 4 / PRACTICE DAY ═══ -->
 <section class="center-content">
-    <div class="section-banner">
-        <h1>Practice</h1>
-        <p>Try each one before you reveal the answer</p>
+    <div class="session-divider">
+        <p class="kicker">Practice Day</p>
+        <h1>Now You Try</h1>
+        <div class="success-box"><strong>Over three classes you built the whole toolkit, learned De Morgan's, and shrank some long expressions.</strong> Today it's your turn — work each one on paper before you reveal the answer.</div>
+        <p class="small">Start with the single-law warm-ups, then the multi-step ones. The Product-of-Sums challenge at the end is optional enrichment.</p>
     </div>
 </section>
 
@@ -565,9 +673,9 @@ if (!isLoggedIn || !isVerified) blockPage();</code></pre>
 </section>
 
 <section>
-    <h2>Challenge — Product of Sums</h2>
+    <h2>Challenge — Product of Sums <span class="enrichment-tag">Enrichment — optional</span></h2>
     <div class="info-box">
-        Remember <strong>Product of Sums</strong> from the Logic Gates lesson? A product (AND) of sum (OR) terms, like below. The same laws simplify it — the brackets are just multiplied out.
+        Remember <strong>Product of Sums</strong> from the Logic Gates lesson? A product (AND) of sum (OR) terms, like below. The same laws simplify it — the brackets are just multiplied out. <strong>This one's harder — skip it if time is short.</strong>
     </div>
     <div class="law-box">F = (A + B)(A + B')(A' + B)</div>
     <div class="fragment"><div class="step"><span class="step-label">Multiply first two — use A + BC = (A+B)(A+C) backwards:</span> (A + B)(A + B') = A + BB'</div></div>
